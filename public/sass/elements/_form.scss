@@ -1,0 +1,214 @@
+$form-el-height: 38px;
+
+.kv-form {
+  @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+    flex-direction: column;
+  }
+
+  &-group {
+    display: flex;
+    align-items: flex-start;
+
+    &-field {
+      &.kv-form-group-2-column {
+        width: 50%;
+        width: calc(50% - 0.5em);
+        margin-right: 1em;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+      &.kv-form-group-3-column {
+        width: 33%;
+        width: calc(33% - 0.5em);
+        margin-right: 1em;
+
+        &:last-child {
+          margin-right: 0;
+        }
+      }
+    }
+
+    @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+      flex-direction: column;
+
+      & > *:not(&-filter) {
+        width: 100%;
+        margin-right: 0 !important;
+        margin-bottom: 5px;
+
+        label:not(.kv-form-label-button):not(.kv-fullwidth-label) {
+          width: 35%;
+        }
+
+        input, select {
+          width: 65%;
+        }
+      }
+    }
+
+    & > * {
+      margin-right: 5px;
+
+      &:last-of-type {
+        margin-right: 0;
+      }
+    }
+
+    &-row-pair {
+      label {
+        @extend .kv-text-ellip;
+
+        width: 35%;
+      }
+
+      input, select {
+        width: 65%;
+      }
+    }
+
+    &-search {
+      @extend .kv-border-no-color;
+
+	    display: flex;
+	    align-items: center;
+      padding: 0 10px;
+      font-size: 13px;
+      text-transform: uppercase;
+
+      [for] {
+        @extend .kv-mr-3;
+
+        &:before {
+          content: '\f002';
+          font-family: 'FontAwesome', sans-serif;
+          display: inline;
+        }
+      }
+
+      [type="text"] {
+        height: $form-el-height;
+        line-height: $form-el-height;
+
+        &, &:focus, &:target, &:hover {
+          @extend .kv-m-0, .kv-no-border, .kv-p-0;
+
+          background: transparent !important;
+          text-transform: uppercase;
+        }
+      }
+    }
+
+    &-filter {
+      align-self: flex-end;
+      position: relative;
+
+      &-button {
+        @extend .kv-border-no-color;
+
+        display: block;
+        box-sizing: content-box;
+        text-align: center;
+        width: 125px;
+        height: $form-el-height;
+        line-height: $form-el-height;
+        cursor: pointer;
+      }
+
+      &-area {
+        @extend .kv-mt-1;
+
+        position: absolute;
+        right: 0;
+        width: 320px;
+        max-width: 75vw;
+        padding: $spacer;
+        z-index: 100;
+
+        &.collapsing {
+          -webkit-transition: none;
+          transition: none;
+          display: none;
+        }
+
+        & > * {
+          border: none !important;
+          margin-bottom: $spacer;
+
+          &:last-of-type {
+            margin-bottom: 0;
+          }
+        }
+
+        .kv-select label {
+          @extend .kv-pl-0;
+        }
+
+        label {
+          width: 40%;
+          color: white !important;
+        }
+      }
+    }
+  }
+
+  &-hide {
+    position: absolute;
+    top: 0;
+    left: -9999px;
+  }
+
+  &-label-button {
+    @extend .kv-small, .kv-border-no-color;
+
+    display: inline-block;
+    text-align: center;
+    height: $form-el-height;
+    min-width: $form-el-height;
+    line-height: $form-el-height;
+    margin-bottom: 3px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 100ms;
+
+    [type='radio']:checked + &,
+    [type='checkbox']:checked + & {
+      color: white !important;
+    }
+
+    :disabled + & {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &-ellip {
+      cursor: default;
+    }
+
+    .fa {
+      font-size: 1.25em;
+    }
+
+    &-padding {
+      @extend .kv-p-2;
+
+      line-height: 1.8;
+    }
+  }
+
+  &-control {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    line-height: $form-el-height;
+    border: 1px solid $color-light;
+    background-color: $color-light;
+    -webkit-transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+    transition: border-color ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+
+    &:not(textarea) {
+      height: $form-el-height;
+    }
+  }
+}

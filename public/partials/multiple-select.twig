@@ -1,0 +1,52 @@
+{% set request = request is defined ? request : kvcoreidx.request.converted %}
+{% set vals = [] %}
+
+{% if request[id] is not empty %}
+	{% if request[id] is iterable %}
+		{% set vals = request[id] %}
+	{% else %}
+		{% set vals = [request[id]]  %}
+	{% endif %}
+{% endif %}
+{% set layout = layout is defined ? layout : 'button' %}
+
+<div class="kv-multiple-select {{ 'kv-multiple-select-layout-' ~ layout }}">
+	{% if name is defined %}
+        <label>{{ name }}</label>
+	{% endif %}
+
+	{% if layout == 'button' %}
+        <button type="button" class="kv-multiple-select-control" data-for="container-{{ id }}" disabled>
+	        <span class="kv-text-ellip">Select {{ name }}</span>
+	        <span class="kv-counter">{{ vals|length|default('0') }}</span>
+        </button>
+	{% endif %}
+
+    <div id="container-{{ id }}"
+         class="kv-multiple-select-container{% if layout == 'button' %} kv-collapsed{% endif %}"
+         data-layout="{{ layout }}"
+         data-id="{{ id }}"
+    >
+        <div class="kv-multiple-select-search-container">
+	        {% if layout == 'token' %}
+                <span class="kv-multiple-select-token-container"></span>
+	        {% endif %}
+            <input type="text"
+                   name="search-{{ id }}"
+                   class="kv-multiple-select-search"
+                   autocomplete="none"
+                   placeholder="Search an address, area, city, postal code or mls"
+                   value="{{ defaultValue }}"
+            >
+        </div>
+        {% if kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' and id == 'area' %}
+            {% set polygonKeyClass = 'kv-polygon-key-container' %}
+        {% endif %}
+
+         {% if ( kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' and id == 'area' ) or ( kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' and id == 'profile-area' ) %}
+            {% set polygonKeyClass = 'kv-polygon-key-container' %}
+        {% endif %}
+
+        <div id="dataset-{{ id }}" class="kv-container kv-multiple-select-dataset-container kv-collapsed {{ polygonKeyClass }}"></div>
+    </div>
+</div>

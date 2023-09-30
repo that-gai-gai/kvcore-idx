@@ -1,0 +1,173 @@
+{% if data is not defined or not data | length %}
+    <div class="kv-properties-container kv-listings-none">
+        <div class="kv-col kv-w-100 kv-text-center">
+            Sorry, no listings found.
+        </div>
+    </div>
+{% else %}
+	{% set perRow = kvcoreidx.defaultFilters.perRow|round in [1, 2, 3, 4] ? kvcoreidx.defaultFilters.perRow|round : 6 %}
+	{% set perRowClass = ' kv-per-row-' ~ perRow %}
+
+    <div class="kv-properties-container {% if currentFilters.layout is defined %}kv-layout-{{ currentFilters.layout }}{% else %}kv-layout-card{% endif %} {{ 'kv-grid-columns-' ~ kvcoreidx.defaultFilters.perRow }}">
+        {% for listing in data %}
+            <div class="kv-property{{ perRowClass }}">
+	            {% set click %}
+		            {% if kvcoreidx.openListingsInNewTab %}
+                        window.open('{{ listing.detail_url }}', '_blank');
+		            {% else %}
+                        document.location='{{ listing.detail_url }}';
+		            {% endif %}
+	            {% endset %}
+
+                {% if kvcoreidx.options.design == 'v1' %}
+                    <div class="kv-box-v1">
+                        <div class="kv-box-v1-image"
+                             {% if listing.coverphoto_url is not empty %}
+                                 style="background-image:url('{{ listing.coverphoto_url }}');"
+                             {% endif %}
+                        >
+                            <ul class="kv-box-v1-links">
+                                <li>
+                                    <a rel="canonical" href="{{ listing.detail_url }}"
+                                       {% if kvcoreidx.openListingsInNewTab %}
+                                           target="_blank"
+                                       {% endif %}
+                                    >
+                                        <i class="fa fa-search kv-mr-3"></i><span>View detail</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ '/properties/?similarMls=' ~ listing.mls ~ '&similarMlsId=' ~ listing.mlsid }}"
+                                       class="kv-similar-properties"
+                                       data-mls="{{ listing.mls }}"
+                                       data-mlsid="{{ listing.mlsid }}"
+                                       {% if kvcoreidx.openListingsInNewTab %}
+                                           target="_blank"
+                                       {% endif %}
+                                    >
+                                        <i class="fa fa-balance-scale kv-mr-3"></i><span>Similar Properties</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="add-favorite {% if listing.saved %}saved-listing{% endif %}"
+                                       data-mls="{{ listing.mls }}"
+                                       data-mls_id="{{ listing.mlsid }}"
+                                    >
+						                {% if not listing.saved %}
+                                            <i class="fa fa-heart-o kv-mr-3"></i><span>Add to favorites</span>
+						                {% else %}
+                                            <i class="fa fa-heart fa-heart-red kv-mr-3"></i><span>Remove from favorites</span>
+						                {% endif %}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="kv-box-v1-content" onclick="{{ click }}">
+                            <div class="kv-box-v1-title">
+                                <h2 class="kv-box-v1-title-main">${{ listing.price|number_format }}</h2>
+
+				                {% if listing.type is defined %}
+                                    <small class="kv-box-v1-keyword">{{ listing.type }}</small>
+				                {% endif %}
+
+                                <h3 class="kv-box-v1-title-sub">
+					                {% if listing.address %}
+						                {{ listing.address }}
+					                {% else %}
+                                        &nbsp;
+					                {% endif %}
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="kv-box-v1-footer kv-bt" onclick="{{ click }}">
+                            <div class="kv-box-v1-footer-item">
+                                <span>{{ listing.beds ?: '-' }}</span>
+                                <small class="kv-color-gray">BEDS</small>
+                            </div>
+                            <div class="kv-box-v1-footer-item">
+                                <span>{{ listing.baths + listing.halfbaths * 0.5 ?: '-' }}</span>
+                                <small class="kv-color-gray">BATHS</small>
+                            </div>
+                            <div class="kv-box-v1-footer-item">
+                                <span>{{ listing.footage | number_format(0) ?: '-' }}</span>
+                                <small class="kv-color-gray">SQFT</small>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="kv-box kv-box-footer-count-1">
+                        {% if listing.coverphoto_url is not empty %}
+                            <a rel="canonical" href="{{ listing.detail_url }}"
+                               class="kv-box-image"
+                               style="background-image: url({{ listing.coverphoto_url }})"
+                                {% if kvcoreidx.openListingsInNewTab %}
+                                    target="_blank"
+                                {% endif %}
+                            >
+                            </a>
+                        {% endif %}
+
+                        <div class="kv-box-content" onclick="{{ click }}">
+                            <div class="kv-box-title">
+                                <h3 class="kv-box-content-title-main">
+                                    <span class="kv-box-content-title-main-bold">${{ listing.price|number_format }}</span>
+                                </h3>
+                                {% set address = listing.area is empty ? listing.address : listing.address ~ ', ' ~ listing.area %}
+                                <h4 class="kv-box-content-title-sub"
+                                     title="{{ address }}"
+                                >
+                                    {{ listing.address }}{% if listing.area %}<br/> {{ listing.area }}{% endif %}
+                                </h4>
+                            </div>
+
+                            {% if listing.type is defined %}
+                                <div class="kv-box-content-keyword">{{ listing.type }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="kv-box-footer kv-box-footer-show">
+                            <div class="kv-box-footer-item">
+                                <div>{{ listing.beds ?: '-' }}</div>
+                                <small>BEDS</small>
+                            </div>
+                            <div class="kv-box-footer-item">
+                                <div>{{ listing.bathsCalculated ?: '-'  }}</div>
+                                <small>BATHS</small>
+                            </div>
+                            <div class="kv-box-footer-item">
+                                <div>{{ listing.footage|number_format(0) ?: '-' }}</div>
+                                <small>SQFT</small>
+                            </div>
+                        </div>
+
+                        <div class="kv-box-footer">
+                            <a href="{{ '/properties/?similarMls=' ~ listing.mls ~ '&similarMlsId=' ~ listing.mlsid }}"
+                               class="kv-box-footer-item kv-small kv-similar-properties"
+                               data-mls="{{ listing.mls }}"
+                               data-mlsid="{{ listing.mlsid }}"
+                               {% if kvcoreidx.openListingsInNewTab %}
+                                   target="_blank"
+                               {% endif %}
+                            >
+                                <i class="fa fa-balance-scale"></i>&nbsp;Similar
+                            </a>
+                            <a href="#"
+                               class="kv-box-footer-item kv-small add-favorite {% if listing.saved %}saved-listing{% endif %}"
+                               data-mls="{{ listing.mls }}"
+                               data-mls_id="{{ listing.mlsid }}"
+                            >
+                                {% if not listing.saved %}
+                                    <i class="fa fa-heart-o"></i>&nbsp;Add to favorites
+                                {% else %}
+                                    <i class="fa fa-heart"></i>&nbsp;Remove from favorites
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+{% endif %}

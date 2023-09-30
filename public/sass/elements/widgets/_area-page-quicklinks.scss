@@ -1,0 +1,86 @@
+.kv-area-quicklinks {
+	@extend .kv-area-page-global;
+	margin-top: 50px;
+	padding: 90px 50px 60px;
+	max-width: 100% !important;
+	width: 100%;
+	border-bottom: 2px solid #c4c4c4;
+
+	.kv-area-section-heading {
+		color: $new-primary;
+	}
+
+	.kv-area-listings-block {
+		position: relative;
+		height: 267px;
+		width: 96%;
+		border-radius: 10px;
+		height: 267px;
+    	background-repeat: no-repeat;
+    	background-size: cover;
+    	background-position: center;
+	}
+
+	.kv-area-quicklinks-category {
+		position: absolute;
+		margin-top: 20px;
+		padding-left: 30px;
+		padding-right: 10px;
+		background-color: rgba(255, 255, 255, 0.9);
+	}
+
+	.kv-category-text {
+		font-family: Roboto;
+		font-weight: 500;
+		text-align: right;
+	}
+
+	.kv-area-listings-overlay {
+		position: absolute;
+		left: 0%;
+		top: auto;
+		right: 0%;
+		bottom: 0%;
+		width: 100%;
+		height: 62px;
+		border-bottom-left-radius: 10px;
+		border-bottom-right-radius: 10px;
+		background-color: rgba(0, 0, 0, 0.6);
+		text-decoration: none;
+
+		span {
+			margin-top: 15px;
+			font-family: Roboto;
+			display: block;
+			color: #fff;
+			font-size: 22px;
+			font-weight: 500;
+			text-align: center;
+		}
+	}
+	.kv-area-listings-overlay:hover {
+		span {
+			color: #ccc;
+		}
+	}
+
+}
+
+@media (max-width: map_get($grid-breakpoints, 'md') - 1){
+	.kv-area-nearby-areas {
+		.kv-nearby-areas-block{
+			margin-bottom: 10px;
+		}
+	}
+}
+
+@media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+	.kv-area-quicklinks {
+		width:100%;
+		padding: 20px;
+
+		.kv-area-listings-block{
+			margin-bottom: 10px;
+		}
+	}
+}

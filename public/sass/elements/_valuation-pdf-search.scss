@@ -1,0 +1,81 @@
+#kvcoreidx-valuation-pdf-search {
+  margin-bottom: 2em;
+
+  .kv-valuation-pdf-search {
+    @extend .kv-row, .kv-no-gutters;
+
+    .kv-valuation-pdf-unit {
+      @extend %kv-col-6, %kv-col-sm-2;
+      margin:0 0 0 -1px;
+      padding:0;
+      input[type='text'] {
+				font-size:12px;
+        width:100%;
+        border: 1px solid #d1d1d1;
+        background-color:transparent;
+        height:48px;
+        margin:0;
+        color:rgba(0,0,0,.5);
+        padding:10px 10px 10px 20px;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+        overflow:hidden;
+        &:focus {
+          border-color:#007acc;
+        }
+			}
+    }
+
+    &-map {
+      @extend %kv-col-12, %kv-col-sm-7;
+
+      height: 46px;
+      overflow: visible;
+      padding:0;
+      .mapboxgl-canvas-container, .mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right {
+        display: none;
+      }
+
+      .mapboxgl-ctrl-top-right {
+        left: 0;
+
+        .mapboxgl-ctrl-geocoder {
+          width: 100%;
+          max-width: 100%;
+          margin: 0;
+          border-radius:0;
+          box-shadow:none;
+          input[type='text'] {
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #d1d1d1;
+            height:48px;
+            &:focus {
+              border-color:#007acc;
+            }
+          }
+          
+          ul.suggestions {
+            padding: 0;
+            list-style-type: none;
+          }
+          .geocoder-icon-search,
+          button.geocoder-icon-close {
+            top:15px;
+            &:hover {
+              color: #1a1a1a;
+              background: #ffffff;
+            }
+          }
+        }
+      }
+    }
+
+    &-button {
+      @extend %kv-col-12, %kv-col-sm-3;
+      margin:0;
+      @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+        margin-top: 0.5 * $spacer;
+      }
+    }
+  }
+}

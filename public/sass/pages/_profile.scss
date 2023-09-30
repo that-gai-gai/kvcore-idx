@@ -1,0 +1,226 @@
+#kv-user-profile {
+  .kv-tab-profile {
+    .kv-row {
+      margin-bottom: 1rem;
+
+      .kv-form-group {
+        @extend %kv-col-12, %kv-col-md-6;
+
+        &.kv-user-profile-form-submit {
+          @extend %kv-col-12, %kv-col-md-2;
+        }
+      }
+    }
+  }
+  .kv-tab-saved-searches {
+    .create-alert-button-container {
+      padding: 10px 0;
+      clear: both;
+
+      .create-alert {
+        position: relative;
+        padding: 5px 50px 5px 20px;
+        border: 1px solid #63af12;
+        border-radius: 5px;
+        line-height: 25px;
+        transition: background-color 100ms linear;
+        cursor: pointer;
+        font-size: 15px;
+        text-transform: uppercase;
+        color: #509a00;
+
+        &:hover {
+          background-color: rgba(99, 175, 18, 0.2);
+        }
+
+        i {
+          position: absolute;
+          font-size: 25px;
+          top:2px;
+          margin-left: 10px;
+          color: #63af12;
+        }
+      }
+    }
+  }
+  .kv-tab-saved-properties {
+    padding: 0;
+
+    .view-content {
+      background-color: $color-bg-light;
+      padding: $grid-gutter-width/2 $grid-gutter-width/2 0;
+
+      //.kv-properties-container {
+      //  @extend .kv-no-gutters;
+      //}
+    }
+  }
+  #kv-new-alerts-container {
+    display:none;
+  }
+  .kv-alerts-container {
+    .kv-form-group {
+      @extend .kv-row;
+
+      & > * {
+        @extend .kv-mr-0;
+      }
+
+      &-number label {
+        @extend %kv-col-12, %kv-col-sm-12, %kv-col-md-6, %kv-col-xl-3;
+      }
+
+      &-radio {
+        justify-content: space-between;
+
+        label {
+          @extend %kv-col-12, %kv-col-sm-12, %kv-col-md-2, %kv-col-xl-2;
+
+          &:first-of-type {
+            @extend %kv-col-12, %kv-col-sm-12, %kv-col-md-12, %kv-col-xl-2;
+          }
+
+          text-align: center;
+        }
+      }
+
+      &-check {
+        max-height: none;
+
+        label {
+          @extend %kv-col-12, %kv-col-sm-6, %kv-col-md-3, %kv-col-xl-2;
+        }
+      }
+    }
+
+    .kv-form-control {
+      height: initial;
+      line-height: initial;
+    }
+
+    .kv-bt-alert {
+      &:first-of-type {
+        border-top: 1px solid $color-buttonface;
+      }
+    }
+    
+
+    .kv-alert {
+      border: none;
+      border-left: 1px solid $color-buttonface;
+      border-right: 1px solid $color-buttonface;
+      border-radius: 0;
+
+      &:first-of-type {
+        border-radius: 5px 5px 0 0;
+        overflow: visible;
+
+        &-button {
+          border-top: none;
+        }
+      }
+
+      &:last-of-type {
+        border-bottom: 1px solid $color-buttonface;
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+        overflow: visible;
+
+        &-button {
+          border-bottom: none;
+        }
+      }
+
+      &-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0.5 * $spacer 0;
+        border: none;
+        border-bottom: 0.5px solid darkgrey;
+        border-top: 0.5px solid darkgrey;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+        }
+
+        &-title {
+          padding: 0 0.5 * $spacer;
+        }
+
+        &-stop-alert {
+          padding: 0 0.5 * $spacer;
+          font-size: 25px;
+          color: indianred;
+        }
+      }
+    }
+    #alert-update-form-new {
+      margin:15px;
+    }
+    .collapse-alert .alert-update-form {
+      padding: 15px;
+    }
+    .selected-area-row-new,
+    .selected-area-row {
+      @extend .kv-row;
+
+      margin-bottom: 10px;
+
+      &-label {
+        @extend %kv-col-1;
+
+        label {
+          line-height: 38px;
+        }
+      }
+
+      &-value {
+        @extend %kv-col-10;
+      }
+
+      &-control {
+        @extend %kv-col-1, .kv-row;
+
+        flex-wrap: nowrap;
+
+        .kv-button {
+          @extend %kv-col-12;
+
+          padding: 0 !important;
+        }
+      }
+    }
+
+    .kv-form-validation-required {
+      border: 1px solid #ed0d21;
+    }
+
+    .form-validation-message {
+      display: none;
+      padding: 10px;
+      line-height: 13px;
+      background-color: rgba(237, 13, 33, 0.1);
+      border: 1px solid #ed0d21;
+      color: #ed0d21;
+    }
+
+    
+  }
+}
+
+.kv-supports--css-grid {
+  #kv-user-profile .kv-tab-saved-properties {
+    .view-content {
+      padding-bottom: 1px;
+    }
+
+    .kv-properties-container {
+      @include kv-make-grid();
+
+      @extend .kv-grid;
+    }
+  }
+}

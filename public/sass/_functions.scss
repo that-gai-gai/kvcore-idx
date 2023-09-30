@@ -1,0 +1,3 @@
+@function kv-transition($property:all, $duration: $transition-duration, $timing: $transition-timing, $delay: $transition-delay){
+  @return $property $duration $timing $delay;
+}

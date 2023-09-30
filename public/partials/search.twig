@@ -1,0 +1,983 @@
+{% set filters = shortcode_attributes.show_filters == 'no' ? false : true %}
+{% set multiLineClass = shortcode_attributes.multi_line_filters == 'yes' ? ' kv-multi-line' : '' %}
+{% set areasClass = filters ? ' kv-filters-areas-has-filters' : ' kv-filters-areas-no-filters' %}
+{% set noPropertyTypesSet = request.propertyTypes is not defined ? true : false %}
+{% set currentSearchType = request.searchtype is defined ? request.searchtype : 'forsale' %}
+{% if supportedTypes|length > 6 %}
+    {% set renderOtherButton = true %}
+{% else %}
+    {% set renderOtherButton = false %}
+{% endif %}
+
+<div class="kv-properties-search" xmlns="http://www.w3.org/1999/html">
+    <div class="kv-filters">
+        <form id="kv-properties-search-form"
+              class="kv-form kv-properties-search-form{{ multiLineClass }}"
+              autocomplete="off"
+              onsubmit="return !('function' === typeof(kvEXEC) && kvEXEC('Properties', 'submitFilterForm', this));"
+              onchange="return !('function' === typeof(kvEXEC) && kvEXEC('PropertiesAlerts', 'updateSearch', this));"
+        >
+            <div id="kv-filters-areas" class="kv-form-group kv-properties-search-areas {{ areasClass }}"></div>
+
+            <div class="kv-form-group kv-properties-search-submit">
+                <button id="kv-filters-submit" type="submit">
+                    <span class="kv-search-text">Search</span>
+                    <span class="kv-search-icon kv-collapsed"><i class="fa fa-search"></i></span>
+                </button>
+            </div>
+            {% if manual_listings_view is not defined %}
+                {% if doNotLoadAlerts is not defined and manual_listings_view is not defined %}
+                    <div id="kv-properties-alerts" class="kv-form-color kv-form-border"></div>
+                {% endif %}
+            {% endif %}
+            {% if filters %}
+            <div class="kv-form-group kv-properties-search-filters">
+                <div class="kv-filters-control-container">
+                    <button type="button"
+                            id="kv-filters-search-more"
+                            data-for="kv-filters-container-more"
+                            class="kv-filter-control kv-has-counter">
+                        Filters <span class="kv-counter">{{ allowedFiltersCount }}</span>
+                    </button>
+                    <div id="kv-filters-container-more" class="kv-filters-container kv-collapsed">
+                        <div class="filters-container-more-wrapper">
+                            {% if kvcoreidx.allowSoldOnWebsites == '1' and kvcoreidx.enableSoldData == '1' and kvcoreidx.soldDataActive == '1'  or hasRentals is same as(true)%}
+                                <div class="kv-row">
+                                    <div class="kv-filters-container-row prices-filter">
+                                        <div class="kv-filters-field-radio-col">
+                                            <input type="radio"
+                                                id="forsale" 
+                                                name="searchtype" 
+                                                value="forsale"
+                                                {% if currentSearchType == 'forsale' %}checked="checked"{% endif %}>
+                                            <label for="forsale">For Sale</label>
+                                        </div>
+                                        {% if hasRentals is same as(true) %}
+                                            <div class="kv-filters-field-radio-col">
+                                                <input type="radio" 
+                                                    id="forrent" 
+                                                    name="searchtype" 
+                                                    value="forrent"
+                                                    {% if currentSearchType == 'forrent' %}checked="checked"{% endif %}>
+                                                <label for="forrent">For Rent</label>
+                                            </div>
+                                        {% endif %}
+                                        {% if kvcoreidx.allowSoldOnWebsites == '1' and kvcoreidx.enableSoldData == '1' and kvcoreidx.soldDataActive == '1' %}
+                                            <div class="kv-filters-field-radio-col">
+                                                <input type="radio" 
+                                                    id="kv-filters-sold" 
+                                                    name="searchtype" 
+                                                    value="sold"
+                                                    {% if currentSearchType == 'sold' %}checked="checked"{% endif %}>
+                                                <label for="kv-filters-sold">Sold</label>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row prices-filter">
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Minimum Price
+                                        </legend>
+                                        <label for="kv-filters-priceMin"></label>
+                                        <div>
+                                            <select name="priceMin" id="kv-filters-priceMin" title="Min Price">
+                                                <option value=""
+                                                        {% if request.priceMin is not defined %}
+                                                            selected
+                                                        {% endif %}
+                                                >No min</option>
+                                                {% for key, item in price %}
+                                                    <option value="{{ key }}"
+                                                            {% if request.priceMin and request.priceMin == key %}
+                                                                selected
+                                                            {% endif %}
+                                                    >
+                                                        {{ item }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle">-</div>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Maximum Price
+                                        </legend>
+                                        <label for="kv-filters-priceMax"></label>
+                                        <div>
+                                            <select name="priceMax" id="kv-filters-priceMax" title="Max Price">
+                                                <option value=""
+                                                        {% if request.priceMax is not defined %}
+                                                            selected
+                                                        {% endif %}
+                                                >No max</option>
+                                                {% for key, item in price %}
+                                                    <option value="{{ key }}"
+                                                            {% if request.priceMax and request.priceMax == key %}
+                                                                selected
+                                                            {% endif %}
+                                                    >
+                                                        {{ item }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row">
+                                    <label for="kv-filters-beds"></label>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title">Bedrooms</legend>
+                                        <select name="beds" id="kv-filters-beds" title="Bedrooms">
+                                            <option value=""
+                                                {% if request.beds is not defined %}
+                                                    selected
+                                                {% endif %}
+                                            >Any</option>
+                                        {% for key, item in beds %}
+                                            <option value="{{ key }}"
+                                                {% if request.beds and request.beds == key %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ item }}
+                                            </option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle"></div>
+                                    {% set requestBaths = '' %}
+                                    {% if request.baths %}
+                                        {% set requestBaths = request.halfBaths == 1 ? request.baths ~ '.5' : request.baths %}
+                                    {% endif %}
+                                    <label for="kv-filters-baths"></label>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title">Bathrooms</legend>
+                                        <select name="baths" id="kv-filters-baths" title="Bathrooms">
+                                            <option value=""
+                                                {% if request.baths is not defined %}
+                                                    selected
+                                                {% endif %}
+                                            >Any</option>
+                                        {% for key, item in baths|sort %}
+                                            <option value="{{ key }}"
+                                                {% if requestBaths and requestBaths is same as(key) %}
+                                                    selected
+                                                {% endif %}
+                                            >
+                                                {{ item }}
+                                            </option>
+                                        {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kv-row-proptypes">
+                                <div class="types-row kv-sub-types-row">
+                                    <div class="kv-imagecheck-group">
+                                        <label for="single-family-forrent" class="checker icon-single-family">
+                                        <input type="checkbox" name="subType[]" class="kv-imagecheck trigger" id="single-family-forrent" title="Single Family" value="single" checked="true">
+                                        <div role="checkbox" tabindex="0">
+                                            <span class="kv-imagecheck-icon">
+                                            <svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.69025 1.00353C6.73089 0.962789 6.77917 0.930464 6.83232 0.908409C6.88547 0.886353 6.94245 0.875 7 0.875C7.05755 0.875 7.11453 0.886353 7.16768 0.908409C7.22083 0.930464 7.26911 0.962789 7.30975 1.00353L12.5598 6.25353C12.6004 6.29424 12.6325 6.34254 12.6545 6.39569C12.6764 6.44884 12.6876 6.50579 12.6875 6.56328V12.6883C12.6875 12.8043 12.6414 12.9156 12.5594 12.9976C12.4773 13.0797 12.366 13.1258 12.25 13.1258H8.3125C8.19647 13.1258 8.08519 13.0797 8.00314 12.9976C7.92109 12.9156 7.875 12.8043 7.875 12.6883V9.18828H6.125V12.6883C6.125 12.8043 6.07891 12.9156 5.99686 12.9976C5.91481 13.0797 5.80353 13.1258 5.6875 13.1258H1.75C1.63397 13.1258 1.52269 13.0797 1.44064 12.9976C1.35859 12.9156 1.3125 12.8043 1.3125 12.6883V6.56328C1.3124 6.50579 1.32363 6.44884 1.34555 6.39569C1.36747 6.34254 1.39965 6.29424 1.44025 6.25353L6.69025 1.00353ZM2.1875 6.74441V12.2508H5.25V8.75078C5.25 8.63475 5.29609 8.52347 5.37814 8.44142C5.46019 8.35938 5.57147 8.31328 5.6875 8.31328H8.3125C8.42853 8.31328 8.53981 8.35938 8.62186 8.44142C8.70391 8.52347 8.75 8.63475 8.75 8.75078V12.2508H11.8125V6.74441L7 1.93191L2.1875 6.74441Z" fill="#333333"></path>
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M11.375 2.1875V5.25L9.625 3.5V2.1875C9.625 2.07147 9.67109 1.96019 9.75314 1.87814C9.83519 1.79609 9.94647 1.75 10.0625 1.75H10.9375C11.0535 1.75 11.1648 1.79609 11.2469 1.87814C11.3289 1.96019 11.375 2.07147 11.375 2.1875Z" fill="#333333"></path>
+                                            </svg>
+                                            </span>
+                                            <span class="kv-imagecheck-text">Single Family</span>
+                                        </div>
+                                        </label>
+                                    </div>
+                                    <div class="kv-imagecheck-group">
+                                        <label for="condos-forrent" class="checker icon-condos">
+                                        <input type="checkbox" name="subType[]" class="kv-imagecheck trigger" id="condos-forrent" title="Condos" value="condo" checked="true">
+                                        <div role="checkbox" tabindex="0">
+                                            <span class="kv-imagecheck-icon">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <g clip-path="url(#clip0)">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M14.763 0.0748824C14.8354 0.119677 14.8952 0.182228 14.9367 0.256606C14.9782 0.330983 15 0.414722 15 0.499882V15.4999C15 15.6325 14.9473 15.7597 14.8536 15.8534C14.7598 15.9472 14.6326 15.9999 14.5 15.9999H11.5C11.3674 15.9999 11.2402 15.9472 11.1464 15.8534C11.0527 15.7597 11 15.6325 11 15.4999V13.9999H10V15.4999C10 15.6325 9.94732 15.7597 9.85355 15.8534C9.75979 15.9472 9.63261 15.9999 9.5 15.9999H0.5C0.367392 15.9999 0.240215 15.9472 0.146447 15.8534C0.0526784 15.7597 0 15.6325 0 15.4999V9.99988C7.96467e-05 9.89499 0.0331481 9.79277 0.0945249 9.7077C0.155902 9.62264 0.242478 9.55903 0.342 9.52588L6 7.63988V4.49988C6 4.4071 6.02582 4.31616 6.07456 4.23721C6.12331 4.15827 6.19305 4.09445 6.276 4.05288L14.276 0.0528824C14.3523 0.0146883 14.4371 -0.00334141 14.5224 0.00050948C14.6076 0.00436037 14.6904 0.0299637 14.763 0.0748824ZM6 8.69388L1 10.3599V14.9999H6V8.69388ZM7 14.9999H9V13.4999C9 13.3673 9.05268 13.2401 9.14645 13.1463C9.24021 13.0526 9.36739 12.9999 9.5 12.9999H11.5C11.6326 12.9999 11.7598 13.0526 11.8536 13.1463C11.9473 13.2401 12 13.3673 12 13.4999V14.9999H14V1.30888L7 4.80888V14.9999Z" fill="#333333"></path>
+                                                <path d="M2 11H3V12H2V11ZM4 11H5V12H4V11ZM2 13H3V14H2V13ZM4 13H5V14H4V13ZM8 9H9V10H8V9ZM10 9H11V10H10V9ZM8 11H9V12H8V11ZM10 11H11V12H10V11ZM12 9H13V10H12V9ZM12 11H13V12H12V11ZM8 7H9V8H8V7ZM10 7H11V8H10V7ZM12 7H13V8H12V7ZM8 5H9V6H8V5ZM10 5H11V6H10V5ZM12 5H13V6H12V5ZM12 3H13V4H12V3Z" fill="#333333"></path>
+                                                </g>
+                                                <defs>
+                                                <clipPath id="clip0">
+                                                    <rect width="16" height="16" fill="white"></rect>
+                                                </clipPath>
+                                                </defs>
+                                            </svg>
+                                            </span>
+                                            <span class="kv-imagecheck-text">Condos</span>
+                                        </div>
+                                        </label>
+                                    </div>
+                                    <div class="kv-imagecheck-group">
+                                        <label for="townhouse-forrent" class="checker icon-townhouse">
+                                        <input type="checkbox" name="subType[]" class="kv-imagecheck trigger" id="townhouse-forrent" title="Townhouse" value="townhouse" checked="true">
+                                        <div role="checkbox" tabindex="0">
+                                            <span class="kv-imagecheck-icon">
+                                            <svg class="icon" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M15.0145 1.33398H7.11239C6.24078 1.33398 5.53196 1.93198 5.53196 2.66732V6.39132L1.81242 9.52932C1.70194 9.62255 1.62671 9.74133 1.59623 9.87063C1.56575 9.99993 1.5814 10.134 1.6412 10.2558C1.70099 10.3776 1.80225 10.4817 1.93217 10.5549C2.06209 10.6282 2.21484 10.6673 2.3711 10.6673V14.0007C2.3711 14.1775 2.45436 14.347 2.60255 14.4721C2.75074 14.5971 2.95174 14.6673 3.16132 14.6673H15.8047C16.0143 14.6673 16.2153 14.5971 16.3635 14.4721C16.5117 14.347 16.595 14.1775 16.595 14.0007V2.66732C16.595 1.93198 15.8861 1.33398 15.0145 1.33398ZM8.69282 13.334H3.95153V9.60998L6.32217 7.60998L8.69282 9.60998V13.334ZM15.0145 13.334H10.2732V10.6673C10.4297 10.6676 10.5827 10.6287 10.7129 10.5555C10.843 10.4823 10.9445 10.3781 11.0043 10.2562C11.0642 10.1342 11.0798 10 11.0491 9.87064C11.0184 9.74123 10.9428 9.62243 10.8319 9.52932L7.11239 6.39132V2.66732H15.0145V13.334Z" fill="#333333"></path>
+                                                <path d="M8.69211 4H10.2725V5.33333H8.69211V4ZM11.853 4H13.4334V5.33333H11.853V4ZM11.853 6.68733H13.4334V8H11.853V6.68733ZM11.853 9.33333H13.4334V10.6667H11.853V9.33333ZM5.53125 10H7.11168V11.3333H5.53125V10Z" fill="#333333"></path>
+                                            </svg>
+                                            </span>
+                                            <span class="kv-imagecheck-text">Townhouse</span>
+                                        </div>
+                                        </label>
+                                    </div>
+                                    <div class="kv-imagecheck-group">
+                                        <label for="multi-family-forrent" class="checker icon-multi-family">
+                                        <input type="checkbox" name="subType[]" class="kv-imagecheck trigger" id="multi-family-forrent" value="apartment" title="Multi-Family" checked="true">
+                                        <div role="checkbox" tabindex="0">
+                                            <span class="kv-imagecheck-icon">
+                                            <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13.7782 3.55469H10.2227V4.44358H13.7782V13.7769H10.2227V14.6658H14.6671V4.44358C14.6671 4.20783 14.5735 3.98174 14.4068 3.81504C14.2401 3.64834 14.014 3.55469 13.7782 3.55469Z" fill="#333333"></path>
+                                                <path d="M8.83512 1.33398H2.71957C2.46967 1.33398 2.23002 1.43325 2.05331 1.60995C1.87661 1.78666 1.77734 2.02631 1.77734 2.27621V14.6673H9.77734V2.27621C9.77734 2.02631 9.67807 1.78666 9.50137 1.60995C9.32467 1.43325 9.08501 1.33398 8.83512 1.33398ZM8.88845 13.7784H7.55512V12.4451H3.99957V13.7784H2.66623V2.27621C2.66623 2.2692 2.66761 2.26227 2.67029 2.2558C2.67297 2.24933 2.6769 2.24345 2.68185 2.23849C2.68681 2.23354 2.69269 2.22961 2.69916 2.22693C2.70563 2.22425 2.71256 2.22287 2.71957 2.22287H8.83512C8.84212 2.22287 8.84906 2.22425 8.85553 2.22693C8.862 2.22961 8.86788 2.23354 8.87283 2.23849C8.87779 2.24345 8.88171 2.24933 8.8844 2.2558C8.88708 2.26227 8.88845 2.2692 8.88845 2.27621V13.7784Z" fill="#333333"></path>
+                                                <path d="M3.55566 3.55469H4.44455V4.44358H3.55566V3.55469Z" fill="#333333"></path>
+                                                <path d="M5.33301 3.55469H6.2219V4.44358H5.33301V3.55469Z" fill="#333333"></path>
+                                                <path d="M7.11133 3.55469H8.00022V4.44358H7.11133V3.55469Z" fill="#333333"></path>
+                                                <path d="M3.55566 5.77734H4.44455V6.66623H3.55566V5.77734Z" fill="#333333"></path>
+                                                <path d="M5.33301 5.77734H6.2219V6.66623H5.33301V5.77734Z" fill="#333333"></path>
+                                                <path d="M7.11133 5.77734H8.00022V6.66623H7.11133V5.77734Z" fill="#333333"></path>
+                                                <path d="M3.55566 8H4.44455V8.88889H3.55566V8Z" fill="#333333"></path>
+                                                <path d="M5.33301 8H6.2219V8.88889H5.33301V8Z" fill="#333333"></path>
+                                                <path d="M7.11133 8H8.00022V8.88889H7.11133V8Z" fill="#333333"></path>
+                                                <path d="M3.55566 10.2227H4.44455V11.1115H3.55566V10.2227Z" fill="#333333"></path>
+                                                <path d="M5.33301 10.2227H6.2219V11.1115H5.33301V10.2227Z" fill="#333333"></path>
+                                                <path d="M7.11133 10.2227H8.00022V11.1115H7.11133V10.2227Z" fill="#333333"></path>
+                                                <path d="M10.2227 5.77734H11.1115V6.66623H10.2227V5.77734Z" fill="#333333"></path>
+                                                <path d="M12 5.77734H12.8889V6.66623H12V5.77734Z" fill="#333333"></path>
+                                                <path d="M10.2227 8H11.1115V8.88889H10.2227V8Z" fill="#333333"></path>
+                                                <path d="M12 8H12.8889V8.88889H12V8Z" fill="#333333"></path>
+                                                <path d="M10.2227 10.2227H11.1115V11.1115H10.2227V10.2227Z" fill="#333333"></path>
+                                                <path d="M12 10.2227H12.8889V11.1115H12V10.2227Z" fill="#333333"></path>
+                                            </svg>
+                                            </span>
+                                            <span class="kv-imagecheck-text">Multi-Family</span>
+                                        </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="types-row kv-types-row">
+                                    {% for key, item in supportedTypes %}
+                                        {# ALL THE BIG BUTTON ONES HERE #}
+                                        {% if loop.index0 < "5" %}
+                                            {% if item.id == "1" %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="single-family" class="checker icon-single-family">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger"
+                                                            id="single-family"
+                                                            title="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                        >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.69025 1.00353C6.73089 0.962789 6.77917 0.930464 6.83232 0.908409C6.88547 0.886353 6.94245 0.875 7 0.875C7.05755 0.875 7.11453 0.886353 7.16768 0.908409C7.22083 0.930464 7.26911 0.962789 7.30975 1.00353L12.5598 6.25353C12.6004 6.29424 12.6325 6.34254 12.6545 6.39569C12.6764 6.44884 12.6876 6.50579 12.6875 6.56328V12.6883C12.6875 12.8043 12.6414 12.9156 12.5594 12.9976C12.4773 13.0797 12.366 13.1258 12.25 13.1258H8.3125C8.19647 13.1258 8.08519 13.0797 8.00314 12.9976C7.92109 12.9156 7.875 12.8043 7.875 12.6883V9.18828H6.125V12.6883C6.125 12.8043 6.07891 12.9156 5.99686 12.9976C5.91481 13.0797 5.80353 13.1258 5.6875 13.1258H1.75C1.63397 13.1258 1.52269 13.0797 1.44064 12.9976C1.35859 12.9156 1.3125 12.8043 1.3125 12.6883V6.56328C1.3124 6.50579 1.32363 6.44884 1.34555 6.39569C1.36747 6.34254 1.39965 6.29424 1.44025 6.25353L6.69025 1.00353ZM2.1875 6.74441V12.2508H5.25V8.75078C5.25 8.63475 5.29609 8.52347 5.37814 8.44142C5.46019 8.35938 5.57147 8.31328 5.6875 8.31328H8.3125C8.42853 8.31328 8.53981 8.35938 8.62186 8.44142C8.70391 8.52347 8.75 8.63475 8.75 8.75078V12.2508H11.8125V6.74441L7 1.93191L2.1875 6.74441Z" fill="#333333"/>
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.375 2.1875V5.25L9.625 3.5V2.1875C9.625 2.07147 9.67109 1.96019 9.75314 1.87814C9.83519 1.79609 9.94647 1.75 10.0625 1.75H10.9375C11.0535 1.75 11.1648 1.79609 11.2469 1.87814C11.3289 1.96019 11.375 2.07147 11.375 2.1875Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% elseif item.id == "2" %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="condos" class="checker icon-condos">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger"
+                                                            id="condos"
+                                                            title="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                            >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <g clip-path="url(#clip0)">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M14.763 0.0748824C14.8354 0.119677 14.8952 0.182228 14.9367 0.256606C14.9782 0.330983 15 0.414722 15 0.499882V15.4999C15 15.6325 14.9473 15.7597 14.8536 15.8534C14.7598 15.9472 14.6326 15.9999 14.5 15.9999H11.5C11.3674 15.9999 11.2402 15.9472 11.1464 15.8534C11.0527 15.7597 11 15.6325 11 15.4999V13.9999H10V15.4999C10 15.6325 9.94732 15.7597 9.85355 15.8534C9.75979 15.9472 9.63261 15.9999 9.5 15.9999H0.5C0.367392 15.9999 0.240215 15.9472 0.146447 15.8534C0.0526784 15.7597 0 15.6325 0 15.4999V9.99988C7.96467e-05 9.89499 0.0331481 9.79277 0.0945249 9.7077C0.155902 9.62264 0.242478 9.55903 0.342 9.52588L6 7.63988V4.49988C6 4.4071 6.02582 4.31616 6.07456 4.23721C6.12331 4.15827 6.19305 4.09445 6.276 4.05288L14.276 0.0528824C14.3523 0.0146883 14.4371 -0.00334141 14.5224 0.00050948C14.6076 0.00436037 14.6904 0.0299637 14.763 0.0748824ZM6 8.69388L1 10.3599V14.9999H6V8.69388ZM7 14.9999H9V13.4999C9 13.3673 9.05268 13.2401 9.14645 13.1463C9.24021 13.0526 9.36739 12.9999 9.5 12.9999H11.5C11.6326 12.9999 11.7598 13.0526 11.8536 13.1463C11.9473 13.2401 12 13.3673 12 13.4999V14.9999H14V1.30888L7 4.80888V14.9999Z" fill="#333333"/>
+                                                                    <path d="M2 11H3V12H2V11ZM4 11H5V12H4V11ZM2 13H3V14H2V13ZM4 13H5V14H4V13ZM8 9H9V10H8V9ZM10 9H11V10H10V9ZM8 11H9V12H8V11ZM10 11H11V12H10V11ZM12 9H13V10H12V9ZM12 11H13V12H12V11ZM8 7H9V8H8V7ZM10 7H11V8H10V7ZM12 7H13V8H12V7ZM8 5H9V6H8V5ZM10 5H11V6H10V5ZM12 5H13V6H12V5ZM12 3H13V4H12V3Z" fill="#333333"/>
+                                                                    </g>
+                                                                    <defs>
+                                                                    <clipPath id="clip0">
+                                                                    <rect width="16" height="16" fill="white"/>
+                                                                    </clipPath>
+                                                                    </defs>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% elseif item.id == "31" %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="townhouse" class="checker icon-townhouse">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger"
+                                                            id="townhouse"
+                                                            title="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                            >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="19" height="16" viewBox="0 0 19 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M15.0145 1.33398H7.11239C6.24078 1.33398 5.53196 1.93198 5.53196 2.66732V6.39132L1.81242 9.52932C1.70194 9.62255 1.62671 9.74133 1.59623 9.87063C1.56575 9.99993 1.5814 10.134 1.6412 10.2558C1.70099 10.3776 1.80225 10.4817 1.93217 10.5549C2.06209 10.6282 2.21484 10.6673 2.3711 10.6673V14.0007C2.3711 14.1775 2.45436 14.347 2.60255 14.4721C2.75074 14.5971 2.95174 14.6673 3.16132 14.6673H15.8047C16.0143 14.6673 16.2153 14.5971 16.3635 14.4721C16.5117 14.347 16.595 14.1775 16.595 14.0007V2.66732C16.595 1.93198 15.8861 1.33398 15.0145 1.33398ZM8.69282 13.334H3.95153V9.60998L6.32217 7.60998L8.69282 9.60998V13.334ZM15.0145 13.334H10.2732V10.6673C10.4297 10.6676 10.5827 10.6287 10.7129 10.5555C10.843 10.4823 10.9445 10.3781 11.0043 10.2562C11.0642 10.1342 11.0798 10 11.0491 9.87064C11.0184 9.74123 10.9428 9.62243 10.8319 9.52932L7.11239 6.39132V2.66732H15.0145V13.334Z" fill="#333333"/>
+                                                                    <path d="M8.69211 4H10.2725V5.33333H8.69211V4ZM11.853 4H13.4334V5.33333H11.853V4ZM11.853 6.68733H13.4334V8H11.853V6.68733ZM11.853 9.33333H13.4334V10.6667H11.853V9.33333ZM5.53125 10H7.11168V11.3333H5.53125V10Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% elseif item.id == "3" %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="multi-family" class="checker icon-multi-family">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger" id="multi-family"
+                                                            value="{{item.id}}"
+                                                            title="{{item.name}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                            >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M13.7782 3.55469H10.2227V4.44358H13.7782V13.7769H10.2227V14.6658H14.6671V4.44358C14.6671 4.20783 14.5735 3.98174 14.4068 3.81504C14.2401 3.64834 14.014 3.55469 13.7782 3.55469Z" fill="#333333"/>
+                                                                    <path d="M8.83512 1.33398H2.71957C2.46967 1.33398 2.23002 1.43325 2.05331 1.60995C1.87661 1.78666 1.77734 2.02631 1.77734 2.27621V14.6673H9.77734V2.27621C9.77734 2.02631 9.67807 1.78666 9.50137 1.60995C9.32467 1.43325 9.08501 1.33398 8.83512 1.33398ZM8.88845 13.7784H7.55512V12.4451H3.99957V13.7784H2.66623V2.27621C2.66623 2.2692 2.66761 2.26227 2.67029 2.2558C2.67297 2.24933 2.6769 2.24345 2.68185 2.23849C2.68681 2.23354 2.69269 2.22961 2.69916 2.22693C2.70563 2.22425 2.71256 2.22287 2.71957 2.22287H8.83512C8.84212 2.22287 8.84906 2.22425 8.85553 2.22693C8.862 2.22961 8.86788 2.23354 8.87283 2.23849C8.87779 2.24345 8.88171 2.24933 8.8844 2.2558C8.88708 2.26227 8.88845 2.2692 8.88845 2.27621V13.7784Z" fill="#333333"/>
+                                                                    <path d="M3.55566 3.55469H4.44455V4.44358H3.55566V3.55469Z" fill="#333333"/>
+                                                                    <path d="M5.33301 3.55469H6.2219V4.44358H5.33301V3.55469Z" fill="#333333"/>
+                                                                    <path d="M7.11133 3.55469H8.00022V4.44358H7.11133V3.55469Z" fill="#333333"/>
+                                                                    <path d="M3.55566 5.77734H4.44455V6.66623H3.55566V5.77734Z" fill="#333333"/>
+                                                                    <path d="M5.33301 5.77734H6.2219V6.66623H5.33301V5.77734Z" fill="#333333"/>
+                                                                    <path d="M7.11133 5.77734H8.00022V6.66623H7.11133V5.77734Z" fill="#333333"/>
+                                                                    <path d="M3.55566 8H4.44455V8.88889H3.55566V8Z" fill="#333333"/>
+                                                                    <path d="M5.33301 8H6.2219V8.88889H5.33301V8Z" fill="#333333"/>
+                                                                    <path d="M7.11133 8H8.00022V8.88889H7.11133V8Z" fill="#333333"/>
+                                                                    <path d="M3.55566 10.2227H4.44455V11.1115H3.55566V10.2227Z" fill="#333333"/>
+                                                                    <path d="M5.33301 10.2227H6.2219V11.1115H5.33301V10.2227Z" fill="#333333"/>
+                                                                    <path d="M7.11133 10.2227H8.00022V11.1115H7.11133V10.2227Z" fill="#333333"/>
+                                                                    <path d="M10.2227 5.77734H11.1115V6.66623H10.2227V5.77734Z" fill="#333333"/>
+                                                                    <path d="M12 5.77734H12.8889V6.66623H12V5.77734Z" fill="#333333"/>
+                                                                    <path d="M10.2227 8H11.1115V8.88889H10.2227V8Z" fill="#333333"/>
+                                                                    <path d="M12 8H12.8889V8.88889H12V8Z" fill="#333333"/>
+                                                                    <path d="M10.2227 10.2227H11.1115V11.1115H10.2227V10.2227Z" fill="#333333"/>
+                                                                    <path d="M12 10.2227H12.8889V11.1115H12V10.2227Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% elseif item.id == "5" %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="land" class="checker icon-land">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger"
+                                                            id="land"
+                                                            title="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                            >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path d="M1.99968 13.334H13.9997C14.117 13.334 14.2322 13.3031 14.3337 13.2444C14.4353 13.1856 14.5195 13.1011 14.5779 12.9994C14.6364 12.8977 14.6669 12.7824 14.6665 12.6651C14.6661 12.5478 14.6348 12.4326 14.5757 12.3313L9.90901 4.33132C9.66968 3.92132 8.99634 3.92265 8.75634 4.33132L6.57701 8.06732L5.89701 6.97932C5.83713 6.88379 5.75397 6.80504 5.65531 6.75046C5.55666 6.69589 5.44575 6.66728 5.33301 6.66732H5.33234C5.21938 6.66743 5.10831 6.69624 5.00954 6.75105C4.91077 6.80586 4.82754 6.88486 4.76768 6.98065L1.43434 12.314C1.37127 12.4149 1.33636 12.5309 1.33324 12.6498C1.33011 12.7688 1.35889 12.8864 1.41658 12.9905C1.47427 13.0946 1.55877 13.1813 1.6613 13.2417C1.76384 13.3021 1.88067 13.334 1.99968 13.334ZM9.33301 5.99065L12.839 12.0007H9.03634L7.37901 9.34265L9.33301 5.99065ZM5.33368 8.59065L7.46434 12.0007H3.20301L5.33368 8.59065ZM3.99968 5.33398C5.10234 5.33398 5.99968 4.43665 5.99968 3.33398C5.99968 2.23132 5.10234 1.33398 3.99968 1.33398C2.89701 1.33398 1.99968 2.23132 1.99968 3.33398C1.99968 4.43665 2.89701 5.33398 3.99968 5.33398ZM3.99968 2.66732C4.17649 2.66732 4.34606 2.73756 4.47108 2.86258C4.5961 2.9876 4.66634 3.15717 4.66634 3.33398C4.66634 3.5108 4.5961 3.68036 4.47108 3.80539C4.34606 3.93041 4.17649 4.00065 3.99968 4.00065C3.82287 4.00065 3.6533 3.93041 3.52827 3.80539C3.40325 3.68036 3.33301 3.5108 3.33301 3.33398C3.33301 3.15717 3.40325 2.9876 3.52827 2.86258C3.6533 2.73756 3.82287 2.66732 3.99968 2.66732Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% else %}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="{{item.name}}" class="checker icon-single-family">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger" id="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            title="{{item.name}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                        >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.69025 1.00353C6.73089 0.962789 6.77917 0.930464 6.83232 0.908409C6.88547 0.886353 6.94245 0.875 7 0.875C7.05755 0.875 7.11453 0.886353 7.16768 0.908409C7.22083 0.930464 7.26911 0.962789 7.30975 1.00353L12.5598 6.25353C12.6004 6.29424 12.6325 6.34254 12.6545 6.39569C12.6764 6.44884 12.6876 6.50579 12.6875 6.56328V12.6883C12.6875 12.8043 12.6414 12.9156 12.5594 12.9976C12.4773 13.0797 12.366 13.1258 12.25 13.1258H8.3125C8.19647 13.1258 8.08519 13.0797 8.00314 12.9976C7.92109 12.9156 7.875 12.8043 7.875 12.6883V9.18828H6.125V12.6883C6.125 12.8043 6.07891 12.9156 5.99686 12.9976C5.91481 13.0797 5.80353 13.1258 5.6875 13.1258H1.75C1.63397 13.1258 1.52269 13.0797 1.44064 12.9976C1.35859 12.9156 1.3125 12.8043 1.3125 12.6883V6.56328C1.3124 6.50579 1.32363 6.44884 1.34555 6.39569C1.36747 6.34254 1.39965 6.29424 1.44025 6.25353L6.69025 1.00353ZM2.1875 6.74441V12.2508H5.25V8.75078C5.25 8.63475 5.29609 8.52347 5.37814 8.44142C5.46019 8.35938 5.57147 8.31328 5.6875 8.31328H8.3125C8.42853 8.31328 8.53981 8.35938 8.62186 8.44142C8.70391 8.52347 8.75 8.63475 8.75 8.75078V12.2508H11.8125V6.74441L7 1.93191L2.1875 6.74441Z" fill="#333333"/>
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.375 2.1875V5.25L9.625 3.5V2.1875C9.625 2.07147 9.67109 1.96019 9.75314 1.87814C9.83519 1.79609 9.94647 1.75 10.0625 1.75H10.9375C11.0535 1.75 11.1648 1.79609 11.2469 1.87814C11.3289 1.96019 11.375 2.07147 11.375 2.1875Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+
+                                        {# OTHER BOX OR REGULAR BUTTON RENDERED #}
+                                        {% if loop.index0 == "5" %}
+                                            {% if renderOtherButton is same as(true) %}
+                                                {# OTHER BOX #}
+                                                <div class="kv-imagecheck-group">
+                                                    <div class="other" id="kv-imagecheck-other-button">
+                                                        <span class="kv-imagecheck-text">Other</span>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                {# REGULAR BUTTON #}
+                                                <div class="kv-imagecheck-group">
+                                                    <label for="{{item.name}}" class="checker icon-single-family">
+                                                        <input type="checkbox"
+                                                            name="propertyTypes[]"
+                                                            class="kv-imagecheck trigger"
+                                                            id="{{item.name}}"
+                                                            title="{{item.name}}"
+                                                            value="{{item.id}}"
+                                                            {% for val in request.propertyTypes %}
+                                                                {% if val == item.id %}
+                                                                    checked="true"
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            {% if noPropertyTypesSet is same as(true) %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                        >
+                                                        <div role="checkbox" tabindex="0">
+                                                            <span class="kv-imagecheck-icon">
+                                                                <svg class="icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.69025 1.00353C6.73089 0.962789 6.77917 0.930464 6.83232 0.908409C6.88547 0.886353 6.94245 0.875 7 0.875C7.05755 0.875 7.11453 0.886353 7.16768 0.908409C7.22083 0.930464 7.26911 0.962789 7.30975 1.00353L12.5598 6.25353C12.6004 6.29424 12.6325 6.34254 12.6545 6.39569C12.6764 6.44884 12.6876 6.50579 12.6875 6.56328V12.6883C12.6875 12.8043 12.6414 12.9156 12.5594 12.9976C12.4773 13.0797 12.366 13.1258 12.25 13.1258H8.3125C8.19647 13.1258 8.08519 13.0797 8.00314 12.9976C7.92109 12.9156 7.875 12.8043 7.875 12.6883V9.18828H6.125V12.6883C6.125 12.8043 6.07891 12.9156 5.99686 12.9976C5.91481 13.0797 5.80353 13.1258 5.6875 13.1258H1.75C1.63397 13.1258 1.52269 13.0797 1.44064 12.9976C1.35859 12.9156 1.3125 12.8043 1.3125 12.6883V6.56328C1.3124 6.50579 1.32363 6.44884 1.34555 6.39569C1.36747 6.34254 1.39965 6.29424 1.44025 6.25353L6.69025 1.00353ZM2.1875 6.74441V12.2508H5.25V8.75078C5.25 8.63475 5.29609 8.52347 5.37814 8.44142C5.46019 8.35938 5.57147 8.31328 5.6875 8.31328H8.3125C8.42853 8.31328 8.53981 8.35938 8.62186 8.44142C8.70391 8.52347 8.75 8.63475 8.75 8.75078V12.2508H11.8125V6.74441L7 1.93191L2.1875 6.74441Z" fill="#333333"/>
+                                                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.375 2.1875V5.25L9.625 3.5V2.1875C9.625 2.07147 9.67109 1.96019 9.75314 1.87814C9.83519 1.79609 9.94647 1.75 10.0625 1.75H10.9375C11.0535 1.75 11.1648 1.79609 11.2469 1.87814C11.3289 1.96019 11.375 2.07147 11.375 2.1875Z" fill="#333333"/>
+                                                                </svg>
+                                                            </span>
+                                                            <span class="kv-imagecheck-text">{{item.name}}</span>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
+                                        {# ALL THE SMALL CHECKBOX ONES HERE #}
+                                        {% if renderOtherButton is same as(true) and loop.index0 == 5 %}
+                                            <div id="kv-filters-property-types-options-list" class="kv-filters-options-panel">
+                                                <ul>
+                                                    <li>
+                                                            <input type="checkbox"
+                                                                name="propertyTypes[]" class="kv-imagecheck trigger otheroptions"
+                                                                    
+                                                                    title="{{item.name}}"
+                                                                    value="{{item.id}}"
+                                                                    tabindex="0"
+                                                                    {% for val in request.propertyTypes %}
+                                                                        {% if val == item.id %}
+                                                                            checked="true"
+                                                                        {% endif %}
+                                                                    {% endfor %}
+                                                                    {% if noPropertyTypesSet is same as(true) %}
+                                                                        checked="true"
+                                                                    {% endif %}
+                                                                    ><label for="{{item.name}}">{{item.name}}</label>
+                                                    </li>
+                                        {% endif %}
+                                        {% if loop.index0 > 5 %}
+                                            <li>
+                                                    <input type="checkbox"
+                                                        name="propertyTypes[]" class="kv-imagecheck trigger otheroptions"
+                                                        id="{{item.name}}"
+                                                        title="{{item.name}}"
+                                                        tabindex="0"
+                                                        value="{{item.id}}"
+                                                        {% for val in request.propertyTypes %}
+                                                            {% if val == item.id %}
+                                                                checked="true"
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                        {% if noPropertyTypesSet is same as(true) %}
+                                                            checked="true"
+                                                        {% endif %}
+                                                        ><label for="{{item.name}}">{{item.name}}</label>
+                                            </li>
+                                        {% endif %}
+                                        {% if renderOtherButton is same as(true) and loop.last %}
+                                            </ul>
+                                        </div>
+                                        {% endif %}
+
+                                    {% endfor %}
+                                    </div>
+                            </div>
+                            <div class="kv-row-multiselect">
+                                <div id="kv-filters-styles"></div>
+                            </div>
+                            <div class="kv-row-multiselect">
+                                <div id="kv-filters-agents"></div>
+                            </div>
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row">
+                                    <label for="kv-filters-ourlistings"></label>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title"> Show agency only listings</legend>
+                                        {% set agencyOnly = {
+                                            0: 'No',
+                                            '1': 'Yes'
+                                        } %}
+                                        <select name="ourListings" id="kv-filters-ourListings" title="Show agency only listings">
+                                            {% for key, item in agencyOnly %}
+                                                <option value="{{ key }}"
+                                                    {% if request.ourListings and request.ourListings == key %}
+                                                        selected
+                                                    {% endif %}
+                                                >
+                                                    {{ item }}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle"></div>
+                                    {% set requestBaths = '' %}
+                                    {% if request.baths %}
+                                        {% set requestBaths = request.halfBaths == 1 ? request.baths ~ '.5' : request.baths %}
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="kv-row-bordertop">
+                                <h3>Property Facts</h3>
+                            </div>
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row prices-filter">
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Min Square Foot
+                                        </legend>
+                                        <label for="kv-filters-footageMin"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="footageMin"
+                                                   id="kv-filters-footageMin"
+                                                   class="no-spin"
+                                                   value="{{ request.footageMin|default('') }}"
+                                                   placeholder="0"
+                                                   min="0"
+                                                   step="1"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle"></div>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title">
+                                            Min Acres
+                                        </legend>
+                                        <label for="kv-filters-acresMin"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="acresMin"
+                                                   id="kv-filters-acresMin"
+                                                   class="no-spin"
+                                                   value="{{ request.acresMin|default('') }}"
+                                                   placeholder="0"
+                                                   min="0"
+                                                   step="any"
+                                            >
+                                        </div>
+                                    </div>
+
+                                        {#                                    Removing for now, but we may want it back later #}
+                                        {#                                    <div class="kv-filters-field-container-col-middle">-</div>#}
+                                        {#                                    <label for="kv-filters-footageMax"></label>#}
+                                        {#                                    <div class="kv-filters-field-container-col">#}
+                                        {#                                        <input type="number"#}
+                                        {#                                        name="footageMax"#}
+                                        {#                                        id="kv-filters-footageMax"#}
+                                        {#                                        class="no-spin"#}
+                                        {#                                        value="{{ request.footageMax|default('') }}"#}
+                                        {#                                        placeholder="Max"#}
+                                        {#                                        min="0"#}
+                                        {#                                        step="1"#}
+                                        {#                                        >#}
+                                </div>
+                            </div>
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row prices-filter">
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Min Year Built
+                                        </legend>
+                                        <label for="kv-filters-year"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="year"
+                                                   id="kv-filters-year"
+                                                   value="{{ request.year|default('') }}"
+                                                   placeholder="Min"
+                                                   min="0"
+                                                   max="{{ 'now'|date('Y') }}"
+                                                   step="1"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle">-</div>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Max Year Built
+                                        </legend>
+                                        <label for="kv-filters-maxYear"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="maxYear"
+                                                   id="kv-filters-maxYear"
+                                                   value="{{ request.maxYear|default('') }}"
+                                                   placeholder="Max"
+                                                   min="0"
+                                                   max="{{ 'now'|date('Y') }}"
+                                                   step="1"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kv-row">
+                                <div class="kv-filters-container-row prices-filter">
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Min Days On Site
+                                        </legend>
+                                        <label for="kv-filters-minDaysOnSite"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="minDaysOnSite"
+                                                   id="kv-filters-minDaysOnSite"
+                                                   value="{{ request.minDaysOnSite|default('') }}"
+                                                   placeholder="Min"
+                                                   min="0"
+                                                   step="1"
+                                            >
+                                        </div>
+                                    </div>
+                                    <div class="kv-filters-field-container-col-middle">-</div>
+                                    <div class="kv-filters-field-container-col">
+                                        <legend class="kv-filters-section-title kv-filters-field-container-col-fullwidth">
+                                            Max Days On Site
+                                        </legend>
+                                        <label for="kv-filters-maxDaysOnSite"></label>
+                                        <div class="kv-filters-field-container-col">
+                                            <input type="number"
+                                                   name="maxDaysOnSite"
+                                                   id="kv-filters-maxDaysOnSite"
+                                                   value="{{ request.maxDaysOnSite|default('') }}"
+                                                   placeholder="Max"
+                                                   min="0"
+                                                   step="1"
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kv-row-bordertop">
+                                <h3>Property Amenities</h3>
+                            </div>
+
+                            <div class="kv-row-proptypes">
+                                <legend class="kv-filters-section-title kv-ml-1 kv-mt-2">General Options</legend>
+                                <div class="kv-filters-options-panel">
+                                    <ul class="kv-options-list">
+                                        <li>                                        
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Just Listed" {% if 'justListed' in request.options %}checked="true"{% endif %} value="justListed"><label for="Just Listed">Just Listed</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Walkable" {% if 'walkable' in request.options %}checked="true"{% endif %} value="walkable"><label for="Walkable">Walkable</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Fixer Upper" {% if 'fixerUpper' in request.options %}checked="true"{% endif %} value="fixerUpper"><label for="Fixer Upper">Fixer Upper</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Newly Built" {% if 'newlyBuilt' in request.options %}checked="true"{% endif %} value="newlyBuilt"><label for="Newly Built">Newly Built</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Open House" {% if 'openHouse' in request.options %}checked="true"{% endif %} value="openHouse"><label for="Open House">Open House</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Adult 55+" {% if 'adult' in request.options %}checked="true"{% endif %} value="adult"><label for="Adult 55+">Adult 55+</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Green/Energy Star" {% if 'green' in request.options %}checked="true"{% endif %} value="green"><label for="Green/Energy Star">Green/Energy Star</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Horse Property" {% if 'horse' in request.options %}checked="true"{% endif %} value="horse"><label for="Horse Property">Horse Property</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Golf Course" {% if 'golf' in request.options %}checked="true"{% endif %} value="golf"><label for="Golf Course">Golf Course</label>
+                                        </li>
+                                                                                    <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Pool" {% if 'pool' in request.options %}checked="true"{% endif %} value="pool"><label for="Pool">Pool</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="propertyViews[]" class="kv-imagecheck trigger" id="Water Front" {% if 'waterfront' in request.propertyViews %}checked="true"{% endif %} value="waterfront"><label for="Water Front">Water Front</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="propertyViews[]" class="kv-imagecheck trigger" id="Water View" {% if 'waterView' in request.propertyViews %}checked="true"{% endif %} value="waterView"><label for="Water View">Water View</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="propertyViews[]" class="kv-imagecheck trigger" id="Views" {% if 'views' in request.propertyViews %}checked="true"{% endif %} value="views"><label for="Views">Views</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <legend class="kv-filters-section-title kv-ml-1 kv-mt-2">Financial Options</legend>
+                                <div class="kv-filters-options-panel">
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Reduced" {% if 'reduced' in request.options %}checked="true"{% endif %} value="reduced"><label for="Reduced">Reduced</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Foreclosures" {% if 'foreclosures' in request.options %}checked="true"{% endif %} value="foreclosures"><label for="Foreclosures">Foreclosures</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Short Sales" {% if 'shortSales' in request.options %}checked="true"{% endif %} value="shortSales"><label for="Short Sales">Short Sales</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Not Distressed" {% if 'notdistressed' in request.options %}checked="true"{% endif %} value="notdistresssed"><label for="Not Distressed">Not Distressed</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Lease to Own" {% if 'leasetoown' in request.options %}checked="true"{% endif %} value="leasetoown"><label for="Lease to Own">Lease to Own</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="No HOA Fees" {% if 'hoa' in request.options %}checked="true"{% endif %} value="hoa"><label for="No HOA Fees">No HOA Fees</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Seller Financing" {% if 'sellerfinance' in request.options %}checked="true"{% endif %} value="sellerfinance"><label for="Seller Financing">Seller Financing</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <legend class="kv-filters-section-title kv-ml-1 kv-mt-2">Structural Options</legend>
+                                <div class="kv-filters-options-panel">
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Fireplace" {% if 'fireplace' in request.options %}checked="true"{% endif %} value="fireplace"><label for="Fireplace">Fireplace</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="1-Car Garage" {% if '1garage' in request.options %}checked="true"{% endif %} value="1garage"><label for="1-Car Garage">1+ Car Garage</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="2-Car Garage" {% if '2garage' in request.options %}checked="true"{% endif %} value="2garage"><label for="2-Car Garage">2+ Car Garage</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="3-Car Garage" {% if '3garage' in request.options %}checked="true"{% endif %} value="3garage"><label for="3-Car Garage">3+ Car Garage</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+
+                                        {% if optimizeForCanada == '1' %}
+                                            {% set stories = {
+                                                '1story': '1 Storey',
+                                                '2story': '2 Storeys',
+                                                '3story': '3 Storeys'
+                                            } %}
+                                        {% else %}
+                                            {% set stories = {
+                                                '1story': '1 Story',
+                                                '2story': '2 Stories',
+                                                '3story': '3 Stories'
+                                            } %}
+                                        {% endif %}
+                                        {% for key, item in stories %}
+                                            <li>
+                                                <input type="checkbox" name="stories" class="kv-imagecheck trigger" id="{{ key }}" {% if key in stories %}checked="true"{% endif %} value="{{ key }}"><label for="{{ key }}">{{ item }}</label>
+                                            </li>
+                                        {% endfor %}
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Deck" {% if 'deck' in request.options %}checked="true"{% endif %} value="deck"><label for="Deck">Deck</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Basement" {% if 'basement' in request.options %}checked="true"{% endif %} value="basement"><label for="Basement">Basement</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Master on Main" {% if 'masterOnMain' in request.options %}checked="true"{% endif %} value="masterOnMain"><label for="Master on Main">Master on Main</label>
+                                        </li>
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Air Conditioning" {% if 'airConditioner' in request.options %}checked="true"{% endif %} value="airConditioner"><label for="Air Conditioning">Air Conditioning</label>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <legend class="kv-filters-section-title kv-ml-1 kv-mt-2">Rental Options</legend>
+                                <div class="kv-filters-options-panel">
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Furnished" {% if 'furnished' in request.options %}checked="true"{% endif %} value="furnished"><label for="Furnished">Furnished</label>
+                                        </li>
+                                    </ul>
+                                    <ul class="kv-options-list">
+                                        <li>
+                                            <input type="checkbox" name="options[]" class="kv-imagecheck trigger" id="Allows Pets" {% if 'allowsPets' in request.options %}checked="true"{% endif %} value="allowsPets"><label for="Allows Pets">Allows Pets</label>
+                                        </li>
+                                    </ul>                                        
+                                </div>
+                            </div>
+                            {% for key, item in kvcoreidx.popularOptions %}
+                                <div class="kv-row-multiselect">
+                                    <div id="kv-filters-popularoptions{{key}}" class="kv-field-full-width kv-properties-search-popularoptions{{key}}"></div>
+                                </div>
+                            {% endfor %}
+                            <div class="kv-row-multiselect">
+                                <div id="kv-filters-keywords" class="kv-field-full-width kv-properties-search-keywords" style="padding-bottom:300px;"></div>
+                            </div>
+                        </div>
+                        <div class="kv-properties-search-submit">
+                            <label class="kv-filters-section-title">&nbsp;</label>
+                            <a href="javascript:void(0)" id="kv-filters-clear">Clear Filters</a>
+                            <button type="submit">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+</div>
+<script data-no-defer="1" data-no-optimize="1">
+jQuery(document).ready(function($) {
+    function changeToRentals() {
+        var $searchContainer = $('#kvcoreidx-properties-search');
+        $('#kv-filters-container-more .kv-types-row').hide();
+        $('#kv-filters-container-more .kv-sub-types-row').show();
+        $('#kv-filters-container-more input[name="subType[]"]').each(function() {
+            this.checked = true;
+        });
+        //rentals is checked change prices
+        $searchContainer.find("#kv-filters-priceMin option[value='']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='']").remove();
+        for (var i = 1800; i > 200; i = i - 200) {
+            var commasNumber = i.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).substring(1);
+            $searchContainer.find('#kv-filters-priceMin').prepend('<option value="'+i+'">'+commasNumber+'</option>');
+        }
+        for (var i = 3000; i > 1800; i = i - 200) {
+            var commasNumber = i.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).substring(1);
+            $searchContainer.find('#kv-filters-priceMax').prepend('<option value="'+i+'">'+commasNumber+'</option>');
+        }
+        
+        $searchContainer.find('#kv-filters-priceMin').prepend('<option value="">No min</option>');
+        $searchContainer.find('#kv-filters-priceMax').prepend('<option value="">No max</option>');
+        $searchContainer.find('#kv-filters-priceMin').val("").change();
+        $searchContainer.find('#kv-filters-priceMax').val("").change();
+    }
+    function changeToForSale() {
+        var $searchContainer = $('#kvcoreidx-properties-search');
+        $('#kv-filters-container-more .kv-types-row').show();
+        $('#kv-filters-container-more .kv-sub-types-row').hide();
+        $('#kv-filters-container-more input[name="subType[]"]').each(function() {
+            this.checked = false;
+        });
+        $searchContainer.find("#kv-filters-priceMin option[value='200']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='400']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='600']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='800']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='1000']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='1200']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='1400']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='1600']").remove();
+        $searchContainer.find("#kv-filters-priceMin option[value='1800']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='1800']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='2000']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='2200']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='2400']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='2600']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='2800']").remove();
+        $searchContainer.find("#kv-filters-priceMax option[value='3000']").remove();
+    }
+    //on first load may have to change to rentals based off shortcode
+    var context = $('#kvcoreidx-properties-page').data('filters');
+    if (context && context.searchtype === 'forrent') {
+        $("#kv-filters-container-more #forrent").prop("checked", true);
+        changeToRentals();
+    }
+    
+    //setup visible one on page load here
+    if ($('#kv-filters-container-more #forrent:checked').val() === 'forrent') {
+        $('#kv-filters-container-more .kv-types-row').hide();
+    } else {
+        $('#kv-filters-container-more .kv-sub-types-row').hide();
+    }
+    //in safari the click action will bind multiple times causing open/close scanario unbind first
+    $("#kv-imagecheck-other-button").unbind("click");
+    $( "#kv-imagecheck-other-button" ).click(function() {
+        $( "#kv-filters-property-types-options-list" ).toggle();
+    });
+    //changing of the types toggles
+    $('#kv-filters-container-more input[type=radio][name=searchtype]').change(function() {
+        if (this.value == 'forrent') {
+            changeToRentals();
+        } else {
+            changeToForSale();
+        }
+    });
+
+});
+</script>

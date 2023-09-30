@@ -1,0 +1,52 @@
+#kvcoreidx-shortcode--prequalify-modal {
+  select, input:not(.form-check-input), textarea {
+    width: 100%;
+  }
+
+  [type="radio"],[type="checkbox"] {
+    display: inline-block;
+    width: auto;
+    height: auto;
+  }
+
+  label {
+    @extend .kv-mb-1;
+
+    &.prequalify-contact-method-label {
+      @extend .kv-mb-3;
+    }
+  }
+
+  .form-check-inline label {
+    display: inline-block;
+  }
+
+  .kv-prequalify-lender {
+    @extend .kv-row;
+
+    margin-left: 0;
+    margin-right: 0;
+
+    &, a, h4 {
+      color: white;
+    }
+
+    &-logo {
+      @extend %kv-col-3, .kv-p-0;
+
+      img {
+        display: block;
+      }
+    }
+
+    &-info {
+      @extend %kv-col-9, .kv-py-2;
+
+      line-height: 1.2;
+    }
+  }
+
+  .kv-disclaimer {
+    line-height: 1.2;
+  }
+}

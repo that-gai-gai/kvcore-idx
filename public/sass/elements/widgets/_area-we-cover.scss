@@ -1,0 +1,48 @@
+.kv-area-we-cover-areas {
+	@extend .kv-area-page-global;
+	margin-top: 50px;
+	padding: 40px 50px 114px;
+	max-width: 100% !important;
+	width: 100%;
+
+	.kv-nearby-area-we-cover-link {
+        text-decoration: none;
+		padding-right: 8px;
+		color: $new-primary;
+
+        &:before {
+            content: '\f041';
+            font-family: FontAwesome;
+            margin-right: 5px;
+            color: #838b92;
+		}
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1300px) {
+	.kv-area-nearby-areas {
+		.kv-block-title {
+			font-size: 20px;
+			line-height: 28px;
+		}
+		.kv-nearby-area-we-cover-link {
+			font-size: 16px;
+		}
+	}
+}
+
+@media (min-width: 300px) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+	.kv-area-nearby-areas {
+		width:100%;
+		padding: 20px;
+		
+		.kv-block-title {
+			font-size: 20px;
+			line-height: 28px;
+		}
+		
+		.kv-nearby-area-we-cover-link{
+			margin-bottom: 10px;
+		}
+	}
+}

@@ -1,0 +1,43 @@
+<div class="{{ kvcoreidx.wrapper_class }}">
+    <div id="modal--lead-manager" class="modal kv-modal kv-modal-login fade in">
+        <div class="modal-dialog kv-modal-dialog">
+            <div class="kv-modal-content kv-container">
+                <div class="kv-modal-header">
+                    <h4 class="kv-modal-title" style="margin: auto;">{{ title|default('Thank you for registering.') }}</h4>
+                </div>
+                <div class="kv-modal-body">
+                    <p style="text-align: center;">Are you currently working with one of these agents?</p>
+                    <form class="login-form-agent-select kv-form"
+                          data-callback="{{ callback|json_encode|url_encode }}">
+{#                        <div style="border: 1px solid lightgrey; border-radius: 3px; display: flex; flex-direction: row; height: 80px; margin-top: 10px;">#}
+{#                            <div class="agent-image" style="margin: 10px; flex-basis: 14%">#}
+{#                                <img src="https://b386363e680359b5cc19-97ec1140354919029c7985d2568f0e82.ssl.cf1.rackcdn.com/assets/uploads/agent/photo/63684/optimized_429192e8aa71a380d71427f8b9e83442.jpg" alt="agent" style="height: 60px; width: 60px;">#}
+{#                            </div>#}
+{#                            <div class="agent-info" style="padding: 10px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid lightgray; color: #4d4d4d; flex-basis: 71%;">#}
+{#                                <p style="margin-bottom: 0; font-size: 18px;">Jimmy Dingus</p>#}
+{#                                <p style="margin-bottom: 5px; font-size: 14px; ">The Sad Boy Realty Group  |  801-568-4258</p>#}
+{#                            </div>#}
+{#                            <div class="select-agent" style="padding: 10px; flex-basis: 15%">#}
+{#                                <input type="radio" style="margin-top: 20px; margin-left: 16px;">#}
+{#                            </div>#}
+{#                        </div>#}
+{#                        <div style="border: 1px solid lightgrey; border-radius: 3px; display: flex; flex-direction: row; height: 80px; margin-top: 10px;">#}
+{#                            <div class="agent-image" style="margin: 10px;">#}
+{#                                <img src="https://b386363e680359b5cc19-97ec1140354919029c7985d2568f0e82.ssl.cf1.rackcdn.com/assets/uploads/agent/photo/63684/optimized_429192e8aa71a380d71427f8b9e83442.jpg" alt="agent" style="height: 60px; width: 60px;">#}
+{#                            </div>#}
+{#                            <div class="agent-info" style="padding: 10px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid lightgray; color: #4d4d4d; flex-basis: 89%">#}
+{#                                <p style="margin-bottom: 0; font-size: 18px;">None of the above.</p>#}
+{#                            </div>#}
+{#                            <div class="select-agent" style="padding: 10px; flex-basis: 15%">#}
+{#                                <input type="radio" style="margin-top: 20px; margin-left: 16px;">#}
+{#                            </div>#}
+{#                        </div>#}
+
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,25 @@
+
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.0.0/mapbox-gl.css" rel="stylesheet" />
+
+<div class="kv-hero-area">
+    <div class="kv-area-container">
+    <div class="kv-hero-content">
+        <div class="kv-col-6">
+            <div>
+                <div class="kv-hero-subtitle">{{area_location}}</div>
+                <h1 class="kv-hero-heading">{{area_location | replace({',': '\n'})}}</h1>
+                <div class="kv-hero-description">
+                <h2>{{hero_title}}</h2>
+                <p>{{hero_desc | raw}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="kv-col-6">
+            <div class="kv-hero-mapbox" data-branding="{{branding}}" id="kv-hero-mapbox" style="height:600px;width:100%" data-center="{{latlng}}" data-key="{{mapbox_key}}" data-coordinates="{{polygon}}">
+            </div>
+        </div>
+    </div>
+    </div>
+</div>

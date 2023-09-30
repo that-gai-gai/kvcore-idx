@@ -1,0 +1,86 @@
+<div id="kvcoreidx-contact-form" class="kvcore kv-container">
+    <form class="kv-contact-form kv-form"
+            action="public/leads/question"
+            method="put"
+            data-callback="{{ callback|json_encode|url_encode }}"
+    >
+        <input type="hidden" id="contact--question-mlsid" name="mls_id" value="">
+        <input type="hidden" id="contact--question-lead_id" name="lead_id" value="{{ user.lead_id }}">
+        <input type="hidden" id="modal--question-website" name="website" value="{{ kvcoreidx.siteUrl }}">
+        <div id="kv-modal-intro-txt"></div>
+        <div class="kv-form-group">
+            <div class="kv-form-group-field kv-form-group-3-column">
+                <label for="modal--question-name">Name</label>
+                <input class="kv-form-control kv-mb-3" name="name" id="contact--question-name"
+                        placeholder="Name" type="text"
+                >
+            </div>
+        </div>
+
+        <div class="kv-form-group">
+            <div class="kv-form-group-field kv-form-group-3-column">
+                <label for="contact--question-email">Email</label>
+                <input class="kv-form-control kv-mb-3" name="email" id="contact--question-email"
+                        placeholder="Email Address" type="text"
+                >
+            </div>
+        </div>
+
+        <div class="kv-form-group">
+            <div class="kv-form-group-field kv-form-group-3-column">
+                <label for="contact--question-phone">Phone</label>
+                <input class="kv-form-control kv-mb-3" name="phone"
+                        id="contact--question-phone" placeholder="Phone" type="text"
+                >
+            </div>
+        </div>
+
+        <div class="kv-form-group">
+            <div class="kv-form-group-field kv-form-group-2-column">
+                <label for="contact--question-question">Comments</label>
+                <textarea name="question" id="contact--question-question" class="kv-form-control kv-mb-3"></textarea>
+            </div>
+        </div>
+                
+        {% if kvcoreidx.options.optimize_for_canada == "1" %}
+            <p class="kv-my-3">
+                <small>By submitting your message and personal details you are permitting us to contact you by these means in response to your inquiry.</small>
+            </p>
+            <div class="kv-form-group">
+                <div class="kv-form-group-field kv-w-100">
+                    <input id="terms-agreement-canada" type="checkbox"
+                            name="preferred-contact-method"
+                            class="kv-form-control form-check-input" required="required" style="margin-bottom:0">
+                    <label for="terms-agreement-canada" class="form-check-label" style="display:inline">
+                        <small>I would also like to receive email newsletters and periodic updates about real estate in my area and other related communications from <span class="kv-modal-terms-canada-name"></span>. I understand I can withdraw my consent at any time. <span class="kv-modal-terms-canada-name"></span>, <span class="kv-modal-terms-canada-address"></span></small>
+                    </label>
+                </div>
+            </div>
+            <div class="kv-form-group">
+                <div class="kv-form-group-field kv-w-100">
+                    <p class="kv-disclaimer kv-my-3">
+                        <small>
+                            {% if kvcoreidx.pages.privacy_policy and kvcoreidx.pages.terms_of_use %}
+                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a> and <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                            {% elseif kvcoreidx.pages.privacy_policy %}
+                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a>.
+                            {% elseif kvcoreidx.pages.terms_of_use %}
+                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                            {% endif %}
+                        </small>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+
+        <button type="submit" class="kv-button">SUBMIT</button>
+    </form>
+    <div class="kv-modal-login-agreement">
+        {% if kvcoreidx.options.optimize_for_canada != "1" %}
+            <small>
+                By clicking on login buttons you are agreeing to our <a href="{{ kvcoreidx.pages.terms_of_use }}">
+                    terms of use</a> and giving us expressed written consent to contact you
+            </small>
+        {% endif %}
+    </div>
+</div>

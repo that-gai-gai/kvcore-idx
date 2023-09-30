@@ -1,0 +1,29 @@
+.kv-team {
+  &-member-filters {
+    @extend .kv-row;
+
+    justify-content: space-between;
+  }
+
+  &-grid {
+    @extend .kv-row;
+  }
+}
+
+#kvcoreidx-team-page {
+  .kv-map {
+    @extend .kv-mb-4;
+  }
+
+  .kv-team-none {
+    @extend .kv-p-5;
+  }
+}
+
+.kv-supports--css-grid {
+  #kvcoreidx-team-page .kv-team-grid {
+    @include kv-make-grid(225px);
+
+    @extend .kv-grid;
+  }
+}

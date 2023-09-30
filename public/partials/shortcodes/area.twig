@@ -1,0 +1,70 @@
+{% set mapsmall = kvcoreidx.publicUrl ~ 'images/map.png' %}
+{% set iconup = kvcoreidx.publicUrl ~ 'images/Polygon-1.png' %}
+{% set iconnochange = kvcoreidx.publicUrl ~ 'images/Polygon-3.png' %}
+{% set icondown = kvcoreidx.publicUrl ~ 'images/Polygon-2.png' %}
+{% set imgpath = kvcoreidx.publicUrl %}
+<div id="area-page">
+<style>
+    :root {
+        --main-bg-color: {{ branding }}
+</style>
+
+{% set hero_data = {
+    data: {'area_location': area_location, 'hero_title': hero_title, 'hero_desc': hero_desc, 'search': search, 'branding': branding, 'polygon_key': polygon_key, 'geog_id': geog_id} }
+%}
+
+{% set vars = {
+    pages: {'terms_of_use': function('get_site_url', null, 'terms-of-use', null)},
+    options: kvcoreidx.options
+} %}
+
+{% set highlights_data = {
+    data: {'average_home_percentage': average_home_percentage,'totalhomesavg': totalhomesavg,'current_home_price': current_home_price,
+            'total_homes': total_homes, 'totalhomesavg': totalhomesavg,'new_to_market': new_to_market,'new_avg': new_avg,
+            'cost_sqft': cost_sqft, 'cost_sqft_avg': cost_sqft_avg } }
+%}
+
+{% set nearby_data = {
+    data: {'areas_and_neighborhoods_data': areas_and_neighborhoods_data}}
+%}
+
+{% set ac_data = {
+    data: {'areas': areas}}
+%}
+
+{% set market_data = {
+    data: {'new_listings': new_listings, 'reductions': reductions, 'foreclosures': foreclosures, 'short_sales': short_sales}}
+%}
+
+{% if hero_enabled %} 
+    {% if hero_title %}
+        {% include 'shortcodes/area-page-hero.twig' with hero_data %}
+    {% else %}
+        {% include 'shortcodes/area-page-hero-full.twig' with hero_data %}    
+    {% endif %}
+{% endif %}
+
+{% if highlights_enabled %} 
+    {% include 'shortcodes/area-page-highlights.twig' with highlights_data %}
+{% endif %}
+
+{% if ql_enabled %} 
+    {% include 'shortcodes/area-page-quicklinks.twig'%}
+{% endif %}
+
+{% if listings_enabled %} 
+    {% include 'shortcodes/area-page-listings.twig' with hero_data %}
+{% endif %}
+
+{% if mh_enabled %} 
+    {% include 'shortcodes/area-page-market.twig' with market_data %}
+{% endif %}
+
+{% if an_enabled %} 
+    {% include 'shortcodes/area-page-nearby.twig' with nearby_data %}
+{% endif %}
+
+{% include 'shortcodes/area-page-areas-we-cover.twig' with ac_data %}
+
+{% include 'login.twig' with vars %}
+</div>

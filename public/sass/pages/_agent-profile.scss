@@ -1,0 +1,286 @@
+.kv-agent-profile {
+  background-color: #F7F7F7;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+
+  &-header {
+    @extend .kv-row;
+
+    text-align: center;
+    min-height: 400px;
+    position: relative;
+    background-color: #081C27;
+    z-index: 0;
+    transition: all .5s;
+    margin-bottom: 70px;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: .30;
+      background: url('https://s3.amazonaws.com/kunversion-platform/widgets/worth.jpg') no-repeat center center;
+      background-size: cover;
+    }
+
+    &-profile {
+      @extend %kv-col-12, %kv-col-sm-4;
+
+      padding-bottom: 30px;
+
+      .photo {
+        background-color: transparent;
+        display: block;
+        height: 170px;
+        width: 170px;
+        position: relative;
+        vertical-align: middle;
+        margin: 55px auto 5px;
+        cursor: pointer;
+        transition: all .3s;
+        overflow: hidden;
+        border: 3px solid #fff;
+        border-radius: 100%;
+
+        img {
+          pointer-events: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      h1 {
+        font-size: 26px;
+        font-weight: 700;
+        color: #fff;
+        padding: 10px 0;
+      }
+
+      p {
+        font-size: 15px;
+        font-weight: 400;
+        color: #ccc;
+        padding: 0;
+        margin: 0 0 20px;
+        line-height: 1em;
+      }
+
+      .kv-button {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  &-content {
+    @extend .kv-row;
+
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 25px;
+
+    &-about {
+      @extend %kv-col-12, %kv-col-md-8;
+    }
+
+    &-contact {
+      @extend %kv-col-12, %kv-col-md-4;
+    }
+
+    .about-contents {
+      margin: 40px 0;
+
+      .team-members__social {
+        margin-top: 50px;
+      }
+    }
+
+    p {
+      padding-right: 50px;
+      font-size: 15px;
+      line-height: 1.6em;
+
+      a {
+        color: rgb(102, 102, 102);
+        transition: all .3s;
+
+        &:hover {
+          color: #feb901;
+        }
+      }
+
+      i {
+        margin-right: 6px;
+      }
+    }
+  }
+
+  &-v2 {
+    $v2: &;
+
+    @extend .kv-row;
+
+    &-header-image {
+      @extend .kv-bg-light;
+
+      width: 100%;
+      min-height: 150px;
+
+      img {
+        @include object-fit(cover);
+
+        width: 100%;
+        height: 300px;
+      }
+    }
+
+    &-contact-blank, &-main-image {
+      @extend %kv-col-7, %kv-col-sm-4, %kv-col-md-4, %kv-col-lg-3;
+    }
+
+    &-contact-bar, &-main-info {
+      @extend %kv-col-12, %kv-col-sm-8, %kv-col-md-8, %kv-col-lg-9, .kv-container-space-between;
+    }
+
+    &-contact {
+      @extend .kv-pt-2;
+
+      @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      &-bar {
+        .kv-list-bar {
+          @media (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+            margin-top: 0 !important;
+          }
+
+          &-no-border li:nth-of-type(odd) a {
+            background-color: transparent;
+          }
+
+          li {
+            font-size: 1.1em;
+
+            &:not(.kv-social-icon-color) {
+              @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+                border: none;
+                margin-right: 0;
+                padding-right: 0;
+                margin-bottom:1em !important;
+                a {
+                  justify-content: center;
+                  width: 75vw;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    &-main {
+      padding-top: 2 * $spacer;
+      padding-bottom: 2 * $spacer;
+
+      &-image {
+        @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+          max-width: 100%;
+          flex: none;
+        }
+        img {
+          position: absolute;
+          width: calc(100% - 30px);
+          bottom: 0;
+          left: 15px;
+          border: 0.5 * $spacer solid $white;
+          @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+            position:relative;
+          }
+        }
+      }
+
+      &-bar {
+        @extend #{$v2}-contact-bar, %kv-col-12, .kv-my-3;
+      }
+
+      &-info {
+        &-name {
+          @extend .kv-mb-3;
+          @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+            margin: 0 30px;
+          }
+
+          display: inline-flex;
+          flex-direction: column;
+
+          &-full, &-title {
+            @extend .kv-m-0, .kv-p-0;
+          }
+
+          &-full {
+            font-weight: 600;
+            font-size: 3em;
+          }
+
+          &-title {
+            color: #b7b7b9;
+          }
+        }
+
+        &-social {
+	        @extend .kv-list-bar-no-xs-column;
+
+          .kv-social-icon-color {
+            display: inline-flex;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: $color-primary;
+            border-radius: 50%;
+            font-size: 18px;
+            color: white;
+
+            a {
+              width: 100%;
+              justify-content: center;
+              text-decoration: none !important;
+              box-shadow: none !important;
+
+              .fa {
+                margin-right: 0;
+                color: white;
+              }
+            }
+          }
+        }
+      }
+
+      &-bio {
+        @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+          flex: auto;
+          margin: 0 30px;
+          width: calc(100% - 60px);
+        }
+        @extend %kv-col-12, .kv-py-5;
+      }
+    }
+
+    &-testimonials {
+      text-align: center;
+    }
+  }
+}

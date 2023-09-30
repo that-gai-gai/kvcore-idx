@@ -1,0 +1,84 @@
+{% if currentFilters is defined %}
+    <div class="kv-filters kv-mb-4">
+        <form id="kv-property-filters-page" class="kv-property-filters">
+            <div class="kv-pagination kv-text-center">
+                {% set max_pages_to_show = 2 %}
+                {% set first_page = 1 %}
+
+                {% set start = currentFilters.page - max_pages_to_show %}
+                {% if start < 1 %}
+                    {% set start = 1 %}
+                {% endif %}
+
+                {% set end = start + (max_pages_to_show * 2) %}
+                {% if end > last_page %}
+                    {% set end = last_page %}
+                {% endif %}
+
+                {% set previous_page = currentFilters.page - 1 %}
+                {% if previous_page < 1 %}
+                    {% set previous_page = 1 %}
+                {% endif %}
+
+                {% set next_page = currentFilters.page + 1 %}
+                {% if next_page > last_page %}
+                    {% set next_page = last_page %}
+                {% endif %}
+
+                {% set previous = kvcoreidx.options.design == 'v1' ? 'Previous' : '<i class="fa fa-caret-left"></i>' %}
+                {% set next = kvcoreidx.options.design == 'v1' ? 'Next' : '<i class="fa fa-caret-right"></i>' %}
+
+	            {% set id = 'kv-filter-page-previous' %}
+                <input type="radio"
+                       name="page"
+                       class="kv-form-hide"
+                       id="{{ id }}"
+                       value="{{ previous_page }}"
+                       {% if currentFilters.page == first_page %}disabled="disabled"{% endif %}
+                >
+                <label for="{{ id }}" class="kv-form-label-button">{{ previous }}</label>
+
+                {% if currentFilters.page > max_pages_to_show + 1 %}
+                    {% set id = "kv-filter-page-" ~ first_page %}
+                    <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ first_page }}">
+                    <label for="{{ id }}" class="kv-form-label-button">{{ first_page }}</label>
+                    {% if currentFilters.page > (max_pages_to_show + 2) %}
+                        <span class="kv-form-label-button no-border">&hellip;</span>
+                    {% endif %}
+                {% endif %}
+
+                {% for i in range(start, end) %}
+                    {% set id = "kv-filter-page-" ~ i %}
+                    <input type="radio"
+                           name="page"
+                           class="kv-form-hide"
+                           id="{{ id }}"
+                           value="{{ i }}"
+                           {% if currentFilters.page == i %}checked="checked"{% endif %}
+                    >
+                    <label for="{{ id }}" class="kv-form-label-button">{{ i }}</label>
+                {% endfor %}
+
+                {% if last_page - currentFilters.page > max_pages_to_show %}
+                    {% if last_page - currentFilters.page > (max_pages_to_show + 1) %}
+                        <span class="kv-form-label-button kv-form-label-button-ellip">&hellip;</span>
+                    {% endif %}
+
+                    {% set id = "kv-filter-page-" ~ last_page %}
+                    <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ last_page }}">
+                    <label for="{{ id }}" class="kv-form-label-button">{{ last_page }}</label>
+                {% endif %}
+
+	            {% set id = 'kv-filter-page-next' %}
+                <input type="radio"
+                       name="page"
+                       class="kv-form-hide"
+                       id="{{ id }}"
+                       value="{{ next_page }}"
+	                   {% if currentFilters.page == last_page %}disabled="disabled"{% endif %}
+                >
+                <label for="{{ id }}" class="kv-form-label-button">{{ next }}</label>
+            </div>
+        </form>
+    </div>
+{% endif %}

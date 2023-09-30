@@ -1,0 +1,9 @@
+.buildignore
+.git*
+node_modules
+package*.json
+Gruntfile.js
+bitbucket-pipelines.yml
+build_plugin.sh
+build.php
+dev-site-deploy.sh

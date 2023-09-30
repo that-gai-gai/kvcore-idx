@@ -1,0 +1,9 @@
+{% set vars = {
+    pages: kvcoreidx.pages,
+    options: kvcoreidx.options
+} %}
+{% include 'login.twig' with vars %}
+{% include 'lead-manager.twig' with vars %}
+{% include 'question.twig' with vars %}
+{% include 'listing-detail-slider.twig' %}
+{% include 'shortcodes/prequalify.twig' with {includeButton: false} %}

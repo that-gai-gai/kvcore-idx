@@ -1,0 +1,81 @@
+<div class="kv-area-highlights">
+   {{highlights}}
+   <div class="kv-area-container">
+      <div class="kv-area-section-heading">{{area_location}} Highlights</div>
+      <div class="kv-area-section-line"></div>
+      <div class="kv-area-row">
+         <div class="kv-col-3">
+            <div class="kv-area-highlight-block">
+               <div class="kv-hero-highlight-statistic">${{ current_home_price | round }}k</div>
+               <div class="kv-type-text">Avg Home Price</div>
+               <div class="kv-hero-statistics-sub">
+               {% if average_home_percentage < 0 %}
+                  <img src="{{ iconup }}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">Up {{average_home_percentage | replace({'-': " ", "," : "."})}}% vs&nbsp;{{county}} County</div>
+               {% elseif average_home_percentage == 0 %}
+                  <img src="{{ iconnochange}}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">No Change in last 30 days</div>
+               {% else %}
+                  <img src="{{ icondown }}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">Down&nbsp;{{average_home_percentage}}% vs&nbsp;{{county}} County</div>
+               {% endif %}
+               </div>
+            </div>
+         </div>
+         <div class="kv-col-3">
+            <div class="kv-area-highlight-block">
+               <div class="kv-hero-highlight-statistic">{{total_homes | round}}</div>
+               <div class="kv-type-text">Homes for Sale</div>
+               <div class="kv-hero-statistics-sub">
+               {% if totalhomesavg < 0 %}
+                  <img src="{{ iconup }}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">Up {{totalhomesavg | replace({'-': " ", "," : "."})}}% Last 30 DAYs</div>
+               {% elseif totalhomesavg == 0 %}
+                  <img src="{{ iconnochange}}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">No Change in Last 30 DAYs</div>
+               {% else %}
+                  <img src="{{ icondown }}" loading="lazy" alt="" class="kv-highlight-icon">
+                  <div class="kv-stat-text">Down&nbsp;{{totalhomesavg}}% Last 30 DAYs</div>
+               {% endif %}
+               </div>
+            </div>
+         </div>
+         <div class="kv-col-3">
+            <div class="kv-area-highlight-block">
+               <div class="kv-hero-highlight-statistic">{{new_to_market | round}}</div>
+               <div class="kv-type-text">Homes New to Market</div>
+               <div class="kv-hero-statistics-sub">
+                  {% if new_avg < 0 %}
+                     <img src="{{ iconup }}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">Up {{new_avg | replace({'-': " ", "," : "."})}}% Last 30 DAYs</div>
+                  {% elseif new_avg == 0 %}
+                     <img src="{{ iconnochange}}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">No Change in Last 30 DAYs</div>
+                  {% else %}
+                     <img src="{{ icondown }}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">Down&nbsp;{{new_avg}}% Last 30 DAYs</div>
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+         <div class="kv-col-3">
+            <div class="kv-area-highlight-block">
+               <div class="kv-hero-highlight-statistic">${{cost_sqft | round}}</div>
+               <div class="kv-type-text">Avg Cost per Square Foot</div>
+               <div class="kv-hero-statistics-sub">
+                  {% if cost_sqft_avg < 0 %}
+                     <img src="{{ iconup }}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">Up {{cost_sqft_avg | replace({'-': " ", "," : "."})}}% Last 30 DAYs</div>
+                  {% elseif cost_sqft_avg == 0 %}
+                     <img src="{{ iconnochange}}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">No Change in Last 30 DAYs</div>
+                  {% else %}
+                     <img src="{{ icondown }}" loading="lazy" alt="" class="kv-highlight-icon">
+                     <div class="kv-stat-text">Down&nbsp;{{cost_sqft_avg}}% Last 30 DAYs</div>
+                  {% endif %}
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

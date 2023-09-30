@@ -1,0 +1,92 @@
+<div class="area-pages-edit-module-hero area-pages-edit-module-modal-content">
+    <div class="admin-modal-box">
+        <div class="admin-modal-box-header">
+            <h2 class="admin-modal-box-title">Current Hero Area Preview{# & Location #}</h2>
+        </div>
+        <div class="admin-modal-box-row">
+            <h1>{{ original_name }}</h1>
+            <p>{{ module_data.description }}</p>
+        </div>
+    </div>
+    <div class="admin-modal-box">
+        <div class="admin-modal-box-header">
+            <h2 class="admin-modal-box-title">Area Name{# & Location #}</h2>
+        </div>
+        <div class="admin-modal-box-row">
+            <div class="admin-modal-box-field">
+                <label
+                    for="edit-module-hero-name"
+                    class="admin-modal-box-field--label"
+                >
+                    Update Title
+                </label>
+                <input
+                    id="edit-module-hero-name"
+                    type="text"
+                    class="admin-modal-box-field--text"
+                    value="{{ name }}"
+                    placeholder="{{ original_name }}"
+                />
+            </div>
+        </div>
+
+        {#
+        <div class="admin-modal-box-row">
+            <span class="admin-modal-box-heading">
+                Area Preview
+            </span>
+
+            <img
+                src="https://via.placeholder.com/1024x720"
+                class="admin-modal-box-image"
+            >
+        </div>
+        #}
+    </div>
+
+    <div class="admin-modal-box">
+        <div class="admin-modal-box-header">
+            <h2 class="admin-modal-box-title">Area Description</h2>
+        </div>
+        <div class="admin-modal-box-row">
+            <div class="admin-modal-box-field">
+                <label
+                    for="edit-module-hero-title"
+                    class="admin-modal-box-field--label"
+                >
+                    Title
+                </label>
+                <input
+                    id="edit-module-hero-title"
+                    type="text"
+                    class="admin-modal-box-field--text"
+                    value="{{ module_data.title }}"
+                />
+            </div>
+        </div>
+        <div class="admin-modal-box-row">
+            <div class="admin-modal-box-field">
+                <label
+                    for="edit-module-hero-description"
+                    class="admin-modal-box-field--label"
+                >
+                    Description
+                </label>
+                <textarea
+                    id="edit-module-hero-description"
+                    type="text"
+                    class="admin-modal-box-field--textarea"
+                >{{ module_data.description }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="kv-modal-submit-cancel-row">
+        <button class="kv-admin-button kv-area-module-cancel">
+            Cancel
+        </button>
+        <button class="kv-admin-button kv-area-module-save">
+            Save Changes
+        </button>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+#area-pages-list-modules {
+  @extend .kv-container;
+
+  .area-pages-module-item {
+    @extend .kv-row, .kv-py-4, .kv-px-4, .kv-pb-0;
+
+    border-bottom: 1px solid $gray-200;
+
+    &:last-child {
+      border-bottom: 0;
+    }
+
+    .module-active {
+      @extend %kv-col-md-1;
+    }
+
+    .module-name {
+      @extend %kv-col-md-9;
+
+      font-size: 1.25em;
+    }
+
+    .module-edit-remove {
+      @extend %kv-col-md-2, .kv-text-right;
+    }
+  }
+}

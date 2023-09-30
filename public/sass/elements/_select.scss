@@ -1,0 +1,28 @@
+.kv-select {
+	@extend .kv-border-no-color;
+
+	display: flex;
+	align-items: flex-start;
+
+	label, select {
+		height: $form-el-height;
+		line-height: $form-el-height;
+		padding: 0 10px;
+		font-size: 13px;
+		text-transform: uppercase;
+		margin-bottom:0;
+	}
+
+	label {
+		display: inline-block;
+	}
+
+	select {
+		flex: 1;
+		min-width: $form-el-height * 2;
+		border: none;
+		border-radius: 0;
+		background-color: white;
+		font-weight: 600;
+	}
+}

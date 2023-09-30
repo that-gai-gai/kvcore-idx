@@ -1,0 +1,43 @@
+<div class="kv-detail-header-slider">
+    {% if data.openHouses is defined and data.openHouses.data is iterable and data.openHouses.data is not empty %}
+				<div class="kv-detail-openhouse">
+				{% for openhouse in data.openHouses.data %}
+					<div>OPEN HOUSE {{ openhouse.fulldate | date('D, M jS') }} {{ openhouse.time }} - VIEWS</div>
+				{% endfor %}
+				</div>
+			{% endif %}
+    <div class="kv-slider">
+        {% for photo in data.photos.data %}
+            <div class="kv-slide kv-background-contain" style="background-image: url('{{ photo.url }}');"></div>
+        {% endfor %}
+    </div>
+    <div class="kv-slider-nav">
+        {% for photo in data.photos.data %}
+            <div class="kv-slide">
+                <img class="kv-image kv-image-object-fit kv-image-object-fit-cover" src="{{ photo.url }}" />
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="modal kv-modal fade in" id="kv-pinterest-modal" tabindex="-1" role="dialog" aria-labelledby="kv-pinterest-modal-label" aria-hidden="true">
+  <div class="modal-dialog kv-modal-dialog kv-modal-lg" role="document">
+    <div class="kv-modal-content">
+      <div class="kv-modal-header">
+        <h4 class="kv-modal-title" id="kv-pinterest-modal-label"><img src="https://passets-cdn.pinterest.com/images/LogoRed.png" alt=""></h4>
+        <button type="button" class="kv-modal-close" data-dismiss="kv-modal">&times;</button>
+      </div>
+      <div class="kv-modal-body">
+            {% for photo in data.photos.data %}
+                <a target="_blank" 
+                    data-pin-do="buttonPin" 
+                    data-pin-count="above" 
+                    href="https://www.pinterest.com/pin/create/button/?media={{ photo.url|url_encode }}&url={{ photo.url|url_encode }}&description={{ data.address ~ ' - Photos, Videos & More!'|url_encode }}"
+                    onclick="window.open(this.href, 'Pinterest','left=20,top=20,width=740,height=795,toolbar=1,resizable=0'); return false;" >
+                    <img class="img-fluid" src="{{ photo.url }}" alt="pinterest" />
+                </a>
+            {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

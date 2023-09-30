@@ -1,0 +1,93 @@
+<div class="kv-detail-header-detail">
+    <span class="kv-detail-heading">{{ data.price }}</span>
+
+    <span class="kv-detail-text">
+        {% if data.address %}
+            {{ data.address }}
+        {% endif %}
+
+        {% set address_line_2 = '' %}
+        {% if data.city %}
+            {% set address_line_2 = address_line_2 ~ data.city %}
+            {% if data.state %}
+                {% set address_line_2 = address_line_2 ~ ', ' %}
+            {% endif %}
+        {% endif %}
+        {% if data.state %}
+            {% set address_line_2 = address_line_2 ~ data.state %}
+            {% if data.zip %}
+                {% set address_line_2 = address_line_2 ~ ' ' %}
+            {% endif %}
+        {% endif %}
+        {% if data.zip %}
+            {% set address_line_2 = address_line_2 ~ data.zip %}
+        {% endif %}
+
+        {% if address_line_2 %}
+            {% if data.address %}<br />{% endif %}
+            {{ address_line_2 }}
+        {% endif %}
+    </span>
+
+    <ul class="kv-list kv-list-bg kv-list-heading-uppercase">
+        {% if data.typeName %}
+        <li class="kv-list-item"><span class="kv-list-item-heading">Type</span><span class="kv-list-item-value">{{ data.typeName }}</span></li>
+        {% endif %}
+
+        {% if data.beds %}
+            <li class="kv-list-item"><span class="kv-list-item-heading">Beds</span><span class="kv-list-item-value">{{ data.beds }}</span></li>
+        {% endif %}
+
+        {% if data.bathsCalculated > 0 %}
+        <li class="kv-list-item"><span class="kv-list-item-heading">Baths</span><span class="kv-list-item-value">{{ data.bathsCalculated }}</span></li>
+        {% endif %}
+
+        {% if data.footage %}
+        <li class="kv-list-item"><span class="kv-list-item-heading">Sqft</span><span class="kv-list-item-value">{{ data.footage }}</span></li>
+        {% endif %}
+
+        {% if data.yearbuilt %}
+        <li class="kv-list-item"><span class="kv-list-item-heading">Built</span><span class="kv-list-item-value">{{ data.yearbuilt }}</span></li>
+        {% endif %}
+    </ul>
+
+    {% if data.mlsid %}
+        {% if data.virtualtour %}
+            <a class="kv-detail-tour" href="{{ data.virtualtour }}" target="_blank">
+                Virtual Tour
+            </a>
+        {% endif %}
+        <span class="kv-detail-mlsid">MLS# {{ data.mlsid }}</span>
+        {% if kvcoreidx.showListingAgentAndMLSInHeader %}
+            {% if data.agentname is defined and data.brokername is defined %}
+                {% set mlsname = '' %}
+                {% if data.mlsName is defined and data.mlsName.data is defined and data.mlsName.data.name is defined %}
+                    {% set mlsname = data.mlsName.data.name %}
+                {% endif %}
+                {% if data.isAgencyListing %}
+                    <p class="kv-mb-2 kv-pb-0">Presented By: {{ data.agentname }} of {{ data.brokername }}{% if mlsname %} and {{ mlsname }}{% endif %}.</p>
+                {% else %}
+                    <p class="kv-mb-2 kv-pb-0">Presented By: {{ data.brokername }}{% if mlsname %} and {{ mlsname }}{% endif %}.</p>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+        {% if kvcoreidx.showMLSDisclaimerInHeader %}
+            <p class="kv-mb-4 kv-pb-0">Disclaimer: The information contained in this listing has not been verified by {{ kvcoreidx.siteName }} and should be verified by the buyer.</p>
+        {% endif %}
+    {% endif %}
+
+    {% if data.openHouses is defined and data.openHouses.data is iterable and data.openHouses.data is not empty %}
+        <div class="kv-mb-4">
+            <strong class="kv-bold kv-color-red">Open Houses</strong>
+            {% for openHouse in data.openHouses.data %}
+                <div><strong class="kv-bold kv-color-red">{{ openHouse.fulldate | date('D, M jS') }} {{ openHouse.time }}</strong></div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <button class="kv-button kv-button-block kv-request-info"
+            data-target="#modal-question"
+            data-mlsid="{{ data.mlsid }}" data-address="{{ data.address }}">
+        Request Info
+    </button>
+</div>

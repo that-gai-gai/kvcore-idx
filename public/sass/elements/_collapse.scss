@@ -1,0 +1,71 @@
+.fade {
+  @include transition($transition-fade);
+
+  &:not(.show) {
+    opacity: 0;
+  }
+}
+
+.collapse {
+  &:not(.show) {
+    display: none;
+  }
+}
+
+.collapsing {
+  position: relative;
+  height: 0;
+  overflow: hidden;
+  @include transition($transition-collapse);
+}
+
+.kv-collapse-container {
+  position: relative;
+
+  .collapse {
+    @extend .kv-my-1;
+
+    position: absolute;
+    left: 0;
+    max-width: 75vw;
+    padding: $spacer;
+    border: 1px solid;
+    background-color:#fff;
+    border-radius: $border-radius;
+    z-index: 100;
+  }
+
+  .collapsing {
+    -webkit-transition: none;
+    transition: none;
+    display: none;
+  }
+}
+
+.kv-collapse-parent {
+  position: relative;
+
+  .kv-collapse-container {
+    position: initial;
+  }
+}
+
+//new stuff
+#kv-property-filters-form {
+  .kv-collapse-parent {
+    display:flex;
+    margin-top:10px;
+    .kv-collapse-container {
+      margin-right:5px;
+    }
+    .kv-collapse-container button {
+      flex: 1;
+      text-align: center;
+      height: 38px;
+      line-height: 38px;
+      padding: 0 8px !important;
+      font-size: 0.75em;
+      border: none;
+    }
+  }
+}

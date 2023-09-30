@@ -1,0 +1,37 @@
+.kvcore-content {
+	* {
+		-webkit-box-sizing: border-box;
+		-moz-box-sizing: border-box;
+		box-sizing: border-box
+	}
+
+	// Bootstrap override
+	caption {
+		caption-side: initial;
+		padding-top: initial;
+		padding-bottom: initial;
+		color: initial;
+	}
+
+	.wp-admin {
+		&.toplevel_page_kvcoreidx_settings .kvcore-sectionset {
+			$input-name: 'kvCORE_Admin_Page_Settings';
+
+			.kvcore-field-text,
+			.kvcore-field-select {
+				[name^="#{$input-name}"] {
+					min-width: 300px;
+				}
+			}
+		}
+
+		.menu-top.toplevel_page_kvcore_idx {
+			display: none;
+		}
+
+		// Fix for collapsible sections in Firefox, if 'is_collapsed' => false
+		.kvcore-collapsible-section-content {
+			display: block;
+		}
+	}
+}

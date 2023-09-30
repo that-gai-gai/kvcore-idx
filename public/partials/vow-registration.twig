@@ -1,0 +1,135 @@
+<div class="{{ kvcoreidx.wrapper_class }}">
+    <div id="modal--vowregistration" class="modal kv-modal kv-modal-login fade in">
+        <div class="modal-dialog kv-modal-dialog">
+            <div class="kv-modal-content kv-container">
+                <div class="kv-modal-header">
+                    <h4 class="kv-modal-title">Agree & Get Full Access</h4>
+                    <button type="button" class="kv-modal-close" data-dismiss="kv-modal">&times;</button>
+                </div>
+                <div class="kv-modal-body">
+
+                    <p class="kv-mb-4">In order to view sold properties, you will need to provide the information below and agree to the terms and conditions. We will then send you an email or text to verify the info provided so you can gain full access to sold properties.</p>
+
+                    <form id="vow-registration" 
+                            action="public/leads"
+                            method="get"
+                            class="modal-login-form"
+                            novalidate="novalidate"
+                            data-toggle="validator"
+                            data-callback="{{ callback|json_encode|url_encode }}"
+                        >
+                        <p class="kv-mb-4">Gain Access Via</p>
+                        <div class="kv-form-group kv-mb-4">
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <div class="form-check form-check-inline">
+                                    <input id="vow_access_email" 
+                                            class="form-check-input" 
+                                            type="radio" 
+                                            name="vow_access_method" 
+                                            id="recEmail"
+                                            value="email"
+                                            checked
+                                        >
+                                    <label for="vow_access_email" class="form-check-label kv-fullwidth-label kv-ib">Email</label>
+                                </div>
+                            </div>
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <div class="form-check form-check-inline">
+                                    <input id="vow_access_text" 
+                                            class="form-check-input" 
+                                            type="radio" 
+                                            name="vow_access_method" 
+                                            id="recText"
+                                            value="text"
+                                        >
+                                    <label for="vow_access_text" class="form-check-label kv-fullwidth-label kv-ib">Text Message</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="vow-fname">First Name</label>
+                                <input id="vow-fname" 
+                                        type="text" 
+                                        name="first_name" 
+                                        class="kv-form-control"
+                                        placeholder="First name"
+                                        required="required"
+                                    >
+                            </div>
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="vow-lname">Last Name</label>
+                                <input id="vow-lname" 
+                                        type="text" 
+                                        name="last_name" 
+                                        class="kv-form-control"
+                                        placeholder="Last name"
+                                        required="required"
+                                    >
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-w-100">
+                                <label for="vow-phone">Cell Phone</label>
+                                <input id="vow-phone" 
+                                        type="tel" 
+                                        name="phone" 
+                                        class="kv-form-control phone-input"
+                                        placeholder="Phone"
+                                        data-kwimpalastatus="alive" 
+                                        data-kwimpalaid="1569934474905-2"
+                                    >
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-w-100">
+                                <label for="vow-email">Email</label>
+                                <input id="vow-email" 
+                                        type="email" 
+                                        name="email" 
+                                        required="required"
+                                        class="kv-form-control"
+                                        placeholder="Email Address"
+                                        data-kwimpalastatus="alive" 
+                                        data-kwimpalaid="1569934474905-4"
+                                    >
+                            </div>
+                        </div>
+                        <div style="margin-top:20px;margin-bottom: 20px; max-height: 300px; border: solid 1px #ccc; overflow-y: scroll;padding:5px;">
+                            <div class="kv-modal-vow-registration-disclaimer">
+                            </div>
+                        </div>
+                        <div class="kv-form-group">
+                            <div class="form-group col-xs-12">
+                                <span id="terms-error-dialog"></span>
+                                <input id="vow-terms-agreement" 
+                                        type="checkbox"
+                                        name="vow-terms-agreement"
+                                        class="form-check-input kv-mr-1" 
+                                        required="required" 
+                                        style="margin-bottom:0"
+                                    >
+                                <label for="vow-terms-agreement" class="kv-ib">I agree to the terms and conditions</label>
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group kv-mt-3">
+                            <input type="hidden" name="vow_request" value="1">
+                            <input type="hidden" name="justintime" value="ts"/>
+                            <input type="hidden" name="backto" value="">
+                            <input type="hidden" name="ftype" value="login">
+                            <button type="submit" class="kv-button kv-mb-2">Send</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="kv-modal-footer">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

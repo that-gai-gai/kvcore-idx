@@ -1,0 +1,313 @@
+@if not variable-exists(dark_filter_color) {
+	$dark_filter_color: darken($primary_color, 20%);
+	$light_filter_color: darken($primary_color, 10%);
+}
+
+.kv-properties-search-submit button {
+	background-color: $light_filter_color;
+	color: $button_text_color;
+}
+.profile-alerts-link {
+	background-color: $dark_filter_color;
+	color: $button_text_color;
+}
+.kv-properties-search-form .kv-filters-control-container #kv-filters-container-more .kv-row-proptypes .kv-imagecheck-group input:checked + div {
+	border:1px solid $light_filter_color;
+	color: $light_filter_color;
+}
+.kv-properties-search-form .kv-filters-control-container #kv-filters-container-more .kv-row-proptypes .kv-imagecheck-group div:hover {
+	color: $light_filter_color;
+  }
+
+.kv-box {
+	&-footer {
+		&-item {
+			border-color: $border_form_color;
+		}
+
+		a&-item:not(.kv-social-icon) {
+			&:first-of-type {
+				background-color: $dark_filter_color;
+			}
+
+			&:last-of-type {
+				background-color: $light_filter_color;
+			}
+
+			&:first-of-type:hover, &:last-of-type:hover {
+				background-color: $primary_color;
+			}
+		}
+
+		a&-item.kv-social-icon:hover .fa {
+			color: $primary_color;
+		}
+	}
+	&-label {
+		background-color: $primary_color;
+		color: $button_text_color;
+	}
+}
+
+.kv-card-price {
+	background-color: $primary_color;
+	color: $button_text_color;
+}
+
+.kv-map-popup .text-center {
+	color: #fff;
+}
+
+.kv-button {
+	background: $primary_color;
+	border-color: $primary_color;
+	color: $button_text_color;
+
+	&-inverted {
+		&:hover {
+			color: $primary_color !important;
+		}
+	}
+
+	&-inverted-v2 {
+		color: $primary_color;
+
+		&:hover {
+			background: $primary_color !important;
+		}
+	}
+
+	&:hover {
+		background: darken($primary_color, 15%);
+		color: $button_text_color;
+	}
+}
+
+.kv-slider .slick-arrow::before {
+	color: $primary_color;
+}
+
+.kv-form {
+	&-color {
+		color: $text_form_color;
+	}
+
+	&-border {
+		border-color: $border_form_color;
+	}
+
+	&-group {
+		.kv-select {
+			border-color: $border_form_color;
+
+			select {
+				color: $dark_filter_color;
+			}
+
+			label {
+				color: $text_form_color;
+			}
+		}
+
+		&-filter {
+			&-button {
+				border-color: $border_form_color;
+				color: $text_form_color;
+			}
+
+			&-area {
+				background-color: $dark_filter_color;
+
+				.kv-form-label-button {
+					border-color: $light_filter_color;
+
+					&:hover {
+						background-color: $light_filter_color;
+					}
+				}
+			}
+		}
+
+		&-search {
+			border-color: $border_form_color;
+			color: $text_form_color;
+
+			[for] {
+				&:before {
+					color: $border_form_color;
+				}
+			}
+		}
+	}
+
+	&-label-button {
+		border-color: $border_form_color;
+		color: $text_form_color;
+
+		[type="radio"]:checked + &,
+		[type="checkbox"]:checked + & {
+			border-color: $text_form_color;
+			background-color: $text_form_color;
+		}
+
+		.kv-select [type="radio"]:checked + &,
+		.kv-select [type="checkbox"]:checked + &,
+		.kv-pagination > [type="radio"]:checked + &,
+		.kv-pagination > [type="checkbox"]:checked + & {
+			border-color: $dark_filter_color;
+			background-color: $dark_filter_color;
+		}
+
+		.kv-form-group-filter-area [type="radio"]:checked + &,
+		.kv-form-group-filter-area [type="checkbox"]:checked + & {
+			border-color: $light_filter_color;
+			background-color: $light_filter_color;
+		}
+	}
+}
+
+.kv-filters {
+	&-items-count {
+		border-color: $border_form_color;
+		color: $text_form_color;
+	}
+}
+
+.kv-slider-nav {
+	background-color: $dark_background_color;
+}
+
+.kv-list.kv-list-bg .kv-list-item {
+	background-color: $light_background_color;
+}
+
+.agent-details {
+	background-color: $light_background_color;
+}
+
+.kv-offices-container.kv-layout-card .kv-office .kv-box-image {
+	background-color: $light_background_color;
+}
+
+.kv-bg-light {
+	background-color: $light_background_color;
+}
+
+.kv-tabs {
+	&-header {
+		border-color: $border_color;
+
+		&:after {
+			border-color: $border_color;
+		}
+	}
+
+	.kv-tab {
+		&-title {
+			.kv-tab-title-text {
+				border-color: $border_color;
+			}
+		}
+
+		&-active {
+			.kv-tab-title-text:after {
+				background-color: $primary_color;
+			}
+		}
+
+		&-link {
+			color: $primary_color;
+
+			.kv-tab-title-text:after {
+				background-color: $primary_color;
+			}
+		}
+	}
+}
+
+.kv-detail-links {
+	.clickable {
+		&:hover {
+			background: $primary_color;
+
+			.fa {
+				color: $button_text_color;
+			}
+		}
+	}
+}
+
+.kv-collapse-container .collapse {
+    border-color: $border_form_color;
+}
+
+.kv-list-bar {
+	li, li a:not(.kv-button) {
+		color: darken($text_form_color, 30%);
+	}
+}
+
+.kv-agent-profile-v2 {
+	&-contact-bar, &-main-bar {
+		.kv-list-bar-no-border li:nth-of-type(odd) a {
+			color: $primary_color;
+
+
+			&:hover {
+				background-color: $primary_color;
+				color: white;
+			}
+		}
+	}
+
+	.kv-social-icon-color {
+		background-color: $primary_color;
+		border: 1px solid $primary_color;
+	}
+}
+.kv-detail {
+	&-openhouse {
+		background-color: $primary_color;
+		color: $button_text_color;
+	}
+	&-v2-openhouse {
+		background-color: $primary_color;
+		color: $button_text_color;
+	}
+	&-listingstatus {
+		background-color: $primary_color;
+		color: $button_text_color;
+	}
+	&-v2-listingstatus {
+		background-color: $primary_color;
+		color: $button_text_color;
+	}
+}
+#kv-detail-v2-cta {
+	background-color: $primary_color;
+}
+
+
+
+.kv-autocomplete {
+	& + ul li:hover {
+		border-top-color: lighten($primary_color, 40%);
+		border-bottom-color: lighten($primary_color, 40%);
+		border-left: 2px solid lighten($primary_color, 20%);
+		border-right: 2px solid lighten($primary_color, 20%);
+		background-color: lighten($primary_color, 20%);
+	}
+
+	&-match {
+		color: $primary_color;
+	}
+
+	&-clear {
+		color: lighten($primary_color, 20%);
+	}
+}
+
+.kv-prequalify-lender {
+	background: $primary_color;
+	border: 5px solid $primary_color;
+}

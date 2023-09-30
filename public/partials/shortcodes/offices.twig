@@ -1,0 +1,127 @@
+{% set perRow = kvcoreidx.options.team.per_row|round in [1, 2, 3, 4, 6] ? kvcoreidx.options.team.per_row|round : 6 %}
+{% set perRowClass = ' kv-container-per-row-' ~ perRow %}
+
+{% set locationOrderBy = 'city' %}
+{% if kvcoreidx.options.team.filter_offices_by is defined %}
+    {% set locationOrderBy = kvcoreidx.options.team.filter_offices_by %}
+{% endif %}
+
+<div id="kvcoreidx-offices-page"
+     class="kv-container{{ perRowClass }}"
+     data-attributes="{{ shortcode_attributes|json_encode|escape }}"
+>
+    <div id="kvcoreidx-offices-page--header">
+        <div class="kv-offices-map-container loading loading-mt-25">
+            <div class="kv-map"></div>
+        </div>
+    </div>
+    <div class="kv-filters kv-mb-4">
+        <form id="kv-offices-filters-form" class="kv-offices-filters kv-form">
+            {% if kvcoreidx.options.design != 'v1' %}
+                <div class="kv-form-group">
+                    <div class="kv-select">
+                        <label class="kv-text-ellip" for="kv-filter-order">
+                            Sort By
+                        </label>
+                        <select id="kv-filter-order" name="filter[order][]">
+                            <option value="relevance|desc" selected="selected">Default</option>
+                            <option value="{{ locationOrderBy }}|asc">Location (A-Z)</option>
+                            <option value="{{ locationOrderBy }}|desc">Location (Z-A)</option>
+                        </select>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="kv-form-group">
+                <div class="kv-form-group-search">
+                    <label for="kv-offices-filters-search"></label>
+                    <input type="text" id="kv-offices-filters-search" name="search" value="" placeholder="QUICK SEARCH">
+                </div>
+                <div class="kv-form-group-filter">
+                    <div class="kv-form-group-filter-button"
+                         data-toggle="collapse"
+                         data-target=".kv-form-group-filter-area"
+                    >
+                        FILTER
+                    </div>
+
+                    <div class="collapse kv-form-group-filter-area">
+
+                        <div id="kv-filter-office-container" class="kv-select kv-hidden">
+                            <label class="kv-text-ellip" for="kv-filter-office">
+                                Office
+                            </label>
+                            <select id="kv-filter-office" name="filter[entities][]"></select>
+                        </div>
+
+                        <div>
+                            <label class="kv-text-ellip" for="kv-filter-first-letter-last-name">
+                                Filter By Location
+                            </label>
+
+                            <div id="kv-filter-first-letter-last-name" class="kv-mt-2 kv-text-center">
+			                    {% set id = 'kv-filter-first-letter-last-name-all' %}
+                                <input type="radio"
+                                       name="filter[first-letter][]"
+                                       class="kv-form-hide"
+                                       id="{{ id }}"
+                                       value=""
+                                >
+                                <label for="{{ id }}" class="kv-form-label-button kv-small">ALL</label>
+			                    {% for letter in range('A', 'Z') %}
+				                    {% set id = 'kv-filter-first-letter-last-name-' ~ letter %}
+                                    <input type="radio"
+                                           name="filter[first-letter][]"
+                                           class="kv-form-hide"
+                                           id="{{ id }}"
+                                           value="{{ letter }}"
+                                    >
+                                    <label for="{{ id }}" class="kv-form-label-button">{{ letter }}</label>
+			                    {% endfor %}
+                            </div>
+                        </div>
+
+	                    {% if kvcoreidx.options.design == 'v1' %}
+                            <div>
+                                <label class="kv-text-ellip" for="kv-filter-order">
+                                    Order By
+                                </label>
+
+                                <div id="kv-filter-order">
+	                                {% set id = 'kv-filter-order-by-default' %}
+                                    <input type="radio"
+                                           id="{{ id }}"
+                                           name="filter[order][]"
+                                           class="kv-form-hide"
+                                           value="relevance|desc"
+                                           checked="checked"
+                                    >
+                                    <label for="{{ id }}" class="kv-form-label-button">Default</label>
+
+	                                {% set id = 'kv-filter-order-by-last_name-asc' %}
+                                    <input type="radio"
+                                           id="{{ id }}"
+                                           name="filter[order][]"
+                                           class="kv-form-hide"
+                                           value="{{ locationOrderBy }}|asc"
+                                    >
+                                    <label for="{{ id }}" class="kv-form-label-button">Location (A-Z)</label>
+
+	                                {% set id = 'kv-filter-order-by-last_name-desc' %}
+                                    <input type="radio"
+                                           id="{{ id }}"
+                                           name="filter[order][]"
+                                           class="kv-form-hide"
+                                           value="{{ locationOrderBy }}|desc"
+                                    >
+                                    <label for="{{ id }}" class="kv-form-label-button">Location (Z-A)</label>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div id="kvcoreidx-offices-page--results"></div>
+</div>

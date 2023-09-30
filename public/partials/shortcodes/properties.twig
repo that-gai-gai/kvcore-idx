@@ -1,0 +1,13 @@
+<div id="kvcoreidx-properties-page" class="kv-container" data-filters="{{ shortcode_attributes|json_encode|escape }}"></div>
+
+{% set vars = {
+    pages: {'terms_of_use': function('get_site_url', null, 'terms-of-use', null)},
+    options: kvcoreidx.options
+} %}
+{% include 'login.twig' with vars %}
+{% include 'vow-registration.twig' with vars %}
+{% include 'pending.twig' with vars %}
+{% include 'lead-manager.twig' with vars %}
+{% if kvcoreidx.request.market_report_modal == '1' %}
+	{% include 'market-report-modal.twig' with vars %}
+{% endif %}

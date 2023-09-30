@@ -1,0 +1,112 @@
+<div class="{{ kvcoreidx.wrapper_class }}">
+    <div id="modal--login" class="modal kv-modal kv-modal-login fade in">
+        <div class="modal-dialog kv-modal-dialog">
+            <div class="kv-modal-content kv-container">
+                <div class="kv-modal-header">
+                    <h4 class="kv-modal-title">{{ title|default('Login & Get Full Access') }}</h4>
+                    <button type="button" class="kv-modal-close" data-dismiss="kv-modal">&times;</button>
+                </div>
+                <div class="kv-modal-body">
+                    <form class="login-form kv-form"
+                          action="public/leads"
+                          method="get"
+                          novalidate="novalidate"
+                          data-toggle="validator"
+                          data-callback="{{ callback|json_encode|url_encode }}"
+                    >
+                        <label for="modal--login-email">Email Address <span class="kv-login-email-small">(must be valid)</span></label>
+                        <input type="email" 
+                            id="modal--login-email" 
+                            name="email" 
+                            required="required"
+                            class="kv-form-control"
+                            placeholder="Email Address" 
+                            data-kwimpalastatus="alive" 
+                            data-kwimpalaid="1569934474905-4"
+                        >
+
+                        {% if kvcoreidx.options.listing_detail.email_only_registration != "1" %}
+                        <div id="kv-modal--phone-section" class="kv-modal-login-hide">
+                            <input type="tel" 
+                                id="modal--login-phone" 
+                                pattern='^\(\d{3}\) \d{3}-\d{4}?$'
+                                name="phone" 
+                                class="kv-form-control"
+                                required="required"
+                                placeholder="Cell number will be your password"
+                                data-kwimpalastatus="alive" 
+                                data-kwimpalaid="1569934474905-2"
+                            >
+                            
+                        </div>
+                        {% endif %}
+                        {% if kvcoreidx.options.optimize_for_canada == "1" %}
+                            <p class="kv-my-3">
+                                <small>By submitting your message and personal details you are permitting us to contact you by these means in response to your inquiry.</small>
+                            </p>
+                            <div class="kv-form-group">
+                                <div class="kv-form-group-field kv-w-100">
+                                    <input id="terms-agreement-canada" type="checkbox"
+                                            name="preferred-contact-method"
+                                            class="kv-form-control form-check-input" required="required" style="margin-bottom:0">
+                                    <label for="terms-agreement-canada" class="form-check-label" style="display:inline">
+                                        <small>I would also like to receive email newsletters and periodic updates about real estate in my area and other related communications from <span class="kv-modal-terms-canada-name"></span>. I understand I can withdraw my consent at any time. <span class="kv-modal-terms-canada-name"></span>, <span class="kv-modal-terms-canada-address"></span></small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="kv-form-group">
+                                <div class="kv-form-group-field kv-w-100">
+                                    <p class="kv-disclaimer kv-my-3">
+                                        <small>
+                                            {% if kvcoreidx.pages.privacy_policy and kvcoreidx.pages.terms_of_use %}
+                                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a> and <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                            {% elseif kvcoreidx.pages.privacy_policy %}
+                                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a>.
+                                            {% elseif kvcoreidx.pages.terms_of_use %}
+                                                In addition, you also agree to our <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <button type="submit" class="kv-button">CONTINUE WITH EMAIL</button>
+                    </form>
+
+                    <div class="kv-login-option-or">
+                        <span>or</span>
+                    </div>
+
+                    <div class="kv-login-row">
+                        <div class="fb-login-section">
+                        <div id="fb-login-start" class="fb-login-start" data-mobileapp="true">
+                            <button type="button" class="btn btn-fb btn-block">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                                Continue with Facebook
+                            </button>
+                        </div>
+                        </div>
+                        <div class="google-login-section">
+                        <div id="google-login-start" class="google-login-start" data-mobileapp="true">
+                            <button type="button" class="btn btn-google btn-block">
+                                <i class="fa fa-google" aria-hidden="true"></i>
+                                Continue with Google
+                            </button>
+                        </div>
+                        </div>
+                    </div>
+                    
+                    <div class="kv-modal-login-agreement kv-mt-4">
+                        {% if kvcoreidx.options.optimize_for_canada != "1" %}
+                            <small>
+                                By clicking on login buttons you are agreeing to our <a href="{{ pages.terms_of_use }}">
+                                    terms of use</a> and giving us expressed written consent to contact you
+                            </small>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

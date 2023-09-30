@@ -1,0 +1,63 @@
+.kv-social-icon, .kv-social-icon-color {
+  .fa {
+    transition: color 100ms;
+
+    &:before {
+      margin: 0;
+    }
+  }
+}
+
+.kv-social-icon {
+  &-facebook, &-facebook-square {
+    background-color: #3b5998;
+  }
+
+  &-linkedin, &-linkedin-square {
+    background-color: #517fa4;
+  }
+
+  &-twitter, &-twitter-square {
+    background-color: #55acee;
+  }
+
+  &-youtube-play {
+    background-color: #b31217;
+  }
+  &-instagram {
+    background-color: #b31217;
+  }
+  &-pinterest {
+    background-color: #b31217;
+  }
+}
+
+.kv-social-icon-color {
+  &:hover {
+    background-color: white !important;
+  }
+
+  &-facebook:hover .fa, &-facebook-square:hover .fa {
+    color: #3b5998 !important;
+  }
+
+  &-linkedin:hover .fa, &-linkedin-square:hover .fa {
+    color: #517fa4 !important;
+  }
+
+  &-twitter:hover .fa, &-twitter-square:hover .fa {
+    color: #55acee !important;
+  }
+
+  &-youtube-play:hover .fa {
+    color: #b31217 !important;
+  }
+
+  &-instagram:hover .fa {
+    color: #b31217 !important;
+  }
+
+  &-pinterest:hover .fa {
+    color: #b31217 !important;
+  }
+}

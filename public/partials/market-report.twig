@@ -1,0 +1,276 @@
+{% if error is defined %}
+	{{ error }}
+{% else %}
+
+
+{% set isValuation = valuation is iterable %}
+{% set optimizeForCanada = kvcoreidx.options.optimize_for_canada %}
+{% if optimizeForCanada == "1" %}
+	{% set areaHtml = areaType == 'zip' ? 'POSTAL CODE ' : '' %}
+{% else %}
+	{% set areaHtml = areaType == 'zip' ? 'ZIP ' : '' %}
+{% endif %}
+{% set areaHtml = areaHtml ~ '<span class="kv-mr-area-name">' ~ area ~
+	'</span>, <span class="kv-mr-area-state">' ~ market_data.state ~ '</span>'
+%}
+{% macro dataRow(title, value, isPrice, lastRow, type, diff) %}
+	{% set rowClass = lastRow == true ? 'last' : '' %}
+	<div class="kv-mr-border-bottom-row {{rowClass}}">
+		<div class="kv-mr-border-bottom-row-col">{{ title }}</div>
+		<div class="kv-mr-border-bottom-row-col kv-mr-text-center">
+			<div class="stat-metric">
+				<div>
+					<strong>{% if isPrice == "1" %}${% endif %}{{ value|number_format(0) }}</strong>
+				</div>
+				<div class="homes">{{ type }}</div>
+			</div>
+		</div>
+		<div class="kv-mr-border-bottom-row-col kv-mr-text-right">
+			{% set arrow = diff == 0 ? 'right' : diff > 0 ? 'up' : 'down' %}
+			<span class="kv-mr-data-row-box-data-difference-smaller {{'kv-difference-' ~ arrow }}">
+			<i class="fa fa-arrow-{{ arrow }}" aria-hidden="true"></i>&nbsp;{{ diff|abs ~ '%' }}
+			</span>
+		</div>
+	</div>
+{% endmacro %}
+
+{% macro dataBox(title, sub, value, isPrice, diff, valueSub, valuation) %}
+	{% if valuation is iterable %}
+		<h3>{{ title }} <span class="kv-mr-data-row-box-sub">{{ sub }}</span></h3>
+	{% else %}
+		<div class="kv-mr-data-row-box-title">{{ title }} <span class="kv-mr-data-row-box-sub">{{ sub }}</span></div>
+	{% endif %}
+	{% if valuation is iterable %}
+		<div class="kv-mr-data-row-box-valuation">
+			<span class="kv-mr-data-row-box-valuation-item">
+				<span class="kv-mr-data-row-box-valuation-item-value">{{ valuation.sqft|number_format(0) }}</span>
+				<span class="kv-mr-data-row-box-valuation-item-name">SQFT</span>
+			</span>
+			<span class="kv-mr-data-row-box-valuation-item">
+				<span class="kv-mr-data-row-box-valuation-item-value">{{ valuation.beds }}</span>
+				<span class="kv-mr-data-row-box-valuation-item-name">BEDS</span>
+			</span>
+			<span class="kv-mr-data-row-box-valuation-item">
+				<span class="kv-mr-data-row-box-valuation-item-value">{{ valuation.baths }}</span>
+				<span class="kv-mr-data-row-box-valuation-item-name">BATHS</span>
+			</span>
+		</div>
+	{% endif %}
+	<div class="kv-mr-data-row-box-data">
+		{% set arrow = diff == 0 ? 'right' : diff > 0 ? 'up' : 'down' %}
+		<span class="kv-mr-data-row-box-data-value">
+			{% if isPrice %}${% endif %}{{ value|number_format(0) }}
+		</span>
+		<span class="kv-mr-data-row-box-data-difference {{'kv-difference-' ~ arrow }}">
+		<i class="fa fa-arrow-{{ arrow }}" aria-hidden="true"></i>&nbsp;{{ diff|abs ~ '%' }}
+		{% if valueSub is defined %}
+			<div class="kv-mr-data-row-box-data-value-sub">{{ valueSub }}</div>
+		{% endif %}
+	</span>
+	</div>
+{% endmacro %}
+
+{% macro listing(listing, type) %}
+	{% set imageClass = type == 'expensive' ? 'mostExpensiveImage' : 'thumbnailImage' %}
+	{% if type != 'expensive' %}
+		<div class="kv-mr-listing-container">
+			<div class="kv-mr-listing-col">
+				<a href="{{ listing.detail_url }}">
+						<img src="{{ listing.photo }}" class="thumbnailImage"
+						{% if kvcoreidx.openListingsInNewTab == 'true' %}
+								target="_blank"
+						{% endif %} />
+				</a>	
+			</div>
+			<div class="kv-mr-listing-col right">
+				<div class="kv-mr-listing-price">{{ '$' ~ listing.price|number_format(0) }}</div>
+				<div class="kv-mr-listing-address">
+					{{ listing.full_address }}
+				</div>
+			</div>
+		</div>
+	{% else %}
+		<a href="{{ listing.detail_url }}">
+			<div class="kv-mr-listing-container">
+				<img src="{{ listing.photo }}" class="mostExpensiveImage"
+				{% if kvcoreidx.openListingsInNewTab == 'true' %}
+						target="_blank"
+				{% endif %} />
+			</div>
+		</a>
+		<div class="kv-mr-listing-price">{{ '$' ~ listing.price|number_format(0) }}</div>
+		<div class="kv-mr-listing-address">
+			{{ listing.full_address }}
+		</div>
+	{% endif %}
+
+	
+{% endmacro %}
+
+{% import _self as macro %}
+{% if valuation is iterable %}
+	<div class="kv-mr-section-title">Valuation Report for {{ areaHtml }}</div>
+{% else %}
+	<div class="kv-mr-section-title">Market Report for {{ areaHtml }}</div>
+{% endif %}
+
+<div class="kv-mr-header-updated">Updated {{ valuation.report_date|date('m/d/Y') }}</div>
+{% if valuation %}
+	<div class="kv-mr-data-row-box-left">
+		{{ macro.dataBox(
+			'Estimate for:', valuation.address,
+			valuation.valuation, true, valuation.diff,
+			'as of ' ~ valuation.report_date|date('m/d/Y'), valuation
+		) }}
+	</div>
+{% endif %}
+<div class="kv-market-report kv-mr">
+	<div class="kv-mr-data-row">
+		<div class="kv-mr-data-row-box">
+			<div class="kv-mr-data-row-box-left">
+				{{ macro.dataBox(
+					'HOMES FOR SALE', ' in last 30 days',
+					market_data.active_listings, false, market_data.active_listings_diff
+				) }}
+				<div class="kv-mr-data-row-box-data">
+					<span class="pull-right kv-mr-data-row-box-sub">30 Day Change</span>
+				</div>
+				{{ macro.dataRow(
+					'New to Market',
+					market_data.new_listings, 
+					false,
+					false,
+					'homes', 
+					market_data.new_listings_diff
+				) }}
+				{{ macro.dataRow(
+					'Off the Market',
+					market_data.off_market, 
+					false,
+					false,
+					'homes', 
+					market_data.off_market_diff
+				) }}
+				{{ macro.dataRow(
+					'Days on Market',
+					market_data.days_on_market, 
+					false,
+					true,
+					'days', 
+					market_data.days_on_market_diff
+				) }}
+			</div>
+		</div>
+		<div class="kv-mr-data-row-box">
+			<div class="kv-mr-map-container">
+				<div id="kv-market-report-map" class="kv-mr-map"></div>
+			</div>
+		</div>
+	</div>
+	<div class="kv-mr-data-row">
+		<div class="kv-mr-data-row-box">
+			<div class="kv-mr-data-row-box-left">
+				{{ macro.dataBox(
+					'AVERAGE HOME PRICE', 'in last 30 days',
+					market_data.avg_list_price, true, market_data.avg_list_price_diff
+				) }}
+			</div>
+		</div>
+		<div class="kv-mr-data-row-box">
+			<div class="kv-mr-data-row-box-left">
+				<div class="kv-mr-data-row-box-data">
+					<span class="pull-right kv-mr-data-row-box-sub">30 Day Change</span>
+				</div>
+				{{ macro.dataRow(
+					'Price Reductions',
+					market_data.price_reductions,
+					false,
+					false,
+					'reductions', 
+					market_data.price_reductions_diff
+				) }}
+				{{ macro.dataRow(
+					'Price per Sqft',
+					market_data.price_per_sqft,
+					true,
+					true,
+					'', 
+					market_data.price_per_sqft_diff
+				) }}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="kv-mr-header-footer">
+		{{ block('agent') }}
+		<div class="kv-mr-header-footer-contact">
+			<div class="kv-mr-header-footer-contact-left">
+				<div class="kv-mr-header-footer-contact-left-title">
+					Get full service sellers assistance from a local area expert.
+				</div>
+			</div>
+			<div class="kv-mr-header-footer-contact-right">
+				{% set contactHref = agent.email is not empty ? 'mailto:' ~ agent.email : '/contact' %}
+				<a href="{{ contactHref }}" {% if agent.email is empty %}target="_blank" {% endif %}
+				   class="kv-mr-header-footer-contact-right-button"
+				>
+					LEARN MORE
+				</a>
+			</div>
+		</div>
+	</div>
+	
+	{% if hasListings %}
+		<div class="kv-mr-section-title">Homes for sale in {{ areaHtml }}</div>
+		<div class="kv-mr-listings-container">
+			<div class="kv-mr-listings-row">
+				<div class="kv-mr-listings-row-body">
+					<div class="kv-mr-listings-row-title">
+						<strong>MOST EXPENSIVE</strong>
+					</div>
+					{{ macro.listing(market_data.most_expensive, 'expensive') }}
+				</div>
+			</div>
+			<div class="kv-mr-listings-row">
+				<div class="kv-mr-listings-row-body">
+					<div class="kv-mr-listings-row-title">
+						<strong>POPULAR LISTINGS</strong>
+					</div>
+					{% for listing in market_data.hot_listings %}
+						{{ macro.listing(listing) }}
+					{% endfor %}
+				</div>
+			</div>
+			<div class="kv-mr-listings-row">
+				<div class="kv-mr-listings-row-body">
+					<div class="kv-mr-listings-row-title">
+						<strong>RECENT LISTINGS</strong>
+					</div>
+					{% for listing in market_data.recent_listings %}
+						{{ macro.listing(listing) }}
+					{% endfor %}
+					<div class="kv-mr-border-top">
+						<span class="pull-right kv-mr-data-row-box-more"><a href="{{propertiesUrl}}" target="_blank">View More</a></span>
+					</div>
+				</div>
+			</div>
+		</div>
+	{% endif %}
+	{% if valuation is iterable %}<br />{% endif %}
+	<div class="kv-mr-header-footer">
+		<div class="kv-mr-header-footer-contact">
+			<div class="kv-mr-header-footer-contact-left">
+				<div class="kv-mr-header-footer-contact-left-title">
+					Stay current by signing up to receive monthly updates.
+				</div>
+			</div>
+			<div class="kv-mr-header-footer-contact-right">
+				{% set contactHref = agent.email is not empty ? 'mailto:' ~ agent.email : '/contact' %}
+				<a href="javascript:void(0)" class="kv-mr-header-footer-contact-right-button kv-mr-subscribe-button">
+					SUBSCRIBE NOW
+				</a>
+			</div>
+		</div>
+	</div>
+</div>
+{% endif %}

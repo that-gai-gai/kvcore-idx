@@ -1,0 +1,591 @@
+// 2 rows of kv-box-image, kv-box-content, kv-box-footer
+$map-height: 3 * (195 + 133.5) + $grid-gutter-width + 10;
+
+.kv-nolistings-found {
+  background-color:#f2f2f2;
+  margin-top:100px;
+  padding:20px;
+  max-width:450px;
+  button {
+    font-size:0.75em;
+  }
+}
+
+.kv-no-similar-listings-found {
+  display:none;
+}
+
+#kv-detail-v2-similar {
+  .kv-nolistings-found {
+    display:none!important;
+  }
+}
+
+#kv-detail-v2-similar {
+  .kv-no-similar-listings-found {
+    display:block;
+  }
+}
+
+.kv-no-listing-found{
+  .kv-no-listings{
+    height: 100%; 
+    width: 100%; 
+    text-align: center; 
+    margin-top: 25px; 
+    display: flex; 
+    justify-content: space-around; 
+    padding-bottom: 30px;
+  }
+  
+  .kv-no-listings-content{
+    width: 45%;
+  }
+  
+  @media (max-width: map_get($grid-breakpoints, 'sm') - 1){
+    .kv-no-listings{
+      flex-direction: column;
+    }
+  
+    .kv-no-listings-content{
+      width: 100%!important;
+      flex: 0 0 100%;
+      margin-top:10px;
+    }
+
+    .ask-a-question-form{
+      margin-top:10px;
+
+      .kv-button {
+        margin-top: 25px;
+      }
+    }
+  }
+}
+
+.kv-properties-container {
+  @extend .kv-row;
+
+  .fullwidth-wrapper {
+    display: table;
+    height: 100%;
+    padding: 0;
+    width: 100%;
+  }
+
+  @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+    .fullwidth-wrapper {
+      display:flex;
+      flex-direction: column;
+    }
+  }
+
+  .kv-property-filters-container, .kv-property-pagination-container {
+    @extend %kv-col-12;
+  }
+
+  .kv-property-listings-container {
+    @extend %kv-col-12;
+
+    .kv-property-listings {
+      @extend .kv-row;
+    }
+  }
+
+  &.layout-list {
+    .listing {
+      @extend %kv-col-12;
+    }
+  }
+
+  .kv-property-filters-container {
+    border-bottom:1px solid #f6f6f6;
+  }
+
+  &.kv-layout-card {
+
+    @media (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+      .kv-property-filters {
+        margin-left:calc(66.6666667% + 15px);
+      }
+    }
+    .kv-property-column {
+      @media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: 1360px) {  
+        .kv-property-filters-container {
+          margin-top:-110px !important;
+        }
+      }
+
+      .property-content {
+        height: 100%;
+        box-sizing: border-box;
+
+        .filter-header {
+          display: flex;
+          flex-direction: column;
+
+          @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+            .kv-property-filters-container {
+              margin-top:0;
+            }
+            .kv-map-grey-area-filters {
+              text-align:center !important;
+              width:100% !important;
+            }
+            .kv-filters-order-column,
+            .kv-filters-gridmap-column {
+              @include kv-hidden();
+            }
+          }
+          .kv-map-grey-area-filters {
+            background-color:#f2f2f2;
+            height:60px;
+            width:66.6666666667%;
+            position:relative;
+
+            .kv-filters-market-report-link {
+              position:absolute;
+              right:0;
+              padding:0 15px;
+              line-height:55px;
+              text-transform:none;
+              font-weight:500;
+              z-index:10;
+              color:#000;
+              text-decoration:none;
+              box-shadow:none;
+            }
+          }
+        }
+
+        .kv-property-filters-container {
+          margin-top:-60px;
+        }
+
+        @media (min-width: map_get($grid-breakpoints, 'md')) and (max-width: 1360px) {
+          .kv-property-filters {
+            margin-left:calc(66.6666667% + 15px);
+            .kv-form-with-container {
+              justify-content:flex-start;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: 1550px) {  
+    .kv-map-grey-area-filters {
+      height:110px !important;
+      text-align:left !important;
+      position:relative;
+      .kv-filters-market-report-link {
+        position:absolute;
+        bottom:0px;
+        left:10px;
+        padding:5px !important;
+      }
+    }
+  }
+
+  &.kv-layout-map {
+    @media (min-width: map_get($grid-breakpoints, 'md')) and (max-width: 1360px) {
+      .kv-property-filters {
+        .kv-form-with-container {
+          justify-content:flex-start !important;
+        }
+      }
+    }
+
+    .kv-property-column {
+      @extend %kv-col-4;
+      @extend .kv-no-gutters;
+
+      display:table-cell;
+      vertical-align:top;
+      width:40%;
+      padding:0;
+
+      .kv-property-listings-container {
+        height:calc(100vh - 63px); // height of filter area
+        width:100%;
+        overflow:auto;
+        padding-top:10px;
+      }
+      .kv-property {
+        @extend %kv-col-12, %kv-col-xl-6;
+
+        .kv-box-content {
+            position: relative;
+
+            i.kv-listing-marker {
+              position: absolute;
+              top: 10px;
+              right: 7px;
+              align-self: center;
+              cursor: alias;
+            }
+        }
+      }
+      .kv-map-grey-area-filters {
+        display:none; //should be hidden in map view
+      }
+    }
+
+    .kv-map-column {
+      @extend %kv-col-12, %kv-col-md-8;
+      @extend .kv-no-gutters;
+
+      display: table-cell;
+      vertical-align:top;
+      padding:0;
+      width:60%;
+
+      .kv-map-grey-area-filters {
+        background-color:#f2f2f2;
+        height:60px;
+        text-align:right;
+
+        .kv-filters-market-report-link {
+          padding:15px;
+          line-height:55px;
+          text-transform:none;
+          font-weight:500;
+          z-index:9;
+          color:#000;
+          text-decoration:none;
+          box-shadow:none;
+        }
+      }
+
+      #kv-properties-map {
+        height:calc(100vh - 7vh); //150 height of the filter area
+        width:100%;
+      }
+    }
+
+    @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+      .kv-property-column, .kv-map-column {
+        width:100%;
+        flex: 0 0 100%;
+        max-width:none;
+      }
+    }
+
+    #kv-property-filters-page {
+      margin-top: 1.5rem;
+    }
+
+    @media screen and (max-width: map_get($grid-breakpoints, 'md')) {
+      #kv-properties-map {
+        @include kv-hidden();
+      }
+
+      #kv-property-filters-order,
+      .kv-filters-order-column,
+      .kv-filters-gridmap-column {
+        @include kv-hidden();
+      }
+    }
+  }
+
+  &.kv-listings-none {
+    .kv-property {
+      @extend %kv-col;
+    }
+  }
+
+  .kv-map-column {
+    display: none;
+
+    .mapboxgl-ctrl-top-right {
+      top:55px;
+    }
+
+    .mapboxgl-popup-content {
+      padding: 0;
+    }
+    .mapbox-gl-draw_trash {
+      display:none;
+    }
+
+    .drive-button {
+      color:#000;
+      .fa {
+        font-size:13px;
+      }
+    }
+  }
+
+  @media (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+    .kv-property-filters {
+      margin-right:0 !important;
+    }
+  }
+
+  .kv-property-filters {
+    margin-bottom: 0.5rem !important;
+    margin-right:105px;
+
+    & > .kv-form-group.kv-form-with-container {
+      @extend .kv-row, .kv-no-gutters;
+      align-items:baseline;
+      margin-top:10px;
+      padding:0!important;
+      justify-content:flex-end;
+
+      @media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: 1360px) {
+        #kv-properties-alerts, .kv-filters-control-container {
+          margin-bottom:8px;
+        }
+      }
+      
+      #kv-properties-alerts, .kv-filters-control-container {
+        display: flex;
+        justify-content:flex-end;
+        margin-right: 5px;
+        border-color:#cccccc;
+
+        &:last-of-type {
+          margin-right: 0;
+        }
+
+        & > label {
+          @extend .kv-text-ellip;
+
+          height: 38px;
+          line-height: 38px;
+          margin: 0;
+          padding: 0 5px;
+          background-color: #f2f2f2;
+        }
+
+        select, .kv-filters-label-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          height: 38px;
+          padding:0;
+          color:#000;
+
+          & > .kv-form-label-button {
+            min-width: 105px;
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 0;
+            padding:0;
+            text-align: center;
+            border:0;
+            cursor: pointer;
+            i.fa {
+              position:relative;
+              top:2px;
+              font-size:100%;
+            }
+          }
+
+          [type='radio']:checked + .kv-form-label-button {
+            display:none;
+          }
+        }
+
+        label, select {
+          font-size: 0.70em;
+          text-transform: uppercase;
+        }
+        label {
+          width:65px;
+        }
+        select {
+          width:95px;
+        }
+      }
+
+      @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+        .kv-filters-control-container {
+          justify-content:left;
+        }
+      }
+
+      .kv-collapse-container {
+        .kv-button:first-of-type {
+          @extend .kv-mr-1;
+        }
+
+        .collapse {
+          width: 600px;
+          background-color: $color-buttonface;
+          justify-content: space-between;
+
+          &.show {
+            @extend .kv-row, .kv-no-gutters;
+
+            input {
+              @extend %kv-col-9;
+            }
+
+            button {
+              @extend %kv-col-2;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #kv-properties-alerts {
+    display: flex;
+    line-height: 45px;
+    z-index: 1;
+  }
+
+  .kv-filters-listings-show-all {
+    display: block;
+    text-align: center;
+    width: 250px;
+    margin: 0 auto 1em;
+    padding: 5px;
+    border: 1px solid $color-buttonface;
+    background-color: $color-buttonface;
+    color: initial;
+    transition: background-color 300ms;
+
+    &:focus {
+      text-decoration: none;
+    }
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+
+  .slick-slide {
+    height: auto;
+    max-height: none;
+
+    .kv-property {
+      @extend .kv-p-0;
+
+      max-width: 350px;
+      height: 100%;
+
+      .kv-box {
+        @extend .kv-mb-0;
+      }
+    }
+  }
+
+  @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+    .kv-property-filters-container {
+      padding:0;
+    }
+    .kv-property-filters {
+      margin:5px !important;
+      & > .kv-form-group.kv-form-with-container {
+        flex-wrap: wrap;
+        text-align:center;
+
+        #kv-properties-alerts {
+          flex: 0 0 100%;
+          margin-bottom: 0.5em;
+          overflow: hidden;
+        }
+
+        & > .kv-filters-control-container {
+          flex: 1;
+
+          & > label {
+            width: 40%;
+          }
+
+          & > select, & > .kv-filters-label-container {
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .kv-box-title-main {
+      font-size: 1.25em;
+    }
+  }
+
+  @media (max-width: $grid-mobile-xs) {
+    .kv-property-filters {
+      & > .kv-form-group.kv-form-with-container {
+        & > .kv-filters-control-container {
+          flex: 0 0 100%;
+          margin-bottom: 0.5em;
+        }
+      }
+    }
+  }
+}
+
+.kv-property-manual-listing-type {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display:block;
+  color: white;
+  padding: 10px;
+  line-height: 1;
+  font-weight: bold;
+  font-size: 80%;
+
+  background-color: $gray-800;
+
+  text-transform: uppercase;
+
+  &-sold {
+    background-color: $color-primary;
+  }
+}
+
+.kv-supports--css-grid {
+  .kv-property-listings-container .kv-property-listings {
+    @include kv-make-grid();
+
+    @extend .kv-grid;
+  }
+
+  .kv-layout-map .kv-property-listings-container .kv-property-listings {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  }
+}
+
+//override a few things on agentfire sites with divi layout here
+.et_pb_section_0{
+  padding-bottom:0 !important;
+}
+.et_pb_section_0.et_pb_section{
+  background-color:#ffffff!important;
+}
+.et_pb_section_1{
+  padding-top:0!important;
+}
+.et_pb_fullwidth_code_0 {
+  padding-left:0!important;
+  padding-right:0!important;
+}
+//keyes specific thing
+.page-id-11312 .kv-properties-search-form .kv-form-group,
+.page-id-11312 .kv-property-filters .kv-form-group {
+  padding:0!important;
+}
+//fivestarmichigan
+.widget_5e467e4f3a3df_7 {
+  margin:0!important;
+}
+//those that don't have 100% width herrealtors fivestarmichigan
+.page-id-7392 .kv-properties-container.kv-layout-map .kv-property-filters>.kv-form-group.kv-form-with-container,
+.page-id-297 .kv-properties-container.kv-layout-map .kv-property-filters>.kv-form-group.kv-form-with-container {
+  justify-content:flex-start;
+}
+@media (min-width: 1360px) {
+  .page-id-7392 .kv-properties-container.kv-layout-card .kv-property-filters>.kv-form-group.kv-form-with-container,
+  .page-id-7392 .kv-properties-container.kv-layout-card .kv-property-filters>.kv-form-group.kv-form-with-container {
+    margin-left:calc(66.6666667% + 85px)!important;
+    justify-content:flex-start;
+  }
+}

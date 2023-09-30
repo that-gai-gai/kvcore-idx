@@ -1,0 +1,93 @@
+{% set idBase = 'kv-admin-hotsheets' %}
+
+{% if hotsheets is iterable %}
+	<form id="{{ idBase }}">
+		<div class="kv-hotsheets-grid">
+		{% for index, hotsheet in hotsheets %}
+			{% set hotsheetId = idBase ~ '[' ~ index ~ ']' %}
+			<div class="kv-content-box-container">
+				<div class="kv-content-box">
+					<div class="kv-content-box-heading">
+						<h2>{{ hotsheet.name }}</h2>
+						<div class="kv-hotsheets-grid-remove kv-hotsheets-grid-remove-hotsheet" title="Remove hotsheet">
+							<i class="fa fa-times" aria-hidden="true"></i>
+						</div>
+					</div>
+					<div class="kv-content-box-content">
+						<div class="kv-hotsheets-grid-filter">
+							<div class="kv-hotsheets-grid-filter-label">
+								<button type="button" class="button button-primary kv-hotsheets-grid-shortcode-copy">
+									Copy
+								</button>
+							</div>
+							<div class="kv-hotsheets-grid-filter-input">
+								<input type="text"
+								       value="[kvcoreidx_listings hotsheet=&#34;{{ hotsheet.name }}&#34;]"
+								       title=""
+								>
+							</div>
+						</div>
+
+						{% for filter, value in hotsheet.filters %}
+							{% if value is iterable %}
+								{% for i, item in value %}
+									{% if filter == 'polygon' and item is iterable %}
+										{% set item = item|json_encode %}
+									{% endif %}
+									{% set name = hotsheetId ~ '[' ~ filter ~ ']' ~ '[' ~ i ~ ']' %}
+									{% set id = name|replace({'[': '_', ']': '_'}) %}
+									<div class="kv-hotsheets-grid-filter">
+										<label for="{{ id }}">{{ filter }}</label>
+										<div class="kv-hotsheets-grid-filter-input">
+											{% if filter == 'polygon' %}
+												<textarea id="{{ id }}"
+												          class="{{ 'kv-hotsheet-filter-' ~ filter }}"
+												          name="{{ name }}"
+												          rows="8"
+									            >{{ item }}</textarea>
+
+											{% else %}
+												<input type="text"
+												       id="{{ id }}"
+												       class="{{ 'kv-hotsheet-filter-' ~ filter }}"
+												       name="{{ name }}"
+												       value="{{ item }}"
+												>
+											{% endif %}
+										</div>
+									</div>
+								{% endfor %}
+							{% else %}
+								{% set name = hotsheetId ~ '[' ~ filter ~ ']' %}
+								{% set id = name|replace({'[': '_', ']': '_'}) %}
+								{% set currentValue = filter in multipleValueFilters ? value|replace({'|':','}) : value %}
+								<div class="kv-hotsheets-grid-filter">
+									<label for="{{ id }}">{{ filter }}</label>
+									<div class="kv-hotsheets-grid-filter-input">
+										<input type="text"
+										       id="{{ id }}"
+										       class="{{ 'kv-hotsheet-filter-' ~ filter }}"
+										       name="{{ name }}"
+										       value="{{ currentValue }}"
+										>
+									</div>
+									<div class="kv-hotsheets-grid-remove-container">
+										<div class="kv-hotsheets-grid-remove kv-hotsheets-grid-remove-filter"
+										     title="Remove filter"
+										>
+											<i class="fa fa-times" aria-hidden="true"></i>
+										</div>
+									</div>
+								</div>
+							{% endif %}
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		{% endfor %}
+		</div>
+		<input type="submit" class="button button-primary" value="Save">
+	</form>
+{% else %}
+	No saved hotsheets found. You can add them by making desired search and clicking on "Save Hotsheet" button on <a href="{{ propertiesLink }}">Properties</a> page.
+{% endif %}

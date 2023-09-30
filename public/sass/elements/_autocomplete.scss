@@ -1,0 +1,49 @@
+.kv-autocomplete {
+	width: 100%;
+	z-index: 0;
+
+	&-container {
+		position: relative;
+	}
+
+	&-match {
+		font-weight: 600;
+	}
+
+	&-clear {
+		display: none;
+		position: absolute;
+		right: 0;
+		top: 3px;
+		padding:0;
+		border: none;
+		background-color: transparent !important;
+		font-size: 2em;
+		cursor: pointer;
+	}
+}
+
+.kv-autocomplete + ul {
+	@extend .kv-p-0;
+
+	position: absolute;
+	width: 100%;
+	margin-top: 3px;
+	list-style-type: none !important;
+	background-color: white;
+	cursor: pointer;
+	z-index: 1;
+
+	li {
+		@extend .kv-p-2;
+
+		margin: 3px;
+		margin-bottom: 0;
+		border: 1px solid #bbb;
+		transition: kv-transition(background-color), kv-transition(border-color);
+
+		&:last-of-type {
+			margin-bottom: 3px;
+		}
+	}
+}

@@ -1,0 +1,13 @@
+.kv-filters {
+  @extend %kv-col-12;
+  padding-left:0;
+
+  &-items-count-container {
+    text-align:center;
+  }
+  
+  &-items-count {
+    margin: 10px;
+    border: 0;
+  }
+}

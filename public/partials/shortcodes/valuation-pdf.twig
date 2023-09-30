@@ -1,0 +1,8 @@
+<div id="kvcoreidx-valuation-pdf" class="kv-container kv-container-no-padding"></div>
+
+{% set vars = {
+	pages: { 'terms_of_use': function('get_site_url', null, 'terms-of-use', null) },
+	options: kvcoreidx.options,
+} %}
+{% include 'login.twig' with vars %}
+{% include 'lead-manager.twig' with vars %}

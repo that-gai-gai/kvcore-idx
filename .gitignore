@@ -1,0 +1,12 @@
+.DS_Store
+/.idea/
+/node_modules/
+/includes/vendor
+*.bat
+kvcoreapi.log
+/admin/css
+/admin/js/views/
+/admin/js/dist/
+/public/css/
+/public/js/dist/
+/public/js/views/

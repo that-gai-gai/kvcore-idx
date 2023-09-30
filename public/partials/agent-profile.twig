@@ -1,0 +1,182 @@
+{% if data is defined and data|length %}
+	{% set phone = data.use_this_phone %}
+    <div class="kv-agent-profile-v2">
+        <section class="kv-agent-profile-v2-header-image">
+            {% if not kv_empty(kvcoreidxSettings.options.agent_profile.header_image_url) %}
+                <img src="{{ kvcoreidxSettings.options.agent_profile.header_image_url }}">
+                {% endif %}
+        </section>
+        <div class="kv-row-container">
+            <div class="kv-agent-profile-v2-contact">
+                <div class="kv-agent-profile-v2-contact-blank"></div>
+                <div class="kv-agent-profile-v2-contact-bar kv-hidden-sm-down">
+                    {% block contactBar %}
+                        <ul class="kv-list-bar">
+                            {% if phone is not empty %}
+                                <li>
+                                    <a href="tel:{{ phone }}" aria-label="{{data.full_name}} mobile phone link">
+                                        <i class="fa fa-mobile"></i>{{ phone|kv_phone_format }}
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% if data.fax %}
+                                <li>
+                                    <i class="fa fa-file-text-0"></i>{{ data.fax|kv_phone_format }}
+                                </li>
+                            {% endif %}
+
+{#                            {% if not kv_empty(data.office.data) and not kv_empty(data.office.data[0].name) %}#}
+{#                                <li>#}
+{#                                    <i class="fa fa-home"></i>{{ data.office.data[0].name }}#}
+{#                                </li>#}
+{#                            {% endif %}#}
+                        </ul>
+                        <ul class="kv-list-bar kv-list-bar-no-border">
+                            {% if data.kvcoreuserdomain is not empty and kvcoreidxSettings.options.team.hide_agent_email_addresses == '1' %}
+                                <li>
+                                    <a href="{{ data.kvcoreuserdomain }}/contact.php" target="_blank" class="kv-button" aria-label="{{data.full_name}} email link">Send Email</a>
+                                </li>
+							{% else %}
+                                {% if data.email %}
+                                    <li>
+                                        <a href="mailto:{{ data.email }}" class="kv-button" aria-label="{{data.full_name}} email link">Send Email</a>
+                                    </li>
+                                {% endif %}
+                            {% endif %}
+                            {% if data.kvcoreuserdomain and kvcoreidx.options.agent_profile.link_agent_listings_to_agent_subdomain == "1" %}
+                                <li>
+                                    <a href="{{ data.kvcoreuserdomain }}/index?showagent=1#rslt" class="kv-button" aria-label="{{data.full_name}} listings link">View Listings</a>
+                                </li>
+                            {% endif %}
+                            {% if not kv_empty(data.userWebsiteUrl.data[0]) and data.userWebsiteUrl.data[0] != '' %}
+                                <li>
+                                    <a href="{{ data.userWebsiteUrl.data[0] }}" target="_blank" class="kv-button" aria-label="{{data.full_name}} website link">
+                                        Visit My Website
+                                    </a>
+                                </li>
+                            {% elseif data.website_url %}
+                                <li>
+                                    <a href="{{ data.website_url }}" target="_blank" class="kv-button" aria-label="{{data.full_name}} website link">
+                                        Visit My Website
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+        <div class="kv-row-container">
+            <div class="kv-agent-profile-v2-main">
+                <div class="kv-agent-profile-v2-main-image">
+                    <img src="{{ data.photo|raw }}" alt="{{data.full_name}} Photo">
+                </div>
+                <div class="kv-agent-profile-v2-main-bar kv-hidden-md-up">
+                    {{ block('contactBar') }}
+                </div>
+                <div class="kv-agent-profile-v2-main-info">
+                    <div class="kv-agent-profile-v2-main-info-name">
+                        <h1 class="kv-agent-profile-v2-main-info-name-full kv-mb-2">{{ data.full_name }}</h1>
+                        <h3 class="kv-agent-profile-v2-main-info-name-title kv-mb-2">{{ data.title }}</h3>
+                        {% if not kv_empty(data.credentials) %}
+                            <div>{{ data.credentials }}</div>
+                        {% endif %}
+                    </div>
+
+                    {% if data.social|length %}
+                        {% set socialIcons = {
+                            facebook_url: 'facebook',
+                            linkedin_url: 'linkedin',
+                            twitter_url: 'twitter',
+                            instagram_url: 'instagram',
+                            pinterest_url: 'pinterest',
+                            youtube_url: 'youtube-play'
+                        } %}
+
+                        <ul class="kv-agent-profile-v2-main-info-social kv-list-bar kv-list-bar-no-border">
+                            {% for network, link in data.social %}
+                                {% if link is not empty %}
+                                    <li class="kv-social-icon-color kv-social-icon-color-{{ socialIcons[network] }}">
+                                        <a href="{{ link }}" target="_blank">
+                                            <i class="fa fa-{{ socialIcons[network] }}"></i>
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                {% if data.bio is not empty %}
+                    <div class="kv-agent-profile-v2-main-bio">
+                        {{ data.bio|raw }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if data.kvcoreuserdomain is defined and data.kvcoreuserdomain != '' %}
+        <div class="kv-row-container">
+            <div class="kv-agent-profile-v2-testimonials kv-my-5">
+                <div class="kv-container">
+                    <a href="{{ data.kvcoreuserdomain ~ '/testimonials.php' }}"
+                        class="kv-button" aria-label="{{data.full_name}} testimonials link"
+                    >View Testimonials</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% if listings.data|length %}
+            <div class="kv-row-container">
+                <div class="kv-agent-profile-v2-active-listings kv-my-5">
+                    <div class="kv-container-space-between">
+                        <h2>Active Listings</h2>
+                        {% if data.kvcoreuserdomain and kvcoreidx.options.agent_profile.link_agent_listings_to_agent_subdomain == "1" %}
+                            <a href="{{ data.kvcoreuserdomain }}/index?showagent=1#rslt" class="kv-button" aria-label="{{data.full_name}} listings link">
+                                View All Listings
+                            </a>
+                        {% else %}
+                            <a href="{{ kvcoreidxSettings.pages.properties }}?agents={{ data.id }}" class="kv-button" aria-label="{{data.full_name}} listings link">
+                                View All Listings
+                            </a>
+                        {% endif %}
+                    </div>
+                    <div class="kv-container" id="kvcoreidx-active-listings">
+                        <div class="kv-property-listings-container">
+                            {% include 'properties-listings.twig' with {data: listings.data, kvcoreidx: kvcoreidxSettings} %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+    </div>
+{% else %}
+    <div class="kv-agent-profile">
+        <div class="kv-agent-profile-header kv-center-contents">
+            <div class="kv-agent-profile-header-profile">
+                <div class="photo loading loading-mt-25">
+                    <img src="{{ kvcoreidxSettings.publicUrl ~ 'images/user-icon.png' }}" onload="jQuery(this).parent().removeClass('loading');">
+                </div>
+                <h1>Agent Not Found</h1>
+            </div>
+        </div>
+
+        <div class="kv-agent-profile-content">
+            <div class="kv-agent-profile-content-about">
+                <div class="about-contents">
+                    <h2>Agent Not Found</h2>
+                    <div class="about-contents">
+                        Sorry, the selected agent was not found. Please visit our <a href="{{ kvcoreidx.pages.team }}">Roster Page</a> to view all agents.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% set vars = {
+    pages: kvcoreidx.pages,
+    options: kvcoreidx.options
+} %}
+{% include 'login.twig' with vars %}

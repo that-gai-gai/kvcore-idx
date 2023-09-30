@@ -1,0 +1,73 @@
+{% set perRow = kvcoreidx.options.team.per_row|round in [1, 2, 3, 4, 6] ? kvcoreidx.options.team.per_row|round : 6 %}
+{% set perRowClass = ' kv-container-per-row-' ~ perRow %}
+
+{% macro sort() %}
+	<div class="kv-select">
+		<label class="kv-text-ellip" for="kv-filter-order">
+			Sort By
+		</label>
+		<select id="kv-filter-order" name="filter[order]">
+			<option value="default" selected="selected">Default</option>
+			<option value="last_name|asc">Last Name (A-Z)</option>
+			<option value="last_name|desc">Last Name (Z-A)</option>
+		</select>
+	</div>
+{% endmacro %}
+
+{% macro offices() %}
+	<div id="kv-filter-office-container" class="kv-select kv-hidden">
+		<label class="kv-text-ellip" for="kv-filter-office">
+			Office
+		</label>
+		<select id="kv-filter-office" name="filter[entities][]"></select>
+	</div>
+{% endmacro %}
+
+{% import _self as macro %}
+
+<div id="kvcoreidx-team-page" class="kv-container{{ perRowClass }}" data-attributes="{{ shortcode_attributes|json_encode|escape }}">
+	<div class="kv-filters kv-mb-4">
+		<form id="kv-team-member-filters-form" class="kv-team-member-filters kv-form" action="javascript:void(0);">
+			{% if kvcoreidx.options.design != 'v1' %}
+				<div class="kv-form-group">
+					{{ macro.sort() }}
+				</div>
+			{% endif %}
+
+			<div class="kv-form-group">
+				{% if kvcoreidx.options.design == 'v1' %}
+					{{ macro.sort() }}
+
+					{{ macro.offices() }}
+				{% endif %}
+
+				<div class="kv-form-group-search">
+					<label for="kv-team-member-filters-search"></label>
+					<input type="text" id="kv-team-member-filters-search" name="search" value="" placeholder="QUICK SEARCH">
+				</div>
+
+				{% if kvcoreidx.options.design != 'v1' %}
+					<div class="kv-form-group-filter">
+						<div class="kv-form-group-filter-button"
+							 data-toggle="collapse"
+							 data-target=".kv-form-group-filter-area"
+						>
+							FILTER
+						</div>
+
+						<div class="collapse kv-form-group-filter-area">
+							{{ macro.offices() }}
+							<div id="kv-filter-type-container" class="kv-hidden"></div>
+							<input type="hidden" name="filter[type]" id="kv-filter-type-value">
+							<div id="kv-filter-designation-container" class="kv-hidden"></div>
+							<input type="hidden" name="filter[designation]" id="kv-filter-designation-value">
+							<div id="kv-filter-language-container" class="kv-hidden"></div>
+							<input type="hidden" name="filter[language]" id="kv-filter-language-value">
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</form>
+	</div>
+	<div id="kvcoreidx-team-page--results"></div>
+</div>

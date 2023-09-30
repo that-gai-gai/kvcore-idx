@@ -1,0 +1,84 @@
+{# ---
+layout: none
+--- #}
+<div id="kv-user-profile" class="{{ kv.wrapper_class }} kv-container kv-tabs loading loading-mt-25">
+    <div class="kv-tabs-header">
+        <div id="tab-profile" class="kv-tab-title kv-tab-active">
+            <div class="kv-tab-title-text">My Profile</div>
+        </div>
+        <div id="tab-saved-properties" class="kv-tab-title kv-tab-inactive">
+            <div class="kv-tab-title-text">Saved Properties</div>
+        </div>
+        <div id="tab-saved-searches" class="kv-tab-title kv-tab-inactive">
+            <div class="kv-tab-title-text">Saved Searches</div>
+        </div>
+        <div class="kv-tab-title kv-tab-link kv-tab-inactive" onclick="kvCORE.User.logout('/');">
+            <div class="kv-tab-title-text">Logout</div>
+        </div>
+    </div>
+
+    <div class="kv-tab-content kv-tab-profile">
+        {% if message is defined and message != '' %}
+            <div class="container">
+                <div class="alert alert-danger">
+                    {{ message }}
+                </div>
+            </div>
+        {% endif %}
+        <form name="kv-user-profile-form"
+              id="kv-user-profile-form"
+              class="loading-mt-50"
+              action="public/leads"
+              method="put"
+        >
+            <div class="kv-row">
+                <div class="kv-form-group kv-form-group-row-pair">
+                    <label for="first-name">YOUR NAME</label>
+                    <input class="kv-form-control" name="name" id="first-name"
+                           value="{{ first_name }}{% if last_name %} {{ last_name }}{% endif %}"
+                    >
+                </div>
+            </div>
+            <div class="kv-row">
+                <div class="kv-form-group kv-form-group-row-pair">
+                    <label for="phone">PHONE</label>
+                    <input class="kv-form-control" name="phone" id="phone"
+                           value="{{ phone }}"
+                    >
+                </div>
+            </div>
+            <div class="kv-row">
+                <div class="kv-form-group kv-form-group-row-pair">
+                    <label for="public-leads--email">EMAIL</label>
+                    <input class="kv-form-control" required="required" name="email" id="public-leads--email"
+                           value="{{ email }}"
+                    >
+                </div>
+            </div>
+             <div class="kv-row">
+                <div class="kv-form-group kv-form-group-row-pair">
+                    <a href="javascript:void(0)" class="kv-form-profile-unsubscribe-link">Unsubscribe from all</a>
+                    <span class="kv-form-profile-unsubscribe-message"></span>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="kv-row">
+                <div class="kv-form-group kv-user-profile-form-submit">
+                    <input type="hidden" name="action" value="submit-profile_update"/>
+                    <input type="hidden" name="lead_id" value="{{ user.lead_id }}"/>
+                    <button type="submit" class="kv-button">Update</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="kv-tab-content kv-tab-saved-properties">
+        <div class="content"></div>
+    </div>
+
+    <div class="kv-tab-content kv-tab-saved-searches">
+        <div class="content"></div>
+    </div>
+</div>

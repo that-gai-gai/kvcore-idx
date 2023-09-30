@@ -1,0 +1,197 @@
+#modal--login,
+#kv-modal-login {
+	.modal-dialog {
+		max-width:660px;
+	}
+}
+.kv-modal-login {
+	#kv-modal--phone-section.kv-modal-login-hide {
+		display:none;
+	}
+	#vow-fname.error,
+	#vow-lname.error,
+	#vow-cell-phone.error,
+	#vow-email.error,
+	#modal--login-email.error,
+	#modal--login-phone.error {
+		border:1px solid #d9534f;
+	}
+
+	#vow-terms-agreement.error {
+		border:1px solid #d9534f;
+		outline:1px solid #d9534f;
+	}
+	#vow-terms-agreement-error {
+		display:none!important;
+	}
+
+	#vow-fname.error,
+	#vow-lname.error,
+	#vow-cell-phone.error,
+	#vow-email.error,
+	#modal--login-phone-error,
+	#modal--login-email-error {
+		color: #d9534f;
+		text-transform:none;
+		font-size:12px;
+		line-height:0;
+		margin-top:-6px;
+		padding-bottom:10px;
+	}
+
+	label {
+		display: block;
+		margin-bottom: 0.5rem;
+		cursor: pointer;
+	}
+
+	label.kv-ib {
+		display:inline-block;
+	}
+
+	.kv-form-control {
+		margin-bottom: 1rem;
+	}
+
+	[type="radio"],
+	[type="checkbox"] {
+		display: inline-block;
+		width: auto;
+		height: auto;
+	}
+
+	.kv-button {
+		margin-bottom: 2rem;
+	}
+
+	&-login-agreement {
+		margin-bottom: 10px;
+		text-align: center;
+	}
+
+	&-date {
+		.kv-row .kv-form-group {
+			@extend %kv-col-12, %kv-col-md-6;
+		}
+	}
+
+	.kv-login-social {
+		@extend .kv-row;
+
+		display: flex;
+		justify-content: space-around;
+
+		margin-top: 2em;
+
+		.kv-form {
+			@extend %kv-col-4;
+		}
+
+		&-button {
+			display: block;
+			text-align: center;
+			font-size: .75em;
+			color: inherit;
+			text-decoration: none;
+
+			img {
+				width: 50px;
+			}
+		}
+	}
+	.modal-header, .modal-body, .kv-modal-body {
+		padding: 1.5rem;
+		label {
+			text-transform:uppercase;
+			.kv-login-email-small {
+				font-size:0.8rem;
+		  	}
+		}
+		.kv-login-row {
+			display: flex;
+			.fb-login-section {
+				padding-right:15px;
+				flex: 0 0 50%;
+				.btn-fb {
+					background-color: #294a8f;
+					color: #fff;
+					padding: 12px; 
+					width:100%;
+					font-size:12px;
+				}
+				.btn.btn-fb.btn-block {
+					height: 100%;
+				}
+			}
+			.google-login-section {
+				flex: 0 0 50%;
+				padding-left:15px;
+				.btn-google {
+					background-color: #d34836;
+					color: #fff;
+					padding: 12px; 
+					width:100%;
+					font-size:12px;
+				}
+				.btn.btn-google.btn-block {
+					height: 100%;
+				}
+			}
+			.fa {
+				color: rgba(255, 255, 255, 0.9);
+				margin: 0 10px 0 0;
+				font-size: 1.15em;
+			}
+		}
+	}
+	[type=button].close {
+		color:#000;
+	}
+	[type=button].close:hover,
+	[type=button].close:visited,
+	[type=button].close:link,
+	[type=button].close:active {
+		background-color: transparent;
+	}
+	.kv-button {
+		width: 100%;
+	}
+	.kv-form-field-invalid {
+		border:1px solid red;
+	}
+	.error-message {
+		font-size:11px;
+		color:red;
+		display:block;
+	}
+	.modal-footer {
+		display:none;
+	}
+	.kv-login-option-or {
+		position: relative;
+		text-align: center;
+		margin: 25px 0; 
+	}
+	.kv-login-option-or:before {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		height: 1px;
+		top: 50%;
+		background: #4A4A4A;
+		z-index: 1; 
+	}
+	.kv-login-option-or span {
+		display: inline-block;
+		position: relative;
+		z-index: 2;
+		vertical-align: top;
+		width: 25px;
+		height: 25px;
+		line-height: 22px;
+		border-radius: 50%;
+		background: #4A4A4A;
+		color: #fff; 
+	}
+}

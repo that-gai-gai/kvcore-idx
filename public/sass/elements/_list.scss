@@ -1,0 +1,174 @@
+.kv-list {
+	@extend .kv-p-0, .kv-mb-2;
+
+	list-style: none !important;
+
+	&.kv-list-bg {
+		.kv-list-item {
+			@extend .kv-p-2;
+
+			background: #f7f7f7;
+
+			&:not(:last-child) {
+				border-bottom: 1px solid #fff;
+			}
+		}
+	}
+
+	&.kv-list-heading-uppercase {
+		.kv-list-item-heading {
+			text-transform: uppercase;
+		}
+	}
+
+	&-heading {
+		@extend .kv-mb-2, .kv-pb-0;
+	}
+
+	&-item {
+		@extend .kv-py-1;
+
+		display: flex;
+
+		&-heading {
+			color: #999;
+			width: 80px;
+		}
+
+		&-value {
+			@extend .kv-bold;
+		}
+	}
+
+	&-v2 {
+		&-title {
+			@extend .kv-pb-2;
+
+			text-transform: uppercase;
+		}
+
+		&-item {
+			display: inline-flex;
+			width: 100%;
+			padding: 0.5 * $spacer;
+			background-color: white;
+
+			&:first-of-type {
+				border-top: 2px solid $color-buttonface;
+			}
+
+			&:nth-of-type(odd) {
+				@extend .kv-bg-light;
+			}
+
+			&-name {
+				float: left;
+				width: 40%;
+				text-align:left;
+			}
+
+			&-value {
+				float: left;
+				width: 60%;
+				padding-left: 0.5 * $spacer;
+				text-align:left;
+			}
+		}
+	}
+
+	&-bar {
+		@extend .kv-m-0, .kv-p-0;
+
+		display: inline-flex;
+		align-items: center;
+		flex-wrap: wrap;
+		margin-bottom: -0.25 * $spacer !important;
+
+		&:not(&-no-border) {
+			@extend .kv-mt-2, .kv-px-0;
+
+			margin-bottom: 0.25 * $spacer !important;
+
+			li {
+				&:not(:last-child) {
+					padding-right: $spacer;
+					border-right: 1px solid #b7b7b9;
+				}
+
+				&:not(.kv-social-icon-color) {
+					@media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+						border: none;
+						padding-right: 0;
+					}
+				}
+			}
+		}
+
+		&:not(&-no-xs-column) {
+			@media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+				flex-direction: column;
+				justify-content: center;
+
+				li {
+					margin-right: 0;
+
+					.kv-button {
+						width: 75vw;
+					}
+				}
+			}
+		}
+
+		&-align-left {
+			@media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+				flex-direction: column;
+				justify-content: center;
+				align-items: flex-start;
+
+				li {
+					padding-right: 0;
+					border: none;
+
+					&, a {
+						width: 100%;
+					}
+				}
+			}
+		}
+
+		&, li {
+			list-style: none;
+		}
+
+		li {
+			@extend .kv-mb-1, .kv-text-ellip;
+
+			display: inline-flex;
+			align-items: center;
+
+			&:not(:last-child) {
+				margin-right: $spacer;
+			}
+
+			a:not(.kv-button) {
+				display: flex;
+				align-items: center;
+				color: currentColor;
+			}
+
+			i {
+				color: #b7b7b9;
+			}
+
+			img {
+				height: 100%;
+				margin-right: 0.3em;
+			}
+
+			.fa {
+				margin-right: 0.3em;
+				font-size: 1.6em;
+			}
+		}
+	}
+}

@@ -1,0 +1,28 @@
+{% if areas_and_neighborhoods_data %}
+<div class="kv-area-nearby-areas">
+   <div class="kv-area-section-heading">{{area_location}} AREAS &amp; NEIGHBORHOODS</div>
+   <div class="kv-area-section-line"></div>
+   <div class="kv-area-row">
+   {% if areas_and_neighborhoods_data.area %}
+      <div class="kv-col-6">
+         <div class="kv-nearby-areas-block">
+            <div class="kv-block-title">AREAS</div>
+            {% for a in areas_and_neighborhoods_data.area %}
+               <a href="{{a.url}}" class="kv-nearby-area-link">{{a.name}}</a>
+            {% endfor %}
+         </div>
+      </div>
+   {% endif %}
+   {% if areas_and_neighborhoods_data.neighborhood %}
+      <div class="kv-col-6">
+         <div class="kv-nearby-areas-block">
+            <div class="kv-block-title">NEIGHBORHOODS</div>
+            {% for n in areas_and_neighborhoods_data.neighborhood %}
+               <a href="{{n.url}}" class="kv-nearby-area-link">{{n.name}}</a>
+            {% endfor %}
+         </div>
+      </div>
+   {% endif %}
+   </div>
+</div>
+{% endif %}

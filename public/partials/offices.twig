@@ -1,0 +1,255 @@
+{% macro pagination(name, currentFilters, from, to, total, last_page, design) %}
+	{% if currentFilters is defined and from and to and total %}
+        <div class="kv-filters-items-count-container">
+            <div class="kv-filters-items-count">{{ from }} to {{ to }} of {{ total }}</div>
+        </div>
+        <div class="kv-filters kv-mb-4">
+            <form id="{{ 'kv-' ~ name ~ '-filters-page' }}" class="{{ 'kv-' ~ name ~ '-filters' }}">
+                <div class="kv-pagination kv-text-center">
+					{% set max_pages_to_show = 5 %}
+					{% set first_page = 1 %}
+
+					{% set start = currentFilters.page - max_pages_to_show %}
+					{% if start < 1 %}
+						{% set start = 1 %}
+					{% endif %}
+
+					{% set end = start + (max_pages_to_show * 2) %}
+					{% if end > last_page %}
+						{% set end = last_page %}
+					{% endif %}
+
+					{% set previous_page = currentFilters.page - 1 %}
+					{% if previous_page < 1 %}
+						{% set previous_page = 1 %}
+					{% endif %}
+
+					{% set next_page = currentFilters.page + 1 %}
+					{% if next_page > last_page %}
+						{% set next_page = last_page %}
+					{% endif %}
+
+	                {% set previous = design == 'v1' ? 'Previous' : '<i class="fa fa-caret-left"></i>' %}
+	                {% set next = design == 'v1' ? 'Next' : '<i class="fa fa-caret-right"></i>' %}
+
+					{% set id = 'kv-filter-page-previous' %}
+                    <input type="radio"
+                           name="page"
+                           class="kv-form-hide"
+                           id="{{ id }}"
+                           value="{{ previous_page }}"
+                           {% if currentFilters.page == first_page %}disabled="disabled"{% endif %}
+                    >
+                    <label for="{{ id }}" class="kv-form-label-button">{{ previous }}</label>
+
+					{% if currentFilters.page > max_pages_to_show + 1 %}
+						{% set id = "kv-filter-page-" ~ first_page %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ first_page }}">
+                        <label for="{{ id }}" class="kv-form-label-button">{{ first_page }}</label>
+						{% if currentFilters.page > (max_pages_to_show + 2) %}
+                            <span class="kv-form-label-button no-border">&hellip;</span>
+						{% endif %}
+					{% endif %}
+
+					{% for i in range(start, end) %}
+						{% set id = "kv-filter-page-" ~ i %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ i }}" {% if currentFilters.page == i %}checked="checked"{% endif %}>
+                        <label for="{{ id }}" class="kv-form-label-button">{{ i }}</label>
+					{% endfor %}
+
+					{% if last_page - currentFilters.page > (max_pages_to_show + 2) %}
+                        <span class="kv-form-label-button kv-form-label-button-ellip">&hellip;</span>
+
+						{% set id = "kv-filter-page-" ~ last_page %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ last_page }}">
+                        <label for="{{ id }}" class="kv-form-label-button">{{ last_page }}</label>
+					{% endif %}
+
+	                {% set id = 'kv-filter-page-next' %}
+                    <input type="radio"
+                           name="page"
+                           class="kv-form-hide"
+                           id="{{ id }}"
+                           value="{{ next_page }}"
+	                       {% if currentFilters.page == last_page %}disabled="disabled"{% endif %}
+                    >
+                    <label for="{{ id }}" class="kv-form-label-button">{{ next }}</label>
+                </div>
+            </form>
+        </div>
+	{% endif %}
+{% endmacro %}
+
+{% import _self as macro %}
+
+<div class="kv-offices-container">
+    {% if data is not defined or not data | length %}
+        <div class="kv-offices-container kv-offices-none">
+            <div class="kv-col kv-text-center">
+                No offices found
+            </div>
+        </div>
+    {% else %}
+
+	    {% set perRow = currentFilters.perRow|round in [1, 2, 3, 4, 6] ? currentFilters.perRow|round : 4 %}
+	    {% set perRowClass = ' kv-per-row-' ~ perRow %}
+
+        <div class="kv-offices-grid{{ gridClass }}">
+        {% for office in data %}
+            <div id="kv-office-{{ office.id }}" class="kv-office {{ 'kv-grid-columns-' ~ currentFilters.perRow }}"
+                 data-relevance="{{ office.relevance }}"
+            >
+	            {% set phone = office.phone %}
+
+	            {% set click %}
+		            {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                        window.open('{{ office.website_url }}', '_blank');
+		            {% else %}
+                        document.location='{{ office.website_url }}';
+		            {% endif %}
+	            {% endset %}
+
+	            {% if kvcoreidx.options.design == 'v1' %}
+                    <div class="kv-box-v1 kv-text-center">
+	                    {% if office.business_photo is not empty %}
+                            <div class="kv-box-v1-image loading-center"
+                                 onclick="{{ click }}"
+                                 style="background-image: url('{{ office.business_photo }}');"
+                            >
+                            </div>
+                        {% endif %}
+
+                        <div class="kv-box-v1-content" onclick="{{ click }}">
+                            <div class="kv-box-v1-title">
+                                <h2 class="kv-box-v1-title-main kv-office-name">{{ office.name }}</h2>
+
+                                <h3 class="kv-box-v1-title-sub kv-office-address-phone">
+                                    <span class="kv-office-address">
+                                        {% if office.address %}
+                                            <span class="kv-address-street">{{ office.address }}<br></span>
+                                        {% else %}
+                                            &nbsp;<br>
+                                        {% endif %}
+
+                                        {% if office.city and office.state %}
+                                            <span class="kv-address-city">{{ office.city }},&nbsp;</span>
+                                            <span class="kv-address-state">{{ office.state }}&nbsp;</span>
+                                        {% endif %}
+
+                                        {% if office.zip %}
+                                            <span class="kv-office-zip">{{ office.zip }}</span>
+                                        {% else %}
+                                            &nbsp;
+                                        {% endif %}
+                                    </span>
+	                                {% if phone is not empty %}
+                                        <br class="kv-office-address">
+                                        <a class="kv-small kv-my-2 kv-d-inline-block kv-phone-number"
+                                           href="tel: {{ phone }}"
+                                        >
+                                            {{ phone|kv_phone_format }}
+                                        </a>
+                                    {% endif %}
+                                </h3>
+                            </div>
+                            {% if office.social|length %}
+                                <div class="kv-box-v1-icons">
+                                    {% for network, link in office.social %}
+                                        {% if link %}
+                                            <a class="kv-social-media kv-{{ network }}" href="{{ link }}" target="_blank"></a>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="kv-social-media"></span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="kv-box-v1-footer kv-bt">
+                            <div class="kv-box-v1-footer-item kv-box-v1-footer-item-link">
+                                <a href="{{ kvcoreidx.pages.team }}?entities[]={{ office.id }}"
+                                   class="kv-color-gray"
+                                   {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                                       target="_blank"
+                                   {% endif %}
+                                >
+                                    View Agents
+                                </a>
+                            </div>
+                            <div class="kv-box-v1-footer-item kv-box-v1-footer-item-link">
+                                <a href="{{ office.website_url }}"
+                                   class="kv-color-gray"
+                                   {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                                       target="_blank"
+                                   {% endif %}
+                                >
+                                    Visit Office Website
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="kv-box kv-box-footer-count-1">
+                        {% if office.business_photo is not empty %}
+                            <a href="{{ office.website_url }}"
+                               class="kv-box-image"
+                               style="background-image: url({{ office.business_photo }});background-size:contain;"
+                               {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                                   target="_blank"
+                               {% endif %}
+                            >
+                            </a>
+                        {% endif %}
+
+                        <div class="kv-box-content" onclick="{{ click }}">
+                            <div class="kv-box-content-title">
+                                {% set nameArr = office.name|split(' ') %}
+                                <h3 class="kv-box-content-title-main" title="{{ office.name }}">
+                                    <span class="kv-box-content-title-main-bold">{{ nameArr[0] }}</span>
+                                    {{ nameArr|slice(1)|join(' ') }}
+                                </h3>
+                            </div>
+                            <div class="kv-box-content-info">
+                                {% set officeAddressArr = [] %}
+                                {% for item in [office.city, office.state, office.zip] %}
+                                    {% if item is not empty %}
+                                        {% set officeAddressArr = officeAddressArr|merge([item|trim|trim(' ')|trim(',')]) %}
+                                    {% endif %}
+                                {% endfor %}
+                                <div class="kv-box-content-info-line" title="{{ officeAddressArr|join(', ') }}">
+                                    <i class="fa fa-home"></i>{{ office.address }}<br>
+                                    {{ officeAddressArr|join(', ') }}
+                                </div>
+                                {% if phone is not empty %}
+                                    <a href="tel:{{ phone }}" class="kv-box-content-info-line">
+                                        <i class="fa fa-phone"></i>{{ phone|kv_phone_format }}
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="kv-box-footer">
+                            <a href="{{ kvcoreidx.pages.team }}?entities[]={{ office.id }}"
+                               class="kv-box-footer-item kv-small"
+                               {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                                   target="_blank"
+                               {% endif %}
+                            >
+                                <i class="fa fa-user"></i>Agents
+                            </a>
+                            <a href="{{ office.website_url }}"
+                               class="kv-box-footer-item kv-small"
+                               {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+                                   target="_blank"
+                               {% endif %}
+                            >
+                                <i class="fa fa-desktop"></i>Website
+                            </a>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        </div>
+	    {{ macro.pagination('offices', currentFilters, from, to, total, last_page, kvcoreidx.options.design) }}
+    {% endif %}
+</div>

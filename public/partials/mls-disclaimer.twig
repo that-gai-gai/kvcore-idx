@@ -1,0 +1,14 @@
+{% for mls in data %}
+    <div class="kv-row">
+        <div class="kv-col-md-12">
+            <img class="kv-float-left kv-disclaimer-company-logo"
+                 src="https://d9la9jrhv6fdd.cloudfront.net/mlslogos/{{ mls.mlsid }}.png"
+                 alt="logo"
+            >
+            {{ mls.disclaimer | raw }}
+            {% if mls.parentState == 'NY' and (mls.mlsid == 1 or mls.mlsid == 129 or mls.mlsid == 251 or mls.mlsid == 578) %}
+                Associate of: <a href="https://{{ mls.parentDomain }}" target="_blank">{{ mls.parentDomain }}</a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}

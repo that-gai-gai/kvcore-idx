@@ -1,0 +1,27 @@
+.kv-content-box {
+  $border: 1px solid #eee;
+
+  border: $border;
+
+  &-heading {
+    border-bottom: $border;
+
+    h1, h2, h3, h4, h5, h6 {
+      @extend .kv-p-0, .kv-m-0;
+    }
+  }
+
+  &-content {
+    p {
+      @extend .kv-p-0;
+
+      &:last-child {
+        @extend .kv-m-0;
+      }
+    }
+  }
+
+  &-content, &-heading {
+    padding: 1.5 * $spacer;
+  }
+}

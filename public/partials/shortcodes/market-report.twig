@@ -1,0 +1,12 @@
+<div id="kvcoreidx-market-report"
+     data-attributes="{{ _context|json_encode|escape }}"
+     class="kv-container kv-container-no-padding loading loading-center"
+></div>
+
+{% set vars = {
+	pages: {'terms_of_use': function('get_site_url', null, 'terms-of-use', null)},
+	options: kvcoreidx.options,
+	title: 'Want To See An Area Report?'
+} %}
+{% include 'login.twig' with vars %}
+{% include 'lead-manager.twig' with vars %}

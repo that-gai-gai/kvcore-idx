@@ -1,0 +1,24 @@
+.kv-chosen {
+    .chosen-container-single {
+        .chosen-single {
+            height:38px;
+            border-radius:0;
+            line-height:38px;
+            div b {
+                background-position:0 10px;
+            }
+            background:#fff;
+            background: linear-gradient(#fff, #fff);
+            background: -webkit-linear-gradient(#fff, #fff);
+            abbr {
+                top:14px;
+                cursor: pointer;
+            }
+        }
+    }
+    .chosen-container-active.chosen-with-drop {
+        .chosen-single div b {
+            background-position: -18px 10px;
+        }
+    }
+}

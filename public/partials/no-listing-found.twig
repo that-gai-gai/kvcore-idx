@@ -1,0 +1,92 @@
+<div class="kv-no-listing-found">
+    <div class="kv-no-listings">
+        <div class="kv-no-listings-content">
+            <h2>Oops! This listing is no longer available.</h2>
+            <p>Please provide your email address and phone number and we will update you of any status changes. You can also view more listings below.</p>
+            <button class="kv-mt-4 kv-button" onclick="window.location.href='{{properties_search_url}}';">BACK TO PROPERTY SEARCH</button>
+        </div>
+        <div class="kv-no-listings-content">
+            <form class="ask-a-question-form kv-form"
+                action="public/leads/question"
+                method="put"
+                data-callback="{{ callback|json_encode|url_encode }}"
+            >
+                <input type="hidden" id="modal--question-mlsid" name="mls_id" value="{{ mlsid }}">
+                <input type="hidden" id="modal--question-mls" name="mls" value="{{ mls }}">
+                <input type="hidden" id="modal--question-lead_id" name="lead_id" value="{{ user.lead_id }}">
+                <input type="hidden" id="modal--question-website" name="website" value="{{ kvcoreidx.siteUrl }}">
+
+                <label for="modal--question-name">Name</label>
+                <input class="kv-form-control" name="name" id="modal--question-name"
+                    placeholder="John Doe" type="text"
+                >
+
+                <label for="modal--question-email">Email</label>
+                <input class="kv-form-control" name="email" id="modal--question-email"
+                    placeholder="Email Address" type="text"
+                >
+
+                <label for="modal--question-phone">Phone</label>
+                <input class="kv-form-control" name="phone"
+                    id="modal--question-phone" placeholder="Phone" type="text"
+                >
+
+                <label for="modal--question-question">Comments</label>
+                <label for="modal--question-question"></label>
+                <textarea name="question" id="modal--question-question" class="kv-form-control">I would like to be updated on the status of MLS ID #{{ mlsid }}</textarea>
+
+                {% if kvcoreidx.options.optimize_for_canada == "1" %}
+                    <p class="kv-my-3">
+                        <small>By submitting your message and personal details you are permitting us to contact you by these means in response to your inquiry.</small>
+                    </p>
+                    <div class="kv-form-group">
+                        <div class="kv-form-group-field kv-w-100">
+                            <input id="terms-agreement-canada" type="checkbox"
+                                name="preferred-contact-method"
+                                class="kv-form-control form-check-input" required="required" style="margin-bottom:0">
+                            <label for="terms-agreement-canada" class="form-check-label" style="display:inline">
+                                <small>I would also like to receive email newsletters and periodic updates about real estate in my area and other related communications from <span class="kv-modal-terms-canada-name"></span>. I understand I can withdraw my consent at any time. <span class="kv-modal-terms-canada-name"></span>, <span class="kv-modal-terms-canada-address"></span></small>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="kv-form-group">
+                        <div class="kv-form-group-field kv-w-100">
+                            <p class="kv-disclaimer kv-my-3">
+                                <small>
+                                    {% if kvcoreidx.pages.privacy_policy and kvcoreidx.pages.terms_of_use %}
+                                        In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a> and <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                    {% elseif kvcoreidx.pages.privacy_policy %}
+                                        In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a>.
+                                    {% elseif kvcoreidx.pages.terms_of_use %}
+                                        In addition, you also agree to our <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                    {% endif %}
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <button type="submit" class="kv-button">SUBMIT</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="kv-row-container">
+    <div class="kv-agent-profile-v2-active-listings kv-my-5">
+        <div class="kv-container-space-between">
+            <h2>More Listings</h2>
+        </div>
+        <div class="kv-container" id="kvcoreidx-active-listings">
+            {% if listings.data|length %}
+                <div class="kv-property-listings-container">
+                    {% include 'properties-listings.twig' with {data: listings.data, kvcoreidx: kvcoreidx} %}
+                </div>
+            {% else %}
+                <h3>Could not find listings.</h3>
+            {% endif %}
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+<div id="kvcoreidx-listing-details-page" class='kv-container kv-px-0'>
+{#    {% if kvcoreidx.options.listing_detail_design is not defined or kvcoreidx.options.listing_detail_design == 'v1' %}#}
+{#        <div class="kv-container kv-pb-4 kv-bb">#}
+{#            {% include 'shortcodes/listing-detail/header.twig' %}#}
+{#        </div>#}
+
+{#        <div class="kv-bg-light">#}
+{#            <div class="kv-container kv-container-box">#}
+{#                {% include 'shortcodes/listing-detail/details.twig' %}#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endif %}#}
+</div>
+{#{% if kvcoreidx.options.listing_detail_design is defined or kvcoreidx.options.listing_detail_design == 'v2' %}#}
+	{% set vars = {
+		pages: kvcoreidx.pages,
+		options: kvcoreidx.options
+	} %}
+	{% include 'login.twig' with vars %}
+	{% include 'lead-manager.twig' with vars %}
+	{% include 'question.twig' with vars %}
+	{% include 'listing-detail-slider.twig' %}
+	{% set showPrequalify = kvcoreidx.options.listing_detail.show_prequalify_button %}
+	{% if showPrequalify == '1' %}
+		{% include 'shortcodes/prequalify.twig' with {includeButton: false} %}
+	{% endif %}
+{#{% endif %}#}

@@ -1,0 +1,193 @@
+{% if includeButton is not defined or includeButton == true %}
+    <button id="kvcoreidx-shortcode--prequalify-button" class="kv-button">Pre-Qualify</button>
+{% endif %}
+
+<div class="{{ kvcoreidx.wrapper_class }}">
+    <div id="kvcoreidx-shortcode--prequalify-modal" class="modal kv-modal kv-modal-login fade in">
+        <div class="modal-dialog kv-modal-dialog">
+            <div class="kv-modal-content kv-container">
+                <div class="kv-modal-header">
+                    <h4 class="kv-modal-title kv-pb-0">Get Pre-Approved Now!</h4>
+                    <button type="button" class="kv-modal-close" data-dismiss="kv-modal">&times;</button>
+                </div>
+                <div class="kv-modal-body">
+                    <p class="kv-mb-4">
+                        Give yourself a better position in the competitive home buying market.
+                        Complete the form to get started on your journey to purchase your dream home.
+                        Our lending partner has a wide variety of lending options available and advanced mortgage technology.
+                        As a result, our lending partner's clients enjoy a flawless experience through impeccable execution and timely communication throughout the process.
+                    </p>
+
+                    <form class="prequalify-form kv-form"
+                          action=""
+                          id="kv-prequalify-form"
+                          method="get"
+                          data-callback="{{ callback|json_encode|url_encode }}"
+                    >
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="prequalify-first-name">First Name</label>
+                                <input type="text" id="prequalify-first-name" name="first-name" class="kv-form-control"
+                                       placeholder="" required="required"
+                                >
+                            </div>
+
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="prequalify-last-name">Last Name</label>
+                                <input type="text" id="prequalify-last-name" name="last-name" class="kv-form-control"
+                                       placeholder="" required="required"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="prequalify-email">Email</label>
+                                <input type="text" id="prequalify-email" name="email" class="kv-form-control"
+                                       placeholder="" required="required"
+                                >
+                            </div>
+
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="prequalify-phone">Phone</label>
+                                <input type="text" id="prequalify-phone" name="phone" class="kv-form-control"
+                                       placeholder="XXX-XXX-XXXX" required="required"
+                                >
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label class="prequalify-contact-method-label kv-fullwidth-label">Preferred Contact Method</label>
+
+                                <div class="form-check form-check-inline">
+                                    <input id="prequalify-preferred-contact-method--none" type="radio"
+                                           name="preferred-contact-method"
+                                           class="kv-form-control form-check-input" value="none">
+                                    <label for="prequalify-preferred-contact-method--none"
+                                           class="form-check-label kv-fullwidth-label">None</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input id="prequalify-preferred-contact-method--email" type="radio"
+                                           name="preferred-contact-method"
+                                           class="kv-form-control form-check-input" value="email">
+                                    <label for="prequalify-preferred-contact-method--email"
+                                           class="form-check-label kv-fullwidth-label">Email</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input id="prequalify-preferred-contact-method--phone" type="radio"
+                                           name="preferred-contact-method"
+                                           class="kv-form-control form-check-input" value="phone">
+                                    <label for="prequalify-preferred-contact-method--phone"
+                                           class="form-check-label kv-fullwidth-label">Phone</label>
+                                </div>
+                            </div>
+
+                            <div class="kv-form-group-field kv-form-group-2-column">
+                                <label for="prequalify-how-can-we-assist" class="kv-fullwidth-label">How can we assist you?</label>
+                                <select id="prequalify-how-can-we-assist" name="how-can-we-assist">
+                                    <option>I am looking to refinance my home.</option>
+                                    <option>I am purchasing a home, and I am a first time homebuyer.</option>
+                                    <option>I am purchasing a home and currently own or have owned a home in the past.</option>
+                                    <option>I am building a new home and need construction financing.</option>
+                                    <option>Other</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-w-100">
+                                <label for="prequalify-message">Message</label>
+                                <textarea id="prequalify-message" name="message"></textarea>
+                            </div>
+                        </div>
+                        {% if kvcoreidx.options.optimize_for_canada == "1" %}
+                        <p class="kv-my-3">
+                            <small>By submitting your message and personal details you are permitting us to contact you by these means in response to your inquiry.</small>
+                        </p>
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-w-100">
+                                <input id="terms-agreement-canada" type="checkbox"
+                                        name="preferred-contact-method"
+                                        class="kv-form-control form-check-input" required="required" style="margin-bottom:0">
+                                <label for="terms-agreement-canada" class="form-check-label" style="display:inline">
+                                    <small>I would also like to receive email newsletters and periodic updates about real estate in my area and other related communications from <span class="kv-modal-terms-canada-name"></span>. I understand I can withdraw my consent at any time. <span class="kv-modal-terms-canada-name"></span>, <span class="kv-modal-terms-canada-address"></span></small>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="kv-form-group">
+                            <div class="kv-form-group-field kv-w-100">
+                                <p class="kv-disclaimer kv-my-3">
+                                    <small>
+                                        {% if kvcoreidx.pages.privacy_policy and kvcoreidx.pages.terms_of_use %}
+                                            In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a> and <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                        {% elseif kvcoreidx.pages.privacy_policy %}
+                                            In addition, you also agree to our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a>.
+                                        {% elseif kvcoreidx.pages.terms_of_use %}
+                                            In addition, you also agree to our <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms & Conditions</a>.
+                                        {% endif %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <button type="submit" class="kv-button kv-mb-2">Submit</button>
+                    </form>
+                    {% if kvcoreidx.options.optimize_for_canada != "1" %}
+                    <div class="kv-modal-login-agreement">
+                        <p class="kv-disclaimer kv-mb-3"><small>
+                            We keep your info safe &amp; never share it.
+                            {% if kvcoreidx.pages.privacy_policy and kvcoreidx.pages.terms_of_use %}
+                                View our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a> or <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms of Use</a>.
+                            {% elseif kvcoreidx.pages.privacy_policy %}
+                                View our <a href="{{ kvcoreidx.pages.privacy_policy }}" target="_blank">Privacy Policy</a>.
+                            {% elseif kvcoreidx.pages.terms_of_use %}
+                                View our <a href="{{ kvcoreidx.pages.terms_of_use }}" target="_blank">Terms of Use</a>.
+                            {% endif %}
+                        </small></p>
+                    </div>
+                    {% endif %}
+
+	                {% set lender = kvcoreidx.options.lender_info %}
+	                {% if not kv_empty(lender) %}
+	                    <div class="kv-prequalify-lender">
+	                        {% if not kv_empty(lender.logo_url) %}
+	                            <div class="kv-prequalify-lender-logo">
+	                                <img src="{{ lender.logo_url }}">
+	                            </div>
+	                        {% endif %}
+	                        <div class="kv-prequalify-lender-info">
+		                        {% if not kv_empty(lender.title) %}
+	                                <h4>{{ lender.title }}</h4>
+		                        {% endif %}
+	                            <div class="kv-d-flex">
+	                                <div class="kv-mr-4">
+		                                {% if not kv_empty(lender.phone_1_label) and not kv_empty(lender.phone_1_number) %}
+			                                {% set lenderPhone = lender.phone_1_number %}
+			                                <div>
+				                                {{ lender.phone_1_label ~ ':' }}
+				                                <a href="tel:{{ lenderPhone }}">{{ lenderPhone|kv_phone_format }}</a>
+			                                </div>
+		                                {% endif %}
+		                                {% if not kv_empty(lender.phone_2_label) and not kv_empty(lender.phone_2_number) %}
+			                                {% set lenderPhone = lender.phone_2_number %}
+			                                <div>
+				                                {{ lender.phone_2_label ~ ':' }}
+				                                <a href="tel:{{ lenderPhone }}">{{ lenderPhone|kv_phone_format }}</a>
+			                                </div>
+		                                {% endif %}
+	                                </div>
+		                            {% if not kv_empty(lender.license_number) %}
+	                                    <div>
+	                                        License #{{ lender.license_number }}
+	                                    </div>
+		                            {% endif %}
+	                            </div>
+	                        </div>
+	                    </div>
+	                {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

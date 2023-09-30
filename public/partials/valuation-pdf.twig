@@ -1,0 +1,86 @@
+{% set notLoggedInClass = user.lead_id is empty ? ' kv-valuation-pdf-not-logged-in' : '' %}
+{% set setValue = value is iterable and value.low is defined
+			? ((value.high - value.low) / 2) + value.low
+			: value
+%}
+{% if user.lead_id is empty %}
+	<div class="{{ notLoggedInClass ~ '-button-container' }}">
+		<button class="{{ notLoggedInClass ~ '-button' }} kv-button"
+		        onclick="return !('function' === typeof(kvEXEC) && kvEXEC('ValuationPdf', 'login', this));"
+		>
+			Please Log In to Download CMA Report
+		</button>
+	</div>
+{% endif %}
+
+<div class="kv-valuation-pdf{{ notLoggedInClass }}" data-address="{{address}}" data-city="{{city}}" data-state="{{state}}" data-zip="{{zip}}" data-value="{{setValue}}" data-beds="{{beds}}" data-baths="{{baths}}" data-footage="{{sqft}}">
+	{% if url is not empty %}
+		<h1>CMA Report Generated</h1>
+		<h3 class="kv-valuation-pdf-address">{{ fullAddress }}</h3>
+		<h4>Please Choose An Option Below</h4>
+		<div class="kv-valuation-pdf-buttons">
+			<div class="kv-valuation-pdf-buttons-button-container">
+				<a href="{{ url }}" class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip">
+					<i class="fa fa-download"></i>Download
+				</a>
+			</div>
+			<div class="kv-valuation-pdf-buttons-button-container">
+				<button type="button" id="kv-valuation-pdf-email" class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip">
+					<i class="fa fa-envelope"></i>Email To Me
+				</button>
+			</div>
+			<div class="kv-valuation-pdf-buttons-button-container">
+				<button type="button" id="kv-valuation-pdf-sms" class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip">
+					<i class="fa fa-mobile-phone kv-valuation-pdf-buttons-button-text-to-me"></i>Text To Me
+				</button>
+			</div>
+			<div class="kv-valuation-pdf-buttons-button-container">
+				<a href="{{ propertiesPage }}?area=zip|{{ zip }}"
+				   class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip"
+				   {% if kvcoreidx.openListingsInNewTab == 'true' %}
+					   target="_blank"
+				   {% endif %}
+				>
+					<i class="fa fa-search"></i>View Comparables
+				</a>
+			</div>
+		</div>
+	{% elseif isFallback %}
+		<h3 class="kv-valuation-pdf-address">{{ fullAddress }}</h3>
+		{% set valueFormatted = value is iterable and value.low is defined
+			? '$' ~ value.low|number_format(0) ~ ' - $' ~ value.high|number_format(0)
+			: '$' ~ value|number_format(0)
+		%}
+		<h1>Estimated Value {{ valueFormatted }}</h1>
+		<p>Please remember that this is an automated starting point, NOT your home's true value. The only way to get the true value of your home is with an in person valuation. If that sounds like something you're interested in, select an option below and let's get started.</p>
+		<div class="kv-valuation-pdf-buttons">
+			{% if agentphone is not empty %}
+				<div class="kv-valuation-pdf-buttons-button-container">
+					<a href="tel:+{{agentphone}}" id="kv-valuation-pdf-phone"
+					        class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip">
+						<i class="fa fa-mobile-phone"></i>Call Agent
+					</a>
+				</div>
+			{% endif %}
+			{% if agentemail is not empty %}
+				<div class="kv-valuation-pdf-buttons-button-container">
+					<button type="button" id="kv-valuation-pdf-email"
+					        class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip">
+						<i class="fa fa-envelope"></i>Email Agent
+					</button>
+				</div>
+			{% endif %}
+			<div class="kv-valuation-pdf-buttons-button-container">
+
+				<a href="{{ propertiesPage }}?area=zip|{{ zip }}"
+					   class="kv-valuation-pdf-buttons-button kv-button kv-text-ellip"
+							{% if kvcoreidx.openListingsInNewTab == 'true' %}
+								target="_blank"
+							{% endif %}
+					>
+					<i class="fa fa-search"></i>View Comparables
+				</a>
+			</div>
+		</div>
+	{% endif %}
+</div>

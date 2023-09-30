@@ -1,0 +1,35 @@
+.kv-offices {
+  &-filters {
+    @extend .kv-row;
+
+    justify-content: space-between;
+
+    &#kv-offices-filters-page {
+      justify-content: center;
+    }
+  }
+
+  &-grid {
+    @extend .kv-row;
+
+    min-height: 50vh;
+  }
+}
+
+#kvcoreidx-offices-page {
+  .kv-map {
+    @extend .kv-mb-4;
+  }
+
+  .kv-offices-none {
+    @extend .kv-p-5;
+  }
+}
+
+.kv-supports--css-grid {
+  .kv-offices-grid {
+    @include kv-make-grid();
+
+    @extend .kv-grid;
+  }
+}

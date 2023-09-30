@@ -1,0 +1,19 @@
+.kv-agent-search {
+	@extend .kv-row, .kv-my-3;
+
+	&-multiselect {
+		@extend %kv-col-12, %kv-col-lg-9;
+	}
+
+	&-submit {
+		@extend %kv-col-12, %kv-col-lg-3, .kv-center-contents;
+
+		@media (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+			margin-top: 0.5 * $spacer;
+		}
+
+		.kv-button {
+			width: 100%;
+		}
+	}
+}

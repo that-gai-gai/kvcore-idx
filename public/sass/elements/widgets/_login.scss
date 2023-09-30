@@ -1,0 +1,62 @@
+#login_tabs, #user-logged-in {
+  display: none;
+
+  .login-tabs-wrapper {
+    background: white;
+
+    .widget-title {
+      @extend .kv-row, .kv-no-gutters;
+
+      .tab-name {
+        @extend %kv-col-6;
+
+	      text-align: center;
+	      height: 35px;
+	      line-height: 35px;
+        text-transform: uppercase;
+        cursor: pointer;
+      }
+
+      .tab-name.tab-inactive {
+        background: #d8d8d8;
+      }
+    }
+
+    .login-content-wrapper {
+	    text-align: center;
+      padding: $grid-gutter-width / 2;
+
+      .kv-form .kv-form-control {
+        margin-bottom: 0.5 * $spacer;
+      }
+
+      label {
+        display: block;
+        text-transform: none;
+        margin-bottom: 1rem;
+      }
+
+      .kv-login-social {
+        @extend .kv-row;
+
+        margin-top: 0.5 * $spacer;
+
+        &-form {
+          @extend %kv-col-4;
+
+          img {
+            max-width: 60px;
+          }
+        }
+      }
+    }
+  }
+}
+
+.kvcoreidx--user-not-logged-in #login_tabs {
+  display: block;
+}
+
+.kvcoreidx--user-logged-in #user-logged-in {
+  display: block;
+}

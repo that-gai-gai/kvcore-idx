@@ -1,0 +1,79 @@
+<label>{{ name }}</label>
+{% set vals = request[id] is defined and request[id] is iterable ? request[id] : [] %}
+<div class="kv-multiple-select">
+    <button class="kv-multiple-select-control" data-for="container-{{ id }}">
+        SELECT {{ name }} <div class="kv-counter">{{ vals|length }}</div>
+    </button>
+    <div id="container-{{ id }}" class="kv-multiple-select-container kv-collapsed">
+        <div class="kv-multiple-select-search-container">
+            <i class="fa fa-search"></i>
+            <input type="text" name="search-{{ id }}" class="kv-multiple-select-search" />
+        </div>
+        <div class="kv-multiple-select-search-message kv-hidden">NOTHING FOUND</div>
+        {% if vals is same as(['0']) %}
+            <input type="checkbox"
+                   class="kv-form-hide"
+                   id="{{ id ~ '-0' }}"
+                   value="0" checked
+                   data-original-order="-9999"
+                   data-order="-9999"
+            >
+            <label class="kv-form-label-button" for="{{ id ~ '-0' }}" style="order: -1">ANY</label>
+        {% endif %}
+
+        {% set loopIndex = 0 %}
+        {% for key in featured %}
+            {% set checkboxId = id ~ '-' ~ key %}
+            {% set loopIndex = loopIndex + 1 %}
+            <input type="checkbox"
+                   class="kv-form-hide"
+                   id="{{ checkboxId }}"
+                   name="{{ id ~ '[]' }}"
+                   value="{{ key }}"
+                    {% for val in vals %}
+                        {% if val == key %}
+                            {{ "checked" }}
+                        {% endif %}
+                    {% endfor %}
+                   data-original-order="{{ loop.index }}"
+                   data-order="{{ loop.index }}"
+            >
+            <label class="kv-form-label-button kv-form-featured" for="{{ checkboxId }}" style="order: {{ loop.index }}">
+                {{ source[key] }}
+            </label>
+        {% endfor %}
+        <style>
+            .kv-form-label-button.kv-form-featured:nth-child(3) {
+                background:#000;
+            }
+        </style>
+
+        {% if featured is not defined %}
+          {% set featured = {} %}
+        {% endif %}
+
+        {% for key, name in source %}
+            {% set checkboxId = id ~ '-' ~ key %}
+            {% set loopIndex = loopIndex + 1 %}
+
+            {% if key not in featured %}
+                <input type="checkbox"
+                       class="kv-form-hide"
+                       id="{{ checkboxId }}"
+                       name="{{ id ~ '[]' }}"
+                       value="{{ key }}"
+                        {% for val in vals %}
+                            {% if val == key %}
+                                {{ "checked" }}
+                            {% endif %}
+                        {% endfor %}
+                       data-original-order="{{ loopIndex }}"
+                       data-order="{{ loopIndex }}"
+                >
+                <label class="kv-form-label-button" for="{{ checkboxId }}" style="order: {{ loopIndex }}">
+                    {{ name }}
+                </label>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

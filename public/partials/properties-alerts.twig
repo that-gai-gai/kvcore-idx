@@ -1,0 +1,9 @@
+{% if alertId is not same as(null) %}
+<a href="/profile/{{ '?alert_id=' ~ alertId }}#tab-saved-searches" class="profile-alerts-link" class="kv-text-ellip">
+    MANAGE SAVED SEARCH
+</a>
+{% else %}
+<button type="button" class="kv-text-ellip profile-alerts-link">
+    SAVE SEARCH
+</button>
+{% endif %}

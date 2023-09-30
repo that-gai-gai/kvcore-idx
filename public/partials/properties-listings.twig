@@ -1,0 +1,351 @@
+{% set curLayout = currentFilters.layout is defined ? currentFilters.layout : 'card' %}
+
+{% set perRow = currentFilters.perRow|round in [1, 2, 3, 4, 6] ? currentFilters.perRow|round : 6 %}
+{% set perRowClass = ' kv-per-row-' ~ perRow %}
+{% set acreageTypes = ['Acreage', 'Com Land', 'Cross Property', 'Farm', 'Land', 'Land Lease', 'Lot', 'Lot-Land'] %}
+{% if notShowSold is not defined %}
+    {% set notShowSold = false %}
+{% endif %}
+{% if total > 0 %}
+    <div class="kv-filters-items-count-container">
+        <div class="kv-filters-items-count">{{ from }} - {{ to }} OF <span class="results-total">{{ recordsTotal }}{% if recordsTotal == 800 or recordsTotal == 10000 %}+{% endif %}</span></div>
+    </div>
+{% endif %}
+{% if data is not defined or not data | length %}
+    <div class="kv-nolistings-found" style="margin-top:8px;">
+        <p class="kv-bold">No Matching Results</p>
+        <p>Your search produced no matching results.
+        <br />
+        Please edit your search by zooming out, adjusting your search area outline or adjusting your search filters.</p>
+        <button class="kv-button kv-mr-1 kv-filters-clear">Clear Filters</button>
+        <button class="kv-button-secondary kv-filters-clear">Start Over</button> 
+    </div>
+    <div class="kv-no-similar-listings-found kv-ml-3">No similar properties found.</div>
+{% endif %}
+<div class="kv-property-listings {{ ' kv-grid-columns-' ~ currentFilters.perRow }}">
+    {% for listing in data %}
+	    {% set markerId = listing.lat == 0 and listing.long == 0 ? 0 : listing.mlsid %}
+        <div class="kv-property{{ perRowClass }} {% if listing.brokerid %} kv-property-broker-{{ listing.brokerid }}{% endif %}"
+             data-marker-id="{{ markerId }}"
+        >
+	        {% set click %}
+		        {% if kvcoreidx.openListingsInNewTab %}
+                    window.open('{{ listing.detail_url }}', '_blank');
+		        {% else %}
+                    document.location='{{ listing.detail_url }}';
+		        {% endif %}
+	        {% endset %}
+
+            {% set footageName = listing.footageType == 'footage' ? 'SQFT' : 'ACRES' %}
+
+	        {% if kvcoreidx.options.design == 'v1' %}
+                <div class="kv-box-v1">
+                    <div class="kv-box-v1-image"
+                         {% if listing.coverphoto_url is not empty %}
+                             style="background-image:url('{{ listing.coverphoto_url }}');"
+                         {% endif %}
+                    >
+                        {% if listing.is_sold_data is same as(true) %}
+                            <div class="kv-box-label">Sold: {{listing.sold_date|date('M d, Y')}}</div>
+                        {% else %}
+                            {% if listing.actual_status_id == 55 %}
+                                <div class="kv-box-label">Pending</div>
+                            {% endif %}
+                            {# This is a bairdwarner specific thing only their types should come through as a 57 other ones come in as their orig type #}
+                            {% if listing.actual_status_id == 57 %}
+                                <div class="kv-box-label">Coming Soon</div>
+                            {% endif %}
+                        {% endif %}
+                        {% if notShowSold is same as(true) %}
+                            <div class="kv-sold-gate kv-box-image">
+                                <p><i class="fa fa-lock lock-icon" aria-hidden="true"></i></p>
+                                <p>Local rules require you to be logged in to see more photos</p>
+                            </div>
+                        {% else %}
+                            <ul class="kv-box-v1-links">
+                                <li>
+                                    <a rel="canonical" href="{{ listing.detail_url }}"
+                                    {% if kvcoreidx.openListingsInNewTab %}
+                                        target="_blank"
+                                    {% endif %}
+                                    >
+                                        <i class="fa fa-search kv-mr-3"></i><span>View detail</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="{{ '/properties/?similarMls=' ~ listing.mls ~ '&similarMlsId=' ~ listing.mlsid }}"
+                                    class="kv-similar-properties"
+                                    data-mls="{{ listing.mls }}"
+                                    data-mlsid="{{ listing.mlsid }}"
+                                    {% if kvcoreidx.openListingsInNewTab %}
+                                        target="_blank"
+                                    {% endif %}
+                                    >
+                                        <i class="fa fa-balance-scale kv-mr-3"></i><span>Similar Properties</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" class="add-favorite {% if listing.saved %}saved-listing{% endif %}"
+                                    data-mls="{{ listing.mls }}"
+                                    data-mls_id="{{ listing.mlsid }}"
+                                    >
+                                        {% if not listing.saved %}
+                                            <i class="fa fa-heart-o kv-mr-3"></i><span>Add to favorites</span>
+                                        {% else %}
+                                            <i class="fa fa-heart fa-heart-red kv-mr-3"></i><span>Remove from favorites</span>
+                                        {% endif %}
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    {% if notShowSold is same as(true) %}
+                        <div class="kv-box-v1-content" style="cursor:default">
+                    {% else %}
+                        <div class="kv-box-v1-content" onclick="{{ click }}">
+                    {% endif %}
+                        <div class="kv-box-v1-title">
+                            {% if notShowSold is same as(false) %}
+                                <h2 class="kv-box-v1-title-main">${{ listing.price|number_format }}</h2>
+                            {% endif %}
+                            {% if listing.type is defined %}
+                                <small class="kv-box-v1-keyword">{{ listing.type }}</small>
+                            {% endif %}
+                            {% if notShowSold is same as(false) %}
+                                <h3 class="kv-box-v1-title-sub">
+                                    {% if listing.address %}
+                                        {{ listing.address }}
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                </h3>
+                                {% if listing.showlogoresults != 0 or listing.addtoresults != 0 %}
+                                    {% if listing.addtoresults == 15 %}
+                                        {% set brokerdisplay = "Courtesy of " ~ listing.brokername %}
+                                    {% elseif listing.addtoresults == 1 %}
+                                        {% set brokerdisplay = listing.brokername %}
+                                    {% elseif listing.addtoresults == 2 %}
+                                        {% set brokerdisplay = listing.brokername ~ " ACT #" ~ listing.mlsid %}
+                                    {% elseif listing.addtoresults == 3 %}
+                                        {% set brokerdisplay = listing.brokername ~ " #" ~ listing.mlsid %}
+                                    {% elseif listing.addtoresults == 4 %}
+                                        {% set brokerdisplay = "Courtesy of " ~ listing.agentname ~ " of " ~ listing.brokername %}
+                                    {% elseif listing.addtoresults == 5 %}
+                                        {% set brokerdisplay = listing.brokername ~ " - " ~ listing.brokerphone %}
+                                    {% else %}
+                                        {% set brokerdisplay = '' %}
+                                    {% endif %}
+
+                                    {% if brokerdisplay %}
+                                        <p class="kv-box-v1-title-brokername">{{brokerdisplay}}</p>
+                                    {% endif %}
+
+                                    {% if listing.showlogoresults != 0 %}
+                                        <img loading="lazy" src="{{'https://img.kvcore.com/cdn-cgi/image/format=auto/https://d9la9jrhv6fdd.cloudfront.net/mlslogos/' ~ listing.mls ~ '.png'}}" class="kv-box-v1-title-mls-logo" />
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <div class="kv-card-title">
+                                    {% if listing.city %}
+                                        <span class="kv-card-city">{{ listing.city}}</span>
+                                    {% else %}
+                                        &nbsp;
+                                    {% endif %}
+                                    <span class="kv-card-price vow-modal-trigger">Login for price</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if notShowSold is same as(true) %}
+                        <div class="kv-box-v1-footer kv-bt" style="cursor:default">
+                    {% else %}
+                        <div class="kv-box-v1-footer kv-bt" onclick="{{ click }}">
+                    {% endif %}
+                        <div class="kv-box-v1-footer-item">
+                            <span>{{ listing.beds ?: '-' }}</span>
+                            <small class="kv-color-gray">BEDS</small>
+                        </div>
+                        <div class="kv-box-v1-footer-item">
+                            {% if listing.halfbaths is defined %}
+                                {% set halfbaths = listing.halfbaths %}
+                            {% else %}
+                                {% set halfbaths = 0 %}
+                            {% endif %}
+                            {% if halfbaths > 0 %}
+                                <div>{{ listing.baths ?: '-'  }} / {{ halfbaths }}</div>
+                            {% else %}
+                                <div>{{ listing.baths }}</div>
+                            {% endif %}
+                            <small class="kv-color-gray">BATHS</small>
+                        </div>
+                        <div class="kv-box-v1-footer-item">
+                            <span>{{ listing[listing.footageType]|number_format(0) ?: '-' }}</span>
+                            <small class="kv-color-gray">{{ footageName }}</small>
+                        </div>
+                    </div>
+                </div>
+	        {% else %}
+                <div class="kv-box {% if listing.mls is defined and listing.mlsid is defined %} kv-box-footer-count-1{% endif %}">
+                    {% if listing.coverphoto_url is not empty %}
+                        {% if listing.is_sold_data is same as(true) %}
+                            <div class="kv-box-label">Sold: {{listing.sold_date|date('M d, Y')}}</div>
+                        {% else %}
+                            {% if listing.actual_status_id == 55 %}
+                                <div class="kv-box-label">Pending</div>
+                            {% endif %}
+                            {# This is a bairdwarner specific thing only their types should come through as a 57 other ones come in as their orig type #}
+                            {% if listing.actual_status_id == 57 %}
+                                <div class="kv-box-label">Coming Soon</div>
+                            {% endif %}
+                        {% endif %}
+                        {% if notShowSold is same as(true) %}
+                            <div class="kv-sold-gate kv-box-image">
+                                <p><i class="fa fa-lock lock-icon" aria-hidden="true"></i></p>
+                                <p>Local rules require you to be logged in to see more photos</p>
+                            </div>
+                        {% else %}
+                            <a rel="canonical" href="{{ listing.detail_url }}"
+                            class="kv-box-image"
+                            style="background-image: url({{ listing.coverphoto_url }})"
+                            {% if kvcoreidx.openListingsInNewTab %}
+                                target="_blank"
+                            {% endif %}
+                            alt="Property Image"
+                            aria-label="Property Image"
+                            >
+                                {% if listing.manualType %}
+                                    <span class="kv-property-manual-listing-type kv-property-manual-listing-type-{{ listing.manualType|lower|replace({' ': '-'}) }}">
+                                        {{ listing.manualType }}
+                                    </span>
+                                {% endif %}
+                            </a>
+                        {% endif %}
+                            {% if listing.manualType %}
+                                <span class="kv-property-manual-listing-type kv-property-manual-listing-type-{{ listing.manualType|lower|replace({' ': '-'}) }}">
+                                    {{ listing.manualType }}
+                                </span>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+
+                    {% if notShowSold is same as(true) %}
+                        <div class="kv-box-content" style="cursor:default">
+                    {% else %}
+                        <div class="kv-box-content" onclick="{{ click }}">
+                    {% endif %}
+                        <div class="kv-box-title">
+                            {% if notShowSold is same as(false) %}
+                                <h3 class="kv-box-content-title-main">
+                                    <span class="kv-box-content-title-main-bold">${{ listing.price|number_format }}</span>
+                                </h3>
+                            {% endif %}
+                            {% set address = listing.area is empty ? listing.address : listing.address ~ ', ' ~ listing.area %}
+                            {% if notShowSold is same as(false) %}
+                                <h4 class="kv-box-content-title-sub"
+                                    title="{{ address }}"
+                                >
+                                    {{ listing.address }} <br>{{ listing.city}}, {{ listing.state }} {{ listing.zip }}
+                                </h4>
+                                {% if listing.showlogoresults != 0 or listing.addtoresults != 0 %}
+                                    {% if listing.addtoresults == 15 %}
+                                        {% set brokerdisplay = "Courtesy of " ~ listing.brokername %}
+                                    {% elseif listing.addtoresults == 1 %}
+                                        {% set brokerdisplay = listing.brokername %}
+                                    {% elseif listing.addtoresults == 2 %}
+                                        {% set brokerdisplay = listing.brokername ~ " ACT #" ~ listing.mlsid %}
+                                    {% elseif listing.addtoresults == 3 %}
+                                        {% set brokerdisplay = listing.brokername ~ " #" ~ listing.mlsid %}
+                                    {% elseif listing.addtoresults == 4 %}
+                                        {% set brokerdisplay = "Courtesy of " ~ listing.agentname ~ " of " ~ listing.brokername %}
+                                    {% elseif listing.addtoresults == 5 %}
+                                        {% set brokerdisplay = listing.brokername ~ " - " ~ listing.brokerphone %}
+                                    {% else %}
+                                        {% set brokerdisplay = '' %}
+                                    {% endif %}
+
+                                    {% if brokerdisplay %}
+                                        <p class="kv-box-brokername">{{brokerdisplay}}</p>
+                                    {% endif %}
+
+                                    {% if listing.showlogoresults != 0 %}
+                                        <div class="kv-box-mls-logo"
+                                            style="background-image:url('{{'https://img.kvcore.com/cdn-cgi/image/format=auto/https://d9la9jrhv6fdd.cloudfront.net/mlslogos/' ~ listing.mls ~ '.png'}}');" title="Broker Name">
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% else %}
+                                <div class="kv-card-title" title="{{ city }}">
+                                    <span class="kv-card-city">{{ listing.city}}</span>
+                                    <span class="kv-card-price vow-modal-trigger">Login for price</span>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if curLayout == 'map' and listing.lat != 0 and listing.long != 0 %}
+                            <i class="kv-listing-marker" title="View on map" data-marker-id="{{ markerId }}"></i>
+                        {% endif %}
+
+                        {% if listing.type is defined %}
+                            <div class="kv-box-content-keyword">{{ listing.type }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="kv-box-footer kv-box-footer-show">
+                        <div class="kv-box-footer-item">
+                            <div>{{ listing.beds ?: '-' }}</div>
+                            <small>BEDS</small>
+                        </div>
+                        <div class="kv-box-footer-item">
+                            {% if listing.halfbaths is defined %}
+                                {% set halfbaths = listing.halfbaths %}
+                            {% else %}
+                                {% set halfbaths = 0 %}
+                            {% endif %}
+                            {% if halfbaths > 0 %}
+                                <div>{{ listing.baths ?: '-'  }} / {{ halfbaths }}</div>
+                            {% else %}
+                                <div>{{ listing.baths }}</div>
+                            {% endif %}
+                            <small>BATHS</small>
+                        </div>
+                        <div class="kv-box-footer-item">
+                            <span>{{ listing[listing.footageType]|number_format(0) ?: '-' }}</span>
+                            <small class="kv-color-gray">{{ footageName }}</small>
+                        </div>
+                    </div>
+
+                    {% if listing.mls is defined and listing.mlsid is defined and notShowSold is same as(false) %}
+                        <div class="kv-box-footer">
+                            <a href="{{ '/properties/?similarMls=' ~ listing.mls ~ '&similarMlsId=' ~ listing.mlsid }}"
+                            class="kv-box-footer-item kv-small kv-similar-properties"
+                            data-mls="{{ listing.mls }}"
+                            data-mlsid="{{ listing.mlsid }}"
+                            {% if kvcoreidx.openListingsInNewTab %}
+                                target="_blank"
+                            {% endif %}
+                            >
+                                <i class="fa fa-balance-scale"></i>&nbsp;Similar
+                            </a>
+                            <a href="#"
+                            class="kv-box-footer-item kv-small add-favorite {% if listing.saved %}saved-listing{% endif %}"
+                            data-mls="{{ listing.mls }}"
+                            data-mls_id="{{ listing.mlsid }}"
+                            >
+                                {% if not listing.saved %}
+                                    <i class="fa fa-heart-o"></i>&nbsp;Add to favorites
+                                {% else %}
+                                    <i class="fa fa-heart"></i>&nbsp;Remove from favorites
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+{% if data is defined or data | length %}
+    <div class="kv-property-pagination-container"></div>
+{% endif %}

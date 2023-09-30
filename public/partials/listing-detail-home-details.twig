@@ -1,0 +1,69 @@
+<div class="kv-detail-content">
+    <div class="kv-detail-content-remarks kv-mb-4">
+        <p>{{ data.remarks | raw }}</p>
+    </div>
+    <div class="kv-detail-list-container">
+        {% for category in kvcoreidx.propertyDetailCategories %}
+            <div class="kv-detail-list">
+                <h3 class="kv-list-heading">{{ category.label }}</h3>
+                <ul class="kv-list">
+                    {% for data_point in category.data_points %}
+                        {% if data[data_point.name] is defined and data[data_point.name] %}
+                            <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ data_point.label }}</span><span class="kv-list-item-value">{{ data[data_point.name] }}</span></li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+        <div class="kv-detail-list">
+            <h3 class="kv-list-heading">General Features</h3>
+            <ul class="kv-list">
+                {% for feature in data.features.data.general %}
+                    {% if feature.value %}
+                        <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ feature.realname }}</span><span class="kv-list-item-value">{{ feature.value }}</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="kv-detail-list">
+            <h3 class="kv-list-heading">Interior Features</h3>
+            <ul class="kv-list">
+                {% for feature in data.features.data.interior %}
+                    {% if feature.value %}
+                        <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ feature.realname }}</span><span class="kv-list-item-value">{{ feature.value }}</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="kv-detail-list">
+            <h3 class="kv-list-heading">Exterior Features</h3>
+            <ul class="kv-list">
+                {% for feature in data.features.data.exterior %}
+                    {% if feature.value %}
+                        <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ feature.realname }}</span><span class="kv-list-item-value">{{ feature.value }}</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% if kvcoreidx.options.optimize_for_canada != "1" %}
+        <div class="kv-detail-list">
+            <h3 class="kv-list-heading">Price History</h3>
+            <ul class="kv-list">
+                {% for historical_data in data.history.data %}
+                    {% if historical_data.dateofchange %}
+                        <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ historical_data.dateofchange | date('Y') }}</span><span class="kv-list-item-value">{{ historical_data.pricechange }}</span></li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <div class="kv-detail-list">
+            <h3 class="kv-list-heading">School Information</h3>
+            <ul class="kv-list">
+                {% for school in data.schools.data %}
+                    <li><li class="kv-list-item"><span class="kv-list-item-heading">{{ school.type }}</span><span class="kv-list-item-value">{{ school.name }}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

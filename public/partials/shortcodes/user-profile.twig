@@ -1,0 +1,8 @@
+<div id="kv-user-profile" class="{{ kvcoreidx.wrapper_class }} kv-container kv-tabs loading loading-mt-25"></div>
+
+{% set vars = {
+	pages: { 'terms_of_use': function('get_site_url', null, 'terms-of-use', null) },
+	options: kvcoreidx.options,
+} %}
+{% include 'login.twig' with vars %}
+{% include 'lead-manager.twig' with vars %}

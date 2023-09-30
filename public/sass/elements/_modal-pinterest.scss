@@ -1,0 +1,39 @@
+#kv-pinterest-modal .kv-modal {
+	&-content {
+		max-height: 94vh;
+		overflow: auto;
+	}
+
+	&-body {
+		@extend .kv-row, .kv-no-gutters;
+
+		padding: 1.5 * $spacer 0.5 * $spacer 0;
+		overflow: auto;
+
+		a {
+			@extend %kv-col-3;
+
+			position: relative;
+			margin-bottom: $grid-gutter-width / 2;
+		}
+
+		a:after {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			opacity: 0;
+			background: rgba(0, 0, 0, .8) url(https://passets-cdn.pinterest.com/images/bm/button.png) no-repeat center center scroll;
+			-webkit-transition: 0.3s ease;
+			-moz-transition: 0.3s ease;
+			-o-transition: 0.3s ease;
+			transition: 0.3s ease;
+		}
+
+		a:hover:after {
+			opacity: 1;
+		}
+	}
+}

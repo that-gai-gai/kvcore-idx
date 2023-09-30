@@ -1,0 +1,404 @@
+{% set alertsCount = data|length %}
+
+<div class="{{ kvcoreidx.wrapper_class }}">
+    {% set freqs = {
+        '+1 minute': 'Instant',
+        '+1 day': 'Daily',
+        '+7 days': 'Once Weekly',
+        '+14 days': 'Twice A Month',
+        'never': 'Off'
+    } %}
+
+    {% set options = {
+        new: 'Just Listed',
+        walkable: 'Walkable',
+        fixer: 'Fixer Upper',
+        newconstruction: 'Newly Built',
+        openhouses: 'Open House',
+        adult: 'Adult 55+',
+        green: 'Green/Energy Star',
+        horse: 'Horse Property',
+        golf: 'Golf Course',
+        pool: 'Pool',
+        reduced: 'Reduced',
+        foreclosures: 'Foreclosures',
+        shortsales: 'Short Sales',
+        nodis: 'Not Distressed',
+        leasetoown: 'Lease to Own',
+        hoa: 'No HOA Fees',
+        sellerf: 'Seller Financing',
+        fireplace: 'Fireplace',
+        deck: 'Deck',
+        basement: 'Basement',
+        master: 'Master on Main',
+        ac: 'Air Conditioning',
+        furnished: 'Furnished',
+        pets: 'Allows Pets',
+        none: 'None'
+    } %}
+
+    {% if alertsCount %}
+        <div class="kv-alerts-container kv-collapse-parent kv-collapse-accordion">
+            {% for alert in data %}
+                {% set alert_id = 'alert-' ~ alert.id %}
+                {% set collapse_id = 'collapse-' ~ alert.id %}
+
+                <section class="kv-alert">
+                    <button id="button-{{ alert.id }}"
+                            class="kv-alert-button"
+                            type="button"
+                            data-toggle="collapse"
+                            data-target="#{{ collapse_id }}"
+                            aria-expanded="false"
+                            aria-controls="{{ collapse_id }}"
+                    >
+                        {% set area_names = [] %}
+                        {% for area in alert.areas %}
+                            {% set area_names = area_names|merge([area.name]) %}
+                        {% endfor %}
+                        {% set types = alert.types|length == 1 ? ' type' : ' types' %}
+
+                        {% set title = alert.updated_at_local ~ ': ' ~ freqs[alert.frequency] ~
+                            ', $' ~ alert.min_price ~ ' - $' ~ alert.max_price ~ ', ' ~ alert.beds ~ '+ beds, ' ~
+                            alert.baths ~ '+ baths, ' ~ area_names.join(', ') ~ ', ' ~ alert.types|length ~ types
+                        %}
+                        <span class="kv-alert-button-title kv-text-ellip" title="{{ title }}">{{ title }}</span>
+                        <i class="fa fa-stop-circle-o kv-alert-button-stop-alert"
+                           title="Stop this alert"
+                           data-alert-id="{{ alert.id }}"
+                        ></i>
+                    </button>
+
+                    {% set show = kvcoreidx.request.args.alert_id == alert.id ? ' show' : '' %}
+                    <div id="{{ collapse_id }}" class="collapse collapse-alert{{ show }}">
+                        <form id="alert-update-form-{{ alert.id }}"
+                              class="alert-update-form"
+                              method="PUT"
+                              action="public/alerts"
+                              enctype="multipart/form-data">
+                            <input type="hidden"
+                                   class="alert-number"
+                                   name="alert_number"
+                                   value="{{ alert.number }}"
+                            />
+                            <input type="hidden" name="id" value="{{ alert.id }}" />
+                            <input type="hidden" name="lead_id" value="{{ alert.contact_id }}" />
+
+                            <div class="kv-form-group kv-form-group-number">
+                                {% set price_min_id = alert_id ~ '-price-min' %}
+                                <label for="{{ price_min_id }}">
+                                    <input type="number"
+                                           min="0"
+                                           step="1"
+                                           class="kv-form-control"
+                                           id="{{ price_min_id }}"
+                                           name="min"
+                                           value="{{ alert.min_price }}" />
+                                    Price Min
+                                </label>
+                                {% set price_max_id = alert_id ~ '-price-max' %}
+                                <label for="{{ price_max_id }}">
+                                    <input type="number"
+                                           min="0"
+                                           step="1"
+                                           class="kv-form-control"
+                                           id="{{ price_max_id }}"
+                                           name="max"
+                                           value="{{ alert.max_price }}" />
+                                    Price Max
+                                </label>
+                                {% set beds_id = alert_id ~ '-beds' %}
+                                <label for="{{ beds_id }}">
+                                    <input type="number"
+                                           min="0"
+                                           step="1"
+                                           class="kv-form-control"
+                                           id="{{ beds_id }}"
+                                           name="beds"
+                                           value="{{ alert.beds }}" />
+                                    Beds
+                                </label>
+                                {% set baths_id = alert_id ~ '-baths' %}
+                                <label for="{{ baths_id }}">
+                                    <input type="number"
+                                           min="0"
+                                           step="1"
+                                           class="kv-form-control"
+                                           id="{{ baths_id }}"
+                                           name="baths"
+                                           value="{{ alert.baths }}" />
+                                    Baths
+                                </label>
+                            </div>
+                            <div id="above-validation-{{ alert.id }}" class="form-validation-message"></div>
+
+                            <hr class="profile_hr">
+
+                            <div class="kv-form-group kv-form-group-radio">
+                                <label>Frequency</label>
+
+                                {% for freq, freq_name in freqs %}
+                                    {% set freq_id = alert_id ~ '-freq-' ~ freq_name %}
+                                    <label for="{{ freq_id }}">
+                                        <input type="radio"
+                                               class="kv-form-control"
+                                               id="{{ freq_id }}"
+                                               name="freq"
+                                               value="{{ freq_name }}"
+                                               {% if freq == alert.frequency %}checked="checked"{% endif %}
+                                        />
+                                        {{ freq_name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+                            <div id="freqs-validation-{{ alert.id }}" class="form-validation-message"></div>
+
+                            <hr>
+
+                            <label>Property types</label>
+                            <div class="kv-form-group kv-form-group-check">
+                                {% for listing_type in kvcoreidx.listingTypes %}
+                                    {% set listing_type_id = alert_id ~ '-type-' ~ listing_type.id %}
+                                    {% set checked = false %}
+                                    {% set break = false %}
+                                    {% for type in alert.types if not break %}
+                                        {% if type.id == listing_type.id %}
+                                            {% set checked = true %}
+                                            {% set break = true %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <label for="{{ listing_type_id }}">
+                                        <input type="checkbox"
+                                               id="{{ listing_type_id }}"
+                                               name="types[]"
+                                               value="{{ listing_type.id }}"
+                                               {% if checked is same as(true) %}checked="checked"{% endif %}
+                                        />
+                                        {{ listing_type.name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+
+                            <div id="types-validation-{{ alert.id }}" class="form-validation-message"></div>
+
+                            <hr class="profile_hr">
+                            <label>Property features</label>
+                            <div class="kv-form-group kv-form-group-check">
+                                {% for key, name in options %}
+                                    {% set option_id = alert_id ~ '-option-' ~ key %}
+
+                                    <label for="{{ option_id }}">
+                                        <input type="checkbox"
+                                               class="kv-form-group-check-input"
+                                               id="{{ option_id }}"
+                                               name="extras[]"
+                                               value="listings.{{ key }} = 1"
+                                               {% for o in alert.options %}
+                                                    {% if key == o.value %}checked="checked"{% endif %}
+                                               {% endfor %}
+                                        />
+                                        {{ name }}
+                                    </label>
+                                {% endfor %}
+                            </div>
+
+                            <div id="options-validation-{{ alert.id }}" class="form-validation-message"></div>
+
+                            <hr>
+
+                            <div class="selected-area-row">
+                                <div class="selected-area-row-label">
+                                    <label for="kvcoreidx-alerts-area-search-{{ alert.id }}">Area</label>
+                                </div>
+                                <div class="selected-area-row-value">
+                                    <div id="kvcoreidx-alerts-area-search-{{ alert.id }}" class="kv-alerts-area-search-multiselect"></div>
+                                </div>
+                                <div class="selected-area-row-control">
+                                    <button type="submit" class="kv-button">Submit</button>
+                                </div>
+                            </div>
+                            <div id="areas-validation-{{ alert.id }}" class="form-validation-message"></div>
+                        </form>
+                    </div>
+                </section>
+            {% endfor %}            
+        </div>
+    {% else %}
+        {% if message %}
+            <p>{{ message | raw }}</p>
+        {% else %}
+            <p>You don't have any saved searches.</p>
+        {% endif %}
+    {% endif %}
+    {% if alertsCount < 2 %}
+        <div class="create-alert-button-container">
+            <span class="create-alert">
+                Create saved search<i class="fa fa-plus-circle" title="Create saved search"></i>
+            </span>
+        </div>
+    {% endif %}
+
+    <div class="kv-alerts-container kv-collapse-parent kv-collapse-accordion" id="kv-new-alerts-container">
+        {% set alert_id = 'new' %}
+        {% set collapse_id = 'collapse-new' %}
+
+        <section class="kv-alert kv-bt-alert">
+            {% set area_names = [] %}
+            {% for area in alert.areas %}
+                {% set area_names = area_names|merge([area.name]) %}
+            {% endfor %}
+            {% set types = alert.types|length == 1 ? ' type' : ' types' %}
+                
+            <div id="{{ collapse_id }}">
+                <form id="alert-update-form-new"
+                        class="alert-update-form-new"
+                        method="PUT"
+                        action="public/alerts"
+                        enctype="multipart/form-data">
+                    <input type="hidden"
+                            class="alert_number"
+                            name="alert_number"
+                            value=""
+                    />
+                    <input type="hidden" name="id" value="{{alert_id}}" />
+                    <input type="hidden" class="lead_id" name="lead_id" value="" />
+
+                    <div class="kv-form-group kv-form-group-number">
+                        {% set price_min_id = alert_id ~ '-price-min' %}
+                        <label for="{{ price_min_id }}">
+                            <input type="number"
+                                    min="0"
+                                    step="1"
+                                    class="kv-form-control"
+                                    id="{{ price_min_id }}"
+                                    name="min"
+                                    value="" />
+                            Price Min
+                        </label>
+                        {% set price_max_id = alert_id ~ '-price-max' %}
+                        <label for="{{ price_max_id }}">
+                            <input type="number"
+                                    min="0"
+                                    step="1"
+                                    class="kv-form-control"
+                                    id="{{ price_max_id }}"
+                                    name="max"
+                                    value="" />
+                            Price Max
+                        </label>
+                        {% set beds_id = alert_id ~ '-beds' %}
+                        <label for="{{beds_id}}">
+                            <input type="number"
+                                    min="0"
+                                    step="1"
+                                    class="kv-form-control"
+                                    id="{{beds_id}}"
+                                    name="beds"
+                                    value="" />
+                            Beds
+                        </label>
+                        {% set baths_id = alert_id ~ '-baths' %}
+                        <label for="baths-new">
+                            <input type="number"
+                                    min="0"
+                                    step="1"
+                                    class="kv-form-control"
+                                    id="{{ baths_id }}"
+                                    name="baths"
+                                    value="" />
+                            Baths
+                        </label>
+                    </div>
+                    <div id="above-validation-new" class="form-validation-message"></div>
+
+                    <hr class="profile_hr">
+
+                    <div class="kv-form-group kv-form-group-radio">
+                        <label>Frequency</label>
+
+                        {% for freq, freq_name in freqs %}
+                            {% set freq_id = alert_id ~ '-freq-' ~ freq_name %}
+                            <label for="{{ freq_id }}">
+                                <input type="radio"
+                                        class="kv-form-control"
+                                        id="{{ freq_id }}"
+                                        name="freq"
+                                        value="{{ freq_name }}"
+                                />
+                                {{ freq_name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div id="freqs-validation-new" class="form-validation-message"></div>
+
+                    <hr>
+
+                    <label>Property types</label>
+                    <div class="kv-form-group kv-form-group-check">
+                        {% for listing_type in kvcoreidx.listingTypes %}
+                            {% set listing_type_id = alert_id ~ '-type-' ~ listing_type.id %}
+                            {% set checked = false %}
+                            {% set break = false %}
+                            {% for type in alert.types if not break %}
+                                {% if type.id == listing_type.id %}
+                                    {% set checked = true %}
+                                    {% set break = true %}
+                                {% endif %}
+                            {% endfor %}
+                            <label for="{{ listing_type_id }}">
+                                <input type="checkbox"
+                                    id="{{ listing_type_id }}"
+                                    name="types[]"
+                                    value="{{ listing_type.id }}"
+                                />
+                                {{ listing_type.name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <div id="types-validation-new" class="form-validation-message"></div>
+
+                    <hr class="profile_hr">
+
+                    <label>Property features</label>
+                    <div class="kv-form-group kv-form-group-check">
+                        {% for key, name in options %}
+                            {% set option_id = alert_id ~ '-option-' ~ key.name %}
+
+                            <label for="{{ option_id }}">
+                                <input type="checkbox"
+                                    class="kv-form-group-check-input"
+                                    id="{{ option_id }}"
+                                    name="extras[]"
+                                    value="listings.{{ key }} = 1"
+                                />
+                                {{ name }}
+                            </label>
+                        {% endfor %}
+                    </div>
+
+                    <div id="options-validation-new" class="form-validation-message"></div>
+
+                    <hr>
+
+                    <div class="selected-area-row-new">
+                        <div class="selected-area-row-label">
+                            <label for="kvcoreidx-alerts-area-search">Area</label>
+                        </div>
+                        <div class="selected-area-row-value">
+                            <div id="kvcoreidx-alerts-area-search" class="kv-alerts-area-search-multiselect"></div>
+                        </div>
+                        <div class="selected-area-row-control">
+                            <button type="submit" class="kv-button">Submit</button>
+                        </div>
+                    </div>
+                    <div id="areas-validation-new" class="form-validation-message"></div>
+            </div>
+
+                    
+                </form>
+            </div>
+        </section>
+
+    </div>
+</div>

@@ -1,0 +1,448 @@
+.kv-container {
+  @include make-container();
+
+  &-box {
+    @include make-container-max-widths();
+
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &.kv-container-no-padding {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.kv-row-container {
+  display: inline-block;
+  width: 100%;
+
+  &:not(section):nth-of-type(even) {
+    @extend .kv-bg-light;
+  }
+
+  & > div {
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  & > div:not(.kv-full-width-child) {
+    @extend .kv-row;
+
+    width: 90%;
+    max-width: 1200px;
+
+    @media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: map_get($grid-breakpoints, 'xl') - 1) {
+      max-width: 1000px !important;
+    }
+
+    @media (min-width: map_get($grid-breakpoints, 'md')) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+      max-width: 800px !important;
+    }
+
+    @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+      width: 100%;
+    }
+
+    .kv-container {
+      @extend %kv-col-12;
+    }
+  }
+}
+
+.kv-container-space-between {
+  @include make-container();
+  @extend .kv-row, .kv-no-gutters;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+    flex-direction: column;
+  }
+}
+
+.kv-float-left{ @include float-left; }
+.kv-float-right{ @include float-right; }
+.kv-row {
+  @include make-row();
+}
+
+.kv-no-gutters {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+
+  > .kv-col,
+  > [class*="col-"] {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+@include kv-make-grid-columns();
+
+.kv-grid {
+  @extend .kv-no-gutters, .kv-mb-3;
+
+  width: 100%;
+
+  &-columns {
+    @for $columns from 1 through 6 {
+      &-#{$columns} {
+        /* Breakpoint XS */
+        @media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+          grid-template-columns: repeat(1, 1fr) !important;
+        }
+        /* Breakpoint SM */
+        @media (min-width: map_get($grid-breakpoints, 'sm')) and (max-width: map_get($grid-breakpoints, 'md') - 1) {
+          grid-template-columns: repeat(min(2, $columns), minmax(0, 1fr)) !important;
+        }
+        /* Breakpoint MD */
+        @media (min-width: map_get($grid-breakpoints, 'md')) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+          grid-template-columns: repeat(min(3, $columns), minmax(0, 1fr)) !important;
+        }
+        /* Breakpoint LG */
+        @media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: map_get($grid-breakpoints, 'xl') - 1) {
+          grid-template-columns: repeat(min(4, $columns), minmax(0, 1fr)) !important;
+        }
+        /* Breakpoint XL */
+        @media (min-width: map_get($grid-breakpoints, 'xl')) and (max-width: map_get($grid-breakpoints, 'xl') + 299) {
+          grid-template-columns: repeat(min(5, $columns), minmax(0, 1fr)) !important;
+        }
+        /* Breakpoint XL+ */
+        @media (min-width: map_get($grid-breakpoints, 'xl') + 300) {
+          grid-template-columns: repeat($columns, minmax(0, 1fr)) !important;
+        }
+      }
+    }
+  }
+
+  .kv-per-row {
+    &-1, &-2, &-3, &-4, &-5, &-6 {
+      @extend .kv-p-0, .kv-mb-0;
+
+      max-width: none;
+    }
+  }
+}
+
+@each $prop, $abbrev in (margin: m, padding: p) {
+  @each $size, $length in $spacers {
+
+    .kv-#{$abbrev}-#{$size} { #{$prop}: $length !important; }
+    .kv-#{$abbrev}t-#{$size},
+    .kv-#{$abbrev}y-#{$size} {
+      #{$prop}-top: $length !important;
+    }
+    .kv-#{$abbrev}r-#{$size},
+    .kv-#{$abbrev}x-#{$size} {
+      #{$prop}-right: $length !important;
+    }
+    .kv-#{$abbrev}b-#{$size},
+    .kv-#{$abbrev}y-#{$size} {
+      #{$prop}-bottom: $length !important;
+    }
+    .kv-#{$abbrev}l-#{$size},
+    .kv-#{$abbrev}x-#{$size} {
+      #{$prop}-left: $length !important;
+    }
+  }
+}
+
+@each $breakpoint in map-keys($grid-breakpoints) {
+  @include media-breakpoint-up($breakpoint) {
+    $infix: breakpoint-infix($breakpoint, $grid-breakpoints);
+
+    .kv-d#{$infix}-none         { display: none !important; }
+    .kv-d#{$infix}-inline       { display: inline !important; }
+    .kv-d#{$infix}-inline-block { display: inline-block !important; }
+    .kv-d#{$infix}-block        { display: block !important; }
+    .kv-d#{$infix}-table        { display: table !important; }
+    .kv-d#{$infix}-table-row    { display: table-row !important; }
+    .kv-d#{$infix}-table-cell   { display: table-cell !important; }
+    .kv-d#{$infix}-flex         { display: flex !important; }
+    .kv-d#{$infix}-inline-flex  { display: inline-flex !important; }
+  }
+}
+
+/*
+ * Restore Bootstrap 3 "hidden" utility classes.
+ */
+
+/* Breakpoint XS */
+@media (max-width: map_get($grid-breakpoints, 'sm') - 1) {
+  .kv-hidden-xs-down, .kv-hidden-sm-down, .kv-hidden-md-down, .kv-hidden-lg-down, .kv-hidden-xl-down,
+  .kv-hidden-xs-up,
+  .kv-hidden-unless-sm, .kv-hidden-unless-md, .kv-hidden-unless-lg, .kv-hidden-unless-xl {
+    display: none !important;
+  }
+
+}
+
+/* Breakpoint SM */
+@media (min-width: map_get($grid-breakpoints, 'sm')) and (max-width: map_get($grid-breakpoints, 'md') - 1) {
+  .kv-hidden-sm-down, .kv-hidden-md-down, .kv-hidden-lg-down, .kv-hidden-xl-down,
+  .kv-hidden-xs-up, .kv-hidden-sm-up,
+  .kv-hidden-unless-xs, .kv-hidden-unless-md, .kv-hidden-unless-lg, .kv-hidden-unless-xl {
+    display: none !important;
+  }
+}
+
+/* Breakpoint MD */
+@media (min-width: map_get($grid-breakpoints, 'md')) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+  .kv-hidden-md-down, .kv-hidden-lg-down, .kv-hidden-xl-down,
+  .kv-hidden-xs-up, .kv-hidden-sm-up, .kv-hidden-md-up,
+  .kv-hidden-unless-xs, .kv-hidden-unless-sm, .kv-hidden-unless-lg, .kv-hidden-unless-xl {
+    display: none !important;
+  }
+}
+
+/* Breakpoint LG */
+@media (min-width: map_get($grid-breakpoints, 'lg')) and (max-width: map_get($grid-breakpoints, 'xl') - 1) {
+  .kv-hidden-lg-down, .kv-hidden-xl-down,
+  .kv-hidden-xs-up, .kv-hidden-sm-up, .kv-hidden-md-up, .kv-hidden-lg-up,
+  .kv-hidden-unless-xs, .kv-hidden-unless-sm, .kv-hidden-unless-md, .kv-hidden-unless-xl {
+    display: none !important;
+  }
+}
+
+/* Breakpoint XL */
+@media (min-width: map_get($grid-breakpoints, 'xl')) {
+  .kv-hidden-xl-down,
+  .kv-hidden-xs-up, .kv-hidden-sm-up, .kv-hidden-md-up, .kv-hidden-lg-up, .kv-hidden-xl-up,
+  .kv-hidden-unless-xs, .kv-hidden-unless-sm, .kv-hidden-unless-md, .kv-hidden-unless-lg {
+    display: none !important;
+  }
+}
+
+/* Rows */
+.kv-per-row {
+  &-1, &-2, &-3, &-4, &-5, &-6 {
+    margin-bottom: $grid-gutter-width;
+  }
+
+  &-1 {
+    @extend %kv-col-12, %kv-col-sm-12, %kv-col-md-12, %kv-col-lg-12;
+  }
+
+  &-2 {
+    @extend %kv-col-12, %kv-col-sm-6, %kv-col-md-6, %kv-col-lg-6;
+  }
+
+  &-3 {
+    @extend %kv-col-12, %kv-col-sm-6, %kv-col-md-4, %kv-col-lg-4;
+  }
+
+  &-4 {
+    @extend %kv-col-12, %kv-col-sm-6, %kv-col-md-4, %kv-col-lg-3;
+  }
+
+  &-6 {
+    @extend %kv-col-12, %kv-col-sm-6, %kv-col-md-4, %kv-col-lg-3, %kv-col-xl-2;
+  }
+}
+
+.kv-text-center {
+  text-align: center;
+}
+
+.kv-text-right {
+  text-align: right;
+}
+
+.kv-text-ellip {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.kv-center-contents,
+.kv-row-contents {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+  align-content: center;
+  justify-content: center;
+  line-height: 1.3;
+
+  overflow: hidden;
+  position: relative;
+}
+.kv-center-contents {
+  flex-direction: column;
+}
+
+.kv-row-contents {
+  flex-direction: row;
+}
+
+.kv-row-pull-right {
+  @extend .kv-row, .kv-no-gutters;
+
+  margin-left: auto !important;
+}
+
+.kv-color-red {
+  color: #ed0d21;
+}
+
+.kv-color-gray {
+  color: #777;
+}
+
+.kv-bg-light {
+  background-color: $color-bg-light;
+}
+
+.kv-bg-white {
+  background-color: white;
+}
+
+.kv-bold {
+  font-weight: bold;
+}
+
+.kv-small {
+  font-size: 0.75em;
+}
+
+.kv-container {
+  small {
+    @extend .kv-small;
+  }
+
+  // containers nested in side
+  // kvcore containers do not
+  // get left/right padding
+  .kv-container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.kv-image {
+  min-width: 100%;
+
+  &-object-fit {
+    &-cover {
+      @include object-fit(cover);
+    }
+  }
+}
+
+@mixin kv-hidden(){
+  display: none !important;
+}
+
+@mixin kv-invisible() {
+  visibility: hidden;
+}
+
+@mixin kv-seo-hidden(){
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  text-indent: -9999px;
+}
+
+.kv-hidden {
+  @include kv-hidden();
+
+  &-mobile {
+    @media screen and (max-width: map_get($grid-breakpoints, 'md') - 1) {
+      @include kv-hidden();
+    }
+  }
+
+  &-tablet {
+    @media screen and (min-width: map_get($grid-breakpoints, 'md')) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+      @include kv-hidden();
+    }
+  }
+
+  &-desktop {
+    @media screen and (min-width: map_get($grid-breakpoints, 'lg')) {
+      @include kv-hidden();
+    }
+  }
+}
+
+body:not(.logged-in) .kv-hidden-public {
+  @extend .kv-hidden;
+}
+
+.kv-invisible {
+  visibility: hidden !important;
+}
+
+.kv-seo-hidden {
+  @include kv-seo-hidden();
+}
+
+.kv-collapsed {
+  display: none;
+}
+
+.kv-background-cover,
+.kv-background-contain {
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+.kv-background-cover {
+  background-size: cover;
+}
+
+.kv-background-contain {
+  background-size: contain;
+}
+
+.kv-w-100 {
+  width: 100%;
+}
+
+.kv-br {
+  border-right: 1px solid #eee;
+}
+.kv-bl {
+  border-left: 1px solid #eee;
+}
+.kv-bt {
+  border-top: 1px solid #eee;
+}
+.kv-bb {
+  border-bottom: 1px solid #eee;
+}
+.kv-no-border {
+  border: none;
+}
+
+.kv-border-no-color {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.kv-pointer {
+  cursor: pointer;
+}
+
+.kvcore .bg .padd0 .tokenfield {
+  overflow: visible !important;
+}
+
+.no-spin::-webkit-inner-spin-button,
+.no-spin::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  -moz-appearance: textfield !important;
+  margin: 0 !important;
+}
+
+// Reset padding
+.kvcore, .view-content {
+  select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"] {
+    padding: 0.5em 0.75em;
+  }
+}

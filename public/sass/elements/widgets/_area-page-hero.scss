@@ -1,0 +1,93 @@
+.kv-hero-area {
+	@extend .kv-area-page-global;
+	overflow: hidden;
+	max-width: 100% !important;
+	width: 100%;
+
+	.kv-col-6 {
+		&:nth-child(2) {
+			padding-top: 50px;
+		}
+	}
+
+	.kv-area-section-heading {
+		color: #fff;
+	}
+
+	.kv-area-container {
+		max-width: 95%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.kv-hero-subtitle {
+		margin-top: 50px;
+		font-family: Roboto, sans-serif;
+		color: #737373;
+		font-size: 24.66px;
+		font-weight: 700;
+	}
+
+	h1 {
+		margin-bottom: 18px;
+		padding-bottom: 10px;
+		border-bottom: 2px solid #c4c4c4;
+		font-family: Roboto, sans-serif;
+		color: $new-primary;
+		font-size: 75px;
+		line-height: 77px;
+		font-weight: 900;
+	}
+
+	h2 {
+		margin-bottom: 30px;
+	}
+
+	.kv-hero-description {
+		margin-top: 40px;
+	}
+
+	.kv-hero-content {
+		@extend .kv-area-row;
+		font-family: Roboto, sans-serif;
+		color: $new-primary;
+		font-size: 20px;
+		line-height: 23px;
+		font-weight: 500;
+		margin-left: 0;
+		margin-right: 0;
+	}
+
+	.kv-hero-description-header {
+		margin-bottom: 30px;
+	}
+
+	.p {
+		color: #000;
+		font-size: 16px;
+		line-height: 25.89px;
+		font-weight: 400;
+	}
+
+	.kv-hero-mapbox {
+		margin-left: 3%;
+		border-radius: 2%;
+
+		.mapboxgl-ctrl-logo{
+			display: none!important;
+		}
+
+		.mapboxgl-ctrl-bottom-right {
+			display: none!important;
+		}
+	}
+}
+
+@media (min-width: 300px) and (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+	.kv-hero-area {
+		.kv-hero-mapbox {
+			margin-left: 0px;
+			height: 300px!important;
+		}
+	}
+}

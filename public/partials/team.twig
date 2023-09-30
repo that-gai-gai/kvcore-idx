@@ -1,0 +1,290 @@
+{% macro pagination(name, currentFilters, from, to, total, last_page, design) %}
+	{% if currentFilters is defined and from and to %}
+		<div class="kv-filters-items-count-container">
+			<div class="kv-filters-items-count">{{ from }} to {{ to }} of {{ total }}</div>
+		</div>
+        <div class="kv-filters kv-mb-4">
+            <form id="{{ 'kv-' ~ name ~ '-filters-page' }}" class="{{ 'kv-' ~ name ~ '-filters' }}">
+	            <div class="kv-pagination kv-text-center">
+					{% set max_pages_to_show = 5 %}
+					{% set first_page = 1 %}
+
+					{% set start = currentFilters.page - max_pages_to_show %}
+					{% if start < 1 %}
+						{% set start = 1 %}
+					{% endif %}
+
+					{% set end = start + (max_pages_to_show * 2) %}
+					{% if end > last_page %}
+						{% set end = last_page %}
+					{% endif %}
+
+					{% set previous_page = currentFilters.page - 1 %}
+					{% if previous_page < 1 %}
+						{% set previous_page = 1 %}
+					{% endif %}
+
+					{% set next_page = currentFilters.page + 1 %}
+					{% if next_page > last_page %}
+						{% set next_page = last_page %}
+					{% endif %}
+
+		            {% set previous = design == 'v1' ? 'Previous' : '<i class="fa fa-caret-left"></i>' %}
+		            {% set next = design == 'v1' ? 'Next' : '<i class="fa fa-caret-right"></i>' %}
+
+		            {% set id = 'kv-filter-page-previous' %}
+		            <input type="radio"
+                           name="page"
+                           class="kv-form-hide"
+                           id="{{ id }}"
+                           value="{{ previous_page }}"
+                           {% if currentFilters.page == first_page %}disabled="disabled"{% endif %}
+                    >
+		            <label for="{{ id }}" class="kv-form-label-button">{{ previous }}</label>
+
+					{% if currentFilters.page > max_pages_to_show + 1 %}
+						{% set id = "kv-filter-page-" ~ first_page %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ first_page }}">
+                        <label for="{{ id }}" class="kv-form-label-button">{{ first_page }}</label>
+						{% if currentFilters.page > (max_pages_to_show + 2) %}
+                            <span class="kv-form-label-button no-border">&hellip;</span>
+						{% endif %}
+					{% endif %}
+
+					{% for i in range(start, end) %}
+						{% set id = "kv-filter-page-" ~ i %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ i }}" {% if currentFilters.page == i %}checked="checked"{% endif %}>
+                        <label for="{{ id }}" class="kv-form-label-button">{{ i }}</label>
+					{% endfor %}
+
+					{% if last_page - currentFilters.page > (max_pages_to_show + 2) %}
+                        <span class="kv-form-label-button kv-form-label-button-ellip">&hellip;</span>
+
+						{% set id = "kv-filter-page-" ~ last_page %}
+                        <input type="radio" name="page" class="kv-form-hide" id="{{ id }}" value="{{ last_page }}">
+                        <label for="{{ id }}" class="kv-form-label-button">{{ last_page }}</label>
+					{% endif %}
+
+	                {% set id = 'kv-filter-page-next' %}
+	                <input type="radio"
+	                       name="page"
+	                       class="kv-form-hide"
+	                       id="{{ id }}"
+	                       value="{{ next_page }}"
+	                       {% if currentFilters.page == last_page %}disabled="disabled"{% endif %}
+	                >
+		            <label for="{{ id }}" class="kv-form-label-button">{{ next }}</label>
+	            </div>
+            </form>
+        </div>
+	{% endif %}
+{% endmacro %}
+
+{% import _self as macro %}
+
+{% set perRow = currentFilters.perRow|round in [1, 2, 3, 4, 6] ? currentFilters.perRow|round : 6 %}
+{% set perRowClass = ' kv-per-row-' ~ perRow %}
+
+<div class="kv-team-container">
+    {% if data is not defined or not data|length %}
+    <div class="kv-team-container kv-team-none">
+        <div class="kv-col kv-text-center">
+            No team members found
+        </div>
+    </div>
+    {% else %}
+        {{ macro.pagination('team-members', currentFilters, pagination.from, pagination.to, pagination.total, pagination.last_page, kvcoreidx.options.design) }}
+
+	    <div class="kv-team-grid {{ 'kv-grid-columns-' ~ currentFilters.perRow }}">
+	    {% for agent in data %}
+			{% if agent.show_cell_phone %}{% set cellphone = agent.cell_phone %}{% endif %}
+			{% if agent.show_work_phone %}{% set workphone = agent.work_phone %}{% endif %}
+			{% if agent.show_direct_phone %}{% set directphone = agent.direct_phone %}{% endif %}
+		    {% set phone = kv_first_non_empty({0: cellphone, 1: workphone, 2: directphone}) %}
+
+		    {% set click %}
+			    {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+				    window.open('{{ agent.profile_url }}', '_blank');
+			    {% else %}
+				    document.location='{{ agent.profile_url }}';
+			    {% endif %}
+		    {% endset %}
+
+		    <div id="kv-team-member-{{ agent.id }}"
+                 class="kv-team-member{{ perRowClass }}"
+                 data-relevance="{{ agent.relevance }}"
+            >
+			    {% if kvcoreidx.options.design == 'v1' %}
+				    <div class="kv-box-v1 kv-text-center">
+					    <div class="kv-box-v1-image loading loading-center">
+						    {% if agent.photo is not empty %}
+							    <a href="{{ agent.profile_url }}">
+								    <img class="kv-team-member-image"
+								         src="{{ agent.photo }}"
+								         onload="jQuery(this).closest('.kv-box-v1-image.loading').removeClass('loading');"
+								         onerror="this.src='{{ kvcoreidx.publicUrl ~ 'images/user-icon.png' }}'"
+								    >
+							    </a>
+						    {% endif %}
+					    </div>
+
+					    <div class="kv-box-v1-content">
+						    <div class="kv-box-v1-title">
+							    <h2 class="kv-box-v1-title-main">{{ agent.first_name }} {{ agent.last_name }}</h2>
+
+							    <h3 class="kv-box-v1-title-sub">
+								    {% if agent.title %}
+									    {{ agent.title }}
+								    {% else %}
+									    &nbsp;
+								    {% endif %}
+								    {% if agent.credentials is not empty %}
+									    {% set lic = agent.credentials|first + 0 in range(0, 9)
+										    ? 'Lic# ' ~ agent.credentials
+										    : agent.credentials
+									    %}
+									    <span class="kv-small kv-mt-2 kv-d-block">{{ lic }}</span>
+								    {% endif %}
+								    <span class="kv-small kv-mt-2 kv-d-block">
+	                                    {% if agent.offices is defined and agent.offices.length != 0 and agent.offices[0].name %}
+		                                    {{ agent.offices[0].name }}
+	                                    {% else %}
+		                                    &nbsp;
+	                                    {% endif %}
+	                                </span>
+							    </h3>
+						    </div>
+						    <div class="kv-box-v1-icons">
+							    {% if agent.social|length %}
+								    {% for network, link in agent.social %}
+									    {% if link %}
+										    <a class="kv-social-media kv-{{ network }}" href="{{ link }}" target="_blank"></a>
+									    {% endif %}
+								    {% endfor %}
+							    {% else %}
+								    <span class="kv-social-media"></span>
+							    {% endif %}
+						    </div>
+					    </div>
+
+					    <div class="kv-box-v1-footer kv-bt">
+						    <div class="kv-box-v1-footer-item kv-box-v1-footer-item-link">
+							    <a href="{{ agent.profile_url }}"
+							       class="kv-color-gray"
+							       {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+								       target="_blank"
+							       {% endif %}
+							    >
+								    Profile
+							    </a>
+						    </div>
+						    {% if phone is not empty or agent.email %}
+							    <div class="kv-box-v1-footer-item kv-pointer kv-box-v1-footer-item-link">
+								    <span class="kv-color-gray">Contact</span>
+
+								    <div class="kv-box-v1-footer-links">
+									    {% if phone is not empty %}
+										    <div class="kv-box-v1-footer-item">
+											    <a href="tel:{{ phone|lower }}">Call Me</a>
+										    </div>
+									    {% endif %}
+									    {% if agent.email %}
+										    <div class="kv-box-v1-footer-item">
+											    <a href="mailto:{{ agent.email|lower }}">Send an Email</a>
+										    </div>
+									    {% endif %}
+								    </div>
+							    </div>
+						    {% endif %}
+					    </div>
+				    </div>
+			    {% else %}
+				    <div class="kv-box kv-box-footer-count-1">
+		                {% set photo = agent.photo is not empty ? agent.photo : kvcoreidx.publicUrl ~ 'images/user-icon.png' %}
+		                <a href="{{ agent.profile_url }}"
+		                   class="kv-box-image kv-box-image-portrait"
+		                   style="background-image: url({{ photo }})"
+		                   {% if kvcoreidx.openTeamMembersOfficesInNewTab %}
+			                   target="_blank"
+		                   {% endif %}
+		                >
+		                </a>
+
+					    <div class="kv-box-content" onclick="{{ click }}">
+		                    <div class="kv-box-content-title">
+		                        <h3 class="kv-box-content-title-main">
+		                            <span class="kv-box-content-title-main-bold">{{ agent.first_name }}</span> {{ agent.last_name }}
+		                        </h3>
+		                        {% if agent.title %}
+		                            <h4 class="kv-box-content-title-sub" title="{{ agent.title }}">
+				                        {{ agent.title }}
+		                            </h4>
+		                        {% else %}
+			                        <h4 class="kv-box-content-title-sub">&nbsp;</h4>
+		                        {% endif %}
+		                    </div>
+		                    <div class="kv-box-content-info">
+		                        {% if agent.offices is iterable %}
+			                        {% set officesLength = agent.offices|length %}
+			                        {% set officeNames = [] %}
+			                        {% for office in agent.offices %}
+				                        {% if loop.index >= 3 %}
+					                        {% set officeNames = officeNames|merge([office.name]) %}
+				                        {% endif %}
+			                        {% endfor %}
+			                        {% for office in agent.offices %}
+				                        {% if loop.index <= 2 %}
+					                        <div class="kv-box-content-info-line" title="{{ office.name }}">
+					                            <i class="fa fa-home"></i>{{ office.name }}
+					                        </div>
+				                        {% elseif loop.index == 3 %}
+					                        <div class="kv-box-content-info-line" title="{{ officeNames|join(', ') }}">
+						                        {{ 'and ' ~ (officesLength - 2) ~ ' more offices' }}
+					                        </div>
+				                        {% else %}
+				                        {% endif %}
+			                        {% endfor %}
+		                        {% endif %}
+		                        {% if phone is not empty %}
+		                            <a href="tel:{{ phone }}" class="kv-box-content-info-line">
+		                                <i class="fa fa-phone"></i>{{ phone|kv_phone_format }}
+		                            </a>
+		                        {% endif %}
+		                    </div>
+		                    {% if agent.credentials is not empty %}
+			                    {% set lic = agent.credentials|first + 0 in range(0, 9)
+				                    ? 'Lic# ' ~ agent.credentials
+				                    : agent.credentials
+			                    %}
+		                        <div class="kv-box-content-keyword">{{ lic }}</div>
+		                    {% endif %}
+		                </div>
+
+		                <div class="kv-box-footer">
+			                {% if phone is not empty %}
+				                <a href="tel:{{ phone }}" class="kv-box-footer-item">
+					                <i class="fa fa-phone"></i>Call
+				                </a>
+			                {% endif %}
+							{% if agent.kvcoreuserdomain is not empty and kvcoreidx.options.team.hide_agent_email_addresses == '1' %}
+								<a href="{{ agent.kvcoreuserdomain }}/contact.php" target="_blank" class="kv-box-footer-item">
+									<i class="fa fa-envelope"></i>Email
+								</a>
+							{% else %}
+								{% if agent.email is not empty %}
+									<a href="mailto:{{ agent.email }}" class="kv-box-footer-item">
+										<i class="fa fa-envelope"></i>Email
+									</a>
+								{% endif %}
+							{% endif %}
+			                
+		                </div>
+				    </div>
+			    {% endif %}
+            </div>
+        {% endfor %}
+	    </div>
+    {% endif %}
+
+	{{ macro.pagination('team-members', currentFilters, pagination.from, pagination.to, pagination.total, pagination.last_page, kvcoreidx.options.design) }}
+</div>

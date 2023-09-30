@@ -1,0 +1,23 @@
+<a href="" target="_blank" id="kv-map-popup-link">
+    <div class="kv-map-popup" style="background-image: url({{ thumbnail }});">
+        <div class="text-center text-center-top">
+            <div class="kv-map-popup-address-wrapper">
+                <div class="address"></div>
+            </div>
+        </div>
+        <div class="text-center text-center-bottom">
+            <div class="kv-map-popup-address-wrapper">
+                <div>
+                    <div class="price">{{ price }}</div>
+                    <div class="other-info"></div>
+                </div>
+                {% if showlogoresults != 0 %}
+                    <div class="{{ 'kv-map-popup-mls-logo' ~ logoClassName }}">
+                        <img src="{{'https://d9la9jrhv6fdd.cloudfront.net/mlslogos/' ~ mls ~ '.png'}}" />
+                    </div>
+                {% endif %}
+            </div>
+            <div class="kv-map-popup-disclaimer-wrapper"></div>
+        </div>
+    </div>
+</a>

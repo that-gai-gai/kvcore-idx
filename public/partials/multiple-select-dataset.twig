@@ -1,0 +1,174 @@
+{% set source = _context[id] %}
+{% set addressShowIcon = true %}
+{% set schoolShowIcon = true %}
+{% set schoolDistrictShowIcon = true %}
+{% set showBarAddress = true %}
+{% set showBarSchool = true %}
+{% set showBarSchoolDistrict = true %}
+
+
+{% if vals is same as(['0']) %}
+	<input type="checkbox"
+	       class="kv-form-hide"
+	       id="{{ id ~ '-0' }}"
+	       value="0" checked
+	       data-original-order="-9999"
+	       data-order="-9999"
+	>
+	<label class="kv-form-label-button" for="{{ id ~ '-0' }}" style="order: -1">ANY</label>
+{% endif %}
+
+
+{% for item in source %}
+	{% set checkboxId = item.itemId is defined ? id ~ '-' ~ item.itemId : id ~ '-' ~ item.id %}
+	{% set checkboxPolyId = item.itemId is defined ? 'poly-' ~ item.itemId : 'poly-' ~ item.id %}
+	{% set isFeatured = item.id in featured %}
+	{% set index = isFeatured ? loop.index : loop.index + 100 %}
+	
+	{% if kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' %}
+		{% set checked = '' ~ item.data.polygonKey in vals ? 'checked' : '' %}
+	{% else %}
+		{% set checked = '' ~ item.id in vals ? 'checked' : '' %}
+	{% endif %}
+
+
+	<input type="checkbox"
+	       class="kv-form-hide kv-area-multiselect-checkbox"
+	       id="{{ checkboxId }}"
+		   {% if 'popularoptions' in id %}
+		       name="keywords[]"
+		   {% else %}
+				name="{{ id ~ '[]' }}"
+		   {% endif %}
+	       
+	       value="{{ item.id }}"
+		   {{ checked }}
+           data-name="{{ item.name }}"
+           data-original-order="{{ index }}"
+           data-order="{{ index }}"
+		   {% if item.extra is defined %}
+		       data-extra="{{ item.extra }}"
+		   {% endif %}
+	       {% if item.data is defined %}
+		       data-item="{{ item.data|json_encode|escape }}"
+	       {% endif %}
+	>
+	{% if kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' %}
+		{% if item.data.polygonKey is defined %}
+		<input type="checkbox"
+				value="{{item.data.polygonKey}}"
+				name="polygonKey[]"
+				data-name="{{ item.name }}"
+				id="{{checkboxPolyId}}"
+				{{ checked }}
+				class="kv-form-hide kv-poly-multiselect-checkbox"
+				{% if item.extra is defined %}
+				data-extra="{{ item.extra }}"
+			{% endif %}
+			{% if item.data is defined %}
+				data-item="{{ item.data|json_encode|escape }}"
+			{% endif %}
+		>
+		{% endif %}
+	{% endif %}
+
+	{% set contentClass = item.type is defined or item.extra is defined ? ' kv-justify' : '' %}
+	{% set nameClass = contentClass != '' and item.extra is not defined ? ' kv-form-label-full-width' : '' %}
+	{% set featuredClass = isFeatured ? ' kv-featured' : '' %}
+
+	{% if ( kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' and id == 'area' ) or ( kvcoreidx.options.listings.neighborhood_school_boundary_search == '1' and id == 'profile-area' ) %}
+		{% if (item.type == 'school') and (showBarSchool == true)  %}
+			{% set borderClass = ' kv-form-label-border' %}
+			{% set showBarSchool = false %}
+		{% endif %}
+		{% if (item.type == 'school district') and (showBarSchoolDistrict == true)  %}
+			{% set borderClass = ' kv-form-label-border' %}
+			{% set showBarSchoolDistrict = false %}
+		{% endif %}
+		{% if (item.type == 'address') and (showBarAddress == true)  %}
+			{% set borderClass = ' kv-form-label-border' %}
+			{% set showBarAddress = false %}
+		{% endif %}
+		
+		<label class="kv-form-label-button{{ contentClass }}{{ featuredClass }} {{ borderClass }} kv-form-label-button-padding"
+			for="{{ checkboxId }}"
+			style="order: {{ index }}"
+		>
+			<div class="kv-form-label-button-wrapper">
+				{% if contentClass != '' %}
+					<div class="kv-form-label-symbol">
+						{% if (loop.index0 is same as(0)) %}
+							{% if (item.type == 'area') or (item.type == 'neighborhood') or (item.type == 'city') %}
+								<i class="fa fa-map-marker"></i>
+							{% endif %}
+						{% endif %}
+						{% if (item.type == 'address') and (addressShowIcon == true) %}
+							<i class="fa fa-home"></i>
+							{% set addressShowIcon = false %}
+						{% endif %}
+						{% if (item.type == 'school') and (schoolShowIcon == true) %}
+							<i class="fa fa-graduation-cap"></i>
+							{% set schoolShowIcon = false %}
+						{% endif %}
+						{% if (item.type == 'school district') and (schoolDistrictShowIcon == true) %}
+							<i class="fa fa-graduation-cap"></i>
+							{% set schoolDistrictShowIcon = false %}
+						{% endif %}
+					</div>
+					<div class="kv-form-label-desc kv-text-ellip">
+						<div class="kv-form-label-desc-text">
+							{{ item.name }}
+							{% if item.type != 'mlsid' and item.type != 'address' and item.state %}
+								({{ item.state|upper}})
+							{% endif %}
+						</div>
+						<div class="kv-form-extra-info">
+							<div class="kv-form-extra">{{ item.extra }}</div>
+							<div class="kv-form-type">
+								{% if contentClass != '' %}
+									{% if item.type == 'zip' %}
+										{% if kvcoreidx.options.optimize_for_canada == "1" %}
+											postal code
+										{% else %}
+											{{ item.type }}
+										{% endif %}
+									{% else %}
+										{{ item.type }}
+									{% endif %}
+								{% endif %}
+							</div>
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</label>
+		
+	{% else %}
+
+		<label class="kv-form-label-button{{ contentClass }}{{ featuredClass }} kv-form-label-button-padding"
+			for="{{ checkboxId }}"
+			style="order: {{ index }}"
+		>
+			{% if contentClass != '' %}
+				{% if item.type == 'zip' %}
+					{% if kvcoreidx.options.optimize_for_canada == "1" %}
+						<span class="kv-form-label-type kv-text-ellip">postal code</span>
+					{% else %}
+						<span class="kv-form-label-type kv-text-ellip">{{ item.type }}</span>
+					{% endif %}
+				{% else %}
+					<span class="kv-form-label-type kv-text-ellip">{{ item.type }}</span>
+				{% endif %}
+			{% endif %}
+				<span class="kv-form-label-name kv-text-ellip{{ nameClass }}">
+					{{ item.name }}
+					{% if item.type != 'mlsid' and item.type != 'address' and item.state %}
+						({{ item.state|upper}})
+					{% endif %}
+				</span>
+			{% if contentClass != '' %}
+				<span class="kv-form-label-extra kv-text-ellip">{{ item.extra }}</span>
+			{% endif %}
+		</label>
+	{% endif %}
+{% endfor %}

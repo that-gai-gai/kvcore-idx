@@ -1,0 +1,68 @@
+<div class="kv-detail-content">
+    <div class="kv-box">
+        {% set agent = data.listingAgent.data is defined ? data.listingAgent.data : false %}
+
+	    {% set photo = agent ? agent.photo : data.agentphoto %}
+	    {% if photo is empty %}
+		    {% set photo = kvcoreidx.publicUrl ~ 'images/user-icon.png' %}
+	    {% endif %}
+
+	    {% set phone = kv_first_non_empty({
+            0: agent.cell_phone, 1: data.agentphone, 2: agent.direct_phone, 3: agent.work_phone
+        }) %}
+
+	    {% set email = agent ? agent.email : data.agentemail %}
+
+        <div class="kv-box-image kv-box-image-portrait" style="background-image: url({{ photo }})"></div>
+
+        <div class="kv-box-content">
+            <div class="kv-box-content-title">
+                {% if agent %}
+                    <h3 class="kv-box-content-title-main">
+                        <span class="kv-box-content-title-main-bold">{{ agent.first_name }}</span>
+                        {{ agent.last_name }}
+                    </h3>
+                {% else %}
+                    {% set nameArr = data.agentname|split(' ') %}
+                    <h3 class="kv-box-content-title-main">
+                        <span class="kv-box-content-title-main-bold">{{ nameArr[0] }}</span>
+		                {{ nameArr|slice(1)|join(' ') }}
+                    </h3>
+                {% endif %}
+	            {% if agent.title %}
+                    <h4 class="kv-box-content-title-sub" title="{{ agent.title }}">
+			            {{ agent.title }}
+                    </h4>
+	            {% endif %}
+            </div>
+
+            <div class="kv-box-content-info">
+		        {% if phone is not empty %}
+                    <a href="tel:{{ phone }}" class="kv-box-content-info-line">
+                        <i class="fa fa-phone"></i>{{ phone|kv_phone_format }}
+                    </a>
+		        {% endif %}
+            </div>
+
+	        {% if agent.credentials is not empty %}
+		        {% set lic = agent.credentials|first + 0 in range(0, 9)
+			        ? 'Lic# ' ~ agent.credentials
+			        : agent.credentials %}
+                <div class="kv-box-content-keyword">{{ lic }}</div>
+	        {% endif %}
+        </div>
+
+        <div class="kv-box-footer">
+		    {% if phone is not empty %}
+                <a href="tel:{{ phone }}" class="kv-box-footer-item">
+                    <i class="fa fa-phone"></i>Call
+                </a>
+		    {% endif %}
+		    {% if email is not empty %}
+                <a href="mailto:{{ email }}" class="kv-box-footer-item">
+                    <i class="fa fa-envelope"></i>Email
+                </a>
+		    {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+{% if currentFilters is defined %}
+    {% set curLayout = currentFilters.layout is defined ? currentFilters.layout : 'card' %}
+    <form id="kv-property-filters-form" class="kv-property-filters">
+        <div class="kv-form-group kv-form-with-container">
+            <div class="kv-filters-control-container kv-select kv-filters-order-column">
+                <label for="kv-property-filters-order">
+                    Sort By
+                </label>
+                <select name="order" id="kv-property-filters-order">
+                    {% for order in filters.order %}
+                        {% set selected = currentFilters['order'] is defined
+                            and currentFilters['order'] == order.value
+                            ? 'selected="selected"'
+                            : ''
+                        %}
+                        <option value="{{ order.value }}" {{ selected }}>{{ order.label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% if manual_listings_view is not defined %}
+                <div class="kv-filters-control-container kv-select kv-filters-gridmap-column">
+                    <div class="kv-filters-label-container">
+                        {% for layout in filters.layout %}
+                            {% set id = 'kv-filter-page-layout-' ~ layout.value %}
+                            <input type="radio"
+                                name="layout"
+                                class="kv-form-hide"
+                                id="{{ id }}"
+                                value="{{ layout.value }}"
+                                {% if curLayout == layout.value %}checked="checked"{% endif %}
+                            >
+                            <label for="{{ id }}" class="kv-form-label-button">{{ layout.label }}</label>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                
+                
+            {% endif %}
+        </div>
+        {% if manual_listings_view is not defined %}
+        {% if shortcodeStr is not empty %}
+            <div class="kv-collapse-parent">
+                <div class="kv-collapse-container">
+                    <button type="button"
+                            class="kv-button"
+                            data-toggle="collapse"
+                            data-target=".kv-filters-get-shortcode"
+                    >
+                        Get Shortcode
+                    </button>
+                    <div class="collapse kv-filters-get-shortcode">
+                        <input type="text" value="{{ shortcodeStr|escape }}" title="">
+                        <button type="button" class="kv-button">Copy</button>
+                    </div>
+                </div>
+
+                <div class="kv-collapse-container">
+                    <button type="button"
+                            class="kv-button"
+                            data-toggle="collapse"
+                            data-target=".kv-filters-save-hotsheet"
+                    >
+                        Save Hotsheet
+                    </button>
+                    <div class="collapse kv-filters-save-hotsheet">
+                        <input type="text"
+                            name="hotsheet-name"
+                            pattern="[a-z0-9-]+"
+                            placeholder="Enter hotsheet name"
+                            required="required"
+                            title=""
+                        >
+                        <button type="submit" class="kv-button">Save</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        {% endif %}
+    </form>
+
+	{% if currentFilters.showAllButton is defined and
+		currentFilters.showAllButton == 'yes' and
+		kvcoreidx.pages is defined and
+		kvcoreidx.pages.properties|length > 1
+	%}
+        <a class="kv-filters-listings-show-all" href="{{ kvcoreidx.pages.properties }}">Filter Search</a>
+	{% endif %}
+{% endif %}

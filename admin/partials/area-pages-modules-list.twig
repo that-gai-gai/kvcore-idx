@@ -1,0 +1,34 @@
+<div id="area-pages-list-modules">
+    {% for module in modules_list %}
+        <div class="area-pages-module-item">
+            <div class="module-active">
+                <input
+                    type="checkbox"
+                    name="activate-module[{{ module.name }}]"
+                    value="{{ module.name }}"
+                    {% if module.data.is_active %}
+                        checked="checked"
+                    {% endif %}
+                />
+            </div>
+
+            <div class="module-name">
+                {{ module.title }}
+            </div>
+
+            {% if module.configurable == true %}
+            <div class="module-edit-remove">
+                <button
+                    class="kv-admin-button kv-area-module-edit"
+                    data-module="{{ module | json_encode | escape }}"
+                    data-area="{{ area | json_encode | escape }}"
+                >
+                    Edit
+                </button>
+            </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="area-page-modal"></div>
+</div>

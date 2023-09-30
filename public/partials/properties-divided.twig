@@ -1,0 +1,71 @@
+{% if data is not defined or not data | length %}
+    <div class="kv-nolistings-found">
+        <p class="kv-bold">No Matching Results</p>
+        <p>Your search produced no matching results.
+        <br />
+        Please edit your search by zooming out, adjusting your search area outline or adjusting your search filters.</p>
+        <button class="kv-button kv-mr-1 kv-filters-clear">Clear Filters</button>
+        <button class="kv-button-secondary kv-filters-clear">Start Over</button>
+    </div>
+{% else %}
+    {% set curLayout = currentFilters.layout is defined ? currentFilters.layout : 'card' %}
+    <div class="kv-properties-container {{ 'kv-layout-' ~ curLayout }}">
+        <div class="fullwidth-wrapper">
+            <div class="kv-map-column">
+                <div class="kv-map-grey-area-filters">
+                    {% if kvcoreidx.pages.market_report is not empty and kvcoreidx.options.hide_market_report_links != "1" %}
+                        <a href="javascript:void(0)" class="kv-filters-market-report-link">
+                            <i class="fa fa-bar-chart"></i>&nbsp;Get FREE Market Report
+                        </a>
+                    {% endif %}
+                </div>
+                <div id="kv-properties-map">
+                    <div id="kv-drive-search">
+                        <div class="kv-drive-search-form">
+                            <div class="kv-container">
+                                <div class="kv-drive-search-form-address" id="kv-drive-address-search-bar"></div>
+                                <div class="kv-drive-search-form-duration">
+                                    <select name="duration" title="Drive Time duration">
+                                        <option value="5">within 5 Min.</option>
+                                        <option value="10">within 10 Min.</option>
+                                        <option value="15">within 15 Min.</option>
+                                        <option value="20">within 20 Min.</option>
+                                        <option value="25">within 25 Min.</option>
+                                        <option value="30" selected="selected">within 30 Min.</option>
+                                        <option value="35">within 35 Min.</option>
+                                        <option value="40">within 40 Min.</option>
+                                        <option value="45">within 45 Min.</option>
+                                        <option value="50">within 50 Min.</option>
+                                        <option value="55">within 55 Min.</option>
+                                        <option value="60">within 60 Min.</option>
+                                    </select>
+                                </div>
+                                <div class="kv-drive-search-form-buttons">
+                                    <button class="kv-button apply-button">Apply</button>
+                                    <button class="kv-button cancel-button">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="kv-property-column">
+                <div class="property-content">
+                    <div class="filter-header">
+                        <div class="kv-map-grey-area-filters">
+                            {% if kvcoreidx.pages.market_report is not empty and kvcoreidx.options.hide_market_report_links != "1" %}
+                                <a href="javascript:void(0)" class="kv-filters-market-report-link">
+                                    <i class="fa fa-bar-chart"></i>&nbsp;Get FREE Market Report
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="kv-property-filters-container"></div>
+                    </div>
+                    <div class="listings-and-mls">
+                        <div class="kv-property-listings-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}

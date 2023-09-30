@@ -1,0 +1,112 @@
+<div id="area-pages-list-areas">
+    {% if not data %}
+    <div class="area-pages-item">
+        <div>There are no areas currently available for this site.</div>
+    </div>
+    {% endif %}
+
+    {% for area in data %}
+    <div class="area-pages-item">
+            <div class="area-active">
+                <input
+                    type="checkbox"
+                    name="activate-area[{{ area.id }}]"
+                    value="{{ area.id }}"
+                    data-area="{{ area | json_encode | escape }}"
+                    {% if area.is_active %}
+                    checked="checked"
+                    {% endif %}
+                />
+            </div>
+
+            <div class="area-name">
+                {% if area.is_active %}
+                    <a href="#" class="area-name-link" data-id="{{ area.id }}">
+                        {{ area.name }}
+                    </a>
+                {% else %}
+                    <span class="area-name-text" data-id="{{ area.id }}">
+                        {{ area.name }}
+                    </span>
+                {% endif %}
+
+                <div class="area-name-options">
+                    <ul class="area-name-options-list">
+                        {% if area.is_active %}
+                        <li class="area-name-options-list-item">
+                            <a href="{{ area.url }}" target="_blank">View Area Page</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="area-active-modules">
+                {% if area.is_active %}
+                    {% if area.enabled_modules is defined %}
+                        {{ area.enabled_modules.length }} of {{ module_count }}
+                    {% endif %}
+                {% endif %}
+            </div>
+
+            <div class="area-type">
+                {% if area.locations.type is defined %}
+                    {{ area.locations.type }}
+                {% endif %}
+                {% if area.activated_type is defined %}
+                    {{ area.activated_type }}
+                {% endif %}
+            </div>
+
+            <div class="area-edit-remove">
+                {% if area.is_active %}
+                    <button class="kv-admin-button kv-admin-button-edit"  data-id="{{ area.id }}">
+                        Edit
+                    </button>
+                {% endif %}
+
+            </div>
+    </div>
+    {% endfor %}
+
+    {% if pagination %}
+        <div class="area-pages-list-pagination">
+            <ul class="area-page-pagination-list">
+                <li
+                        class="area-page-pagination-list-item {% if not pagination.show_first %}kv-invisible{% endif %}"
+                >
+                    <button
+                            class="area-page-pagination-button"
+                            data-page="1"
+                    >
+                        1
+                    </button>
+                    &nbsp;...&nbsp;
+                </li>
+
+                {% for page in pagination.pages %}
+                    <li class="area-page-pagination-list-item">
+                        <button
+                                class="area-page-pagination-button {% if page == pagination.current %}area-page-pagination-button--current{% endif %}"
+                                data-page="{{ page }}"
+                        >
+                            {{ page }}
+                        </button>
+                    </li>
+                {% endfor %}
+
+                <li
+                        class="area-page-pagination-list-item {% if not pagination.show_last %}kv-invisible{% endif %}"
+                >
+                    &nbsp;...&nbsp;
+                    <button
+                            class="area-page-pagination-button"
+                            data-page="{{ pagination.last }}"
+                    >
+                        {{ pagination.last }}
+                    </button>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+</div>

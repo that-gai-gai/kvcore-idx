@@ -1,0 +1,210 @@
+
+.kv-show-listings, .kv-area-page-area-listings {
+	@extend .kv-area-page-global;
+	overflow: hidden;
+	max-width: 100% !important;
+    width: 100%;
+    margin-top: 50px;
+    padding: 0px 50px 0px;
+
+    .kv-filters-items-count-container, .kv-filters-items-count {
+        display: none;
+    }
+
+    .kv-property-listings {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+
+        .kv-per-row-6 {
+            flex: 0 0 20%;
+            max-width: 20%;
+        }
+
+        .kv-box {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden;
+            -webkit-box-shadow: 0 0 3px 1px rgba(0,0,0,0.1);
+            -moz-box-shadow: 0 0 3px 1px rgba(0,0,0,0.1);
+            box-shadow: 0 0 3px 1px rgba(0,0,0,0.1);
+            border-radius: 10px 10px 10px 10px;
+    
+            .kv-box-image {
+                height: 190px;
+            }
+    
+            .kv-box-content{
+                .kv-box-title{
+                    padding: 5px;
+
+                    h3.kv-box-content-title-main {
+                        margin: 1rem auto 3rem;
+                    }
+            
+                    .kv-box-content-title-main-bold {
+                        font-weight: 600;
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: bold;
+                        font-size: 25px;
+                        line-height: 21px;
+                        display: flex;
+                        align-items: center;
+                        color: #000000;
+                    }
+            
+                    h4.kv-box-content-title-sub {
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-size: 15px;
+                        line-height: 19px;
+                        margin-bottom: 5px;
+                        letter-spacing: 0.03em;
+                        color: #797979;
+                    }
+
+                    .kv-box-brokername {
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 15px;
+                        line-height: 19px;
+                        letter-spacing: 0.03em;
+                        color: #797979;
+                    }
+                }
+                .kv-box-content-keyword {
+                    top: 30px;
+                    font-family: Roboto;
+                    font-style: normal;
+                    font-weight: 500;
+                    font-size: 9px;
+                    line-height: 15px;
+                    height: auto;
+                    text-align: right;
+                    right: 15px;
+                }
+            }
+
+            .kv-box-footer {         
+                    .kv-box-footer-item {
+                        border-top: 1px solid #EAEAEA;
+                        border-right: 1px solid #EAEAEA;
+                        color: #000!important;
+
+                        div {
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 14px;
+                            line-height: 15px;
+                            text-align: center;
+                        }
+            
+                        span {
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 12px;
+                            line-height: 15px;
+                            text-align: center;
+                            color: #0F0F0F;
+                        }
+        
+                        small {
+                            font-size: 0.75em;
+                            font-family: Roboto;
+                            font-style: normal;
+                            font-weight: 500;
+                            font-size: 11px;
+                            line-height: 15px;
+                            text-align: center;
+                            color: #797979;
+                        }
+            
+                        a {
+                            color: #000!important;
+                        } 
+                    }
+
+                    a.kv-similar-properties{
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 12px;
+                        line-height: 15px;
+                        text-align: center;
+                        color: #fff!important;
+                        background-color:$new-primary;
+                        text-decoration: none;
+                    }    
+                        
+                    a.add-favorite {
+                        font-family: Roboto;
+                        font-style: normal;
+                        font-weight: 500;
+                        font-size: 12px;
+                        color: #fff!important;
+                        line-height: 15px;
+                        text-align: center;
+                        background-color:$new-primary;
+                        text-decoration: none;
+                    }
+            }
+        }
+
+    }
+}
+
+.kv-listing-button {
+    margin: auto;
+    display: block;
+    text-align: center;
+    color: #fff!important;
+    background: $new-primary;
+    max-width: 100%!important;
+    width: 369px!important;
+    padding: 13px;
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.35);
+    border: 2px solid $new-primary;
+    text-decoration: none;
+}
+
+.kv-listing-button:hover {
+    background: $new-primary;
+    transition: 2s;
+    opacity: 0.8;
+    transition: 0.3s;
+    border-color: $new-primary;
+}
+
+@media (min-width: map_get($grid-breakpoints, 'sm')) and (max-width: 1300px) {
+	.kv-property-listings {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
+
+        .kv-per-row-6 {
+            flex: 0 0 50%!important;
+            max-width: 50%!important;
+        }
+    }
+}
+
+@media (max-width: 767px) {
+
+    .kv-show-listings, .kv-area-page-area-listings {
+        padding: 0px;
+    }
+
+    .kv-property-listings {
+        .kv-per-row-6 {
+            flex: 0 0 100%!important;
+            max-width: 100%!important;
+        }
+    }
+}

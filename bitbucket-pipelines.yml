@@ -1,0 +1,110 @@
+image: atlassian/default-image:2
+
+pipelines:
+  default:
+    - step:
+        name: Build
+        image: php:7
+        script:
+          # Install composer, node, and npm
+          - |
+              # Various Dependencies
+              apt -y update && apt -y install --no-install-recommends \
+                git \
+                zip \
+                unzip \
+                libzip-dev \
+                nodejs \
+                npm
+              # Composer
+              curl --silent --show-error https://getcomposer.org/installer \
+                | php -- --1 --install-dir=/usr/local/bin --filename=composer
+              # Zip PHP extension
+              docker-php-ext-install zip
+
+          - ./build_plugin.sh
+
+          # Add GPL License to generated site
+          - curl -s https://www.gnu.org/licenses/old-licenses/gpl-2.0.txt > LICENSE.txt
+
+          # Make tarball
+          # Notes: * Some implementations of tar were complaining if
+          #          kvcore-idx.tar.gz didn't exist before running; therefore we
+          #          touch it before we invoke tar.
+          #        * The transform flag has tar place all files under kvcore-idx
+          #          in archive.
+          #        * The .buildignore file is used to determine what should and
+          #          shouldn't be part of the distribution.
+          #        * The other exclusion keeps tar from trying to archive
+          #          recursively.
+          - >
+            touch kvcore-idx.tar.gz
+
+            tar -cvzf kvcore-idx.tar.gz
+            --transform 's/^\./kvcore-idx/' 
+            --exclude-from=.buildignore
+            --exclude=kvcore-idx.tar.gz
+            .
+        artifacts:
+          - kvcore-idx.tar.gz
+    - step:
+        name: Upload
+        image: amazon/aws-cli:latest
+        script:
+          # Set artifact path
+          - |
+              ARTIFACT_PATH=""
+              if [ ! -z "${BITBUCKET_PR_ID}" ]; then
+                # Pull request style
+                ARTIFACT_PATH=pull-request/${BITBUCKET_PR_ID}
+              elif [ ! -z "${BITBUCKET_TAG}" ]; then
+                # Tag style
+                ARTIFACT_PATH=tag/${BITBUCKET_TAG}
+              elif [ ! -z "${BITBUCKET_BRANCH}" ]; then
+                # Branch style: branch/master/123-94b84c6e30
+                ARTIFACT_PATH=branch/${BITBUCKET_BRANCH}/${BITBUCKET_BUILD_NUMBER}-${BITBUCKET_COMMIT::10}
+              fi
+
+          # Assert that the path is not empty
+          - test ! -z "$ARTIFACT_PATH"
+
+          # Upload to s3
+          - aws s3 cp kvcore-idx.tar.gz s3://${BUILD_ARTIFACT_BUCKET}/$ARTIFACT_PATH/kvcore-idx.tar.gz
+          #TODO Set expiration times for s3 objects that come from PRs and
+          #     branches. Builds from tags can probably persist.
+          
+          - echo "s3://${BUILD_ARTIFACT_BUCKET}/$ARTIFACT_PATH/kvcore-idx.tar.gz"
+              > release_url.txt
+        artifacts:
+          - release_url.txt
+    - step:
+        name: Deploy
+        script:
+          # Create domain name and mysql friendly deployment slug
+          - |
+            DEPLOYMENT_SLUG=""
+            if [ ! -z "${BITBUCKET_PR_ID}" ]; then
+              DEPLOYMENT_SLUG="${BITBUCKET_PR_ID}"
+            elif [ ! -z "${BITBUCKET_TAG}" ]; then
+              DEPLOYMENT_SLUG="${BITBUCKET_TAG}"
+            elif [ ! -z "${BITBUCKET_BRANCH}" ]; then
+              DEPLOYMENT_SLUG="${BITBUCKET_BRANCH}"
+            fi
+            DEPLOYMENT_SLUG=$(echo "$DEPLOYMENT_SLUG" | tr '[:upper:]' '[:lower:]' | tr -d '/-')
+
+          # Assert that the slug is not empty
+          - test ! -z "$DEPLOYMENT_SLUG"
+
+          # Copy deployment script to server
+          - scp
+            -o ProxyCommand="ssh -W %h:%p developer@access.kvcore.io" -o StrictHostKeyChecking="no"
+            ./dev-site-deploy.sh ubuntu@${SERVER_IP}:~/dev-site-deploy.sh
+
+          # Run deployment script
+          - ssh
+            -o ProxyCommand="ssh -W %h:%p developer@access.kvcore.io" -o StrictHostKeyChecking="no"
+            ubuntu@${SERVER_IP}
+            ./dev-site-deploy.sh "$DEPLOYMENT_SLUG" "$(cat release_url.txt)"
+
+          - echo "Success! A bare site with this version of the plugin is ready
+            for you to set up at https://$DEPLOYMENT_SLUG.wpdev.kvcore.com"

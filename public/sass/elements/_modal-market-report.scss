@@ -1,0 +1,76 @@
+#modal--market-report {
+	.kv-modal-dialog {
+		max-width: 750px;
+	}
+
+	.kv-modal-mr {
+		@extend .kv-row;
+
+		&-left, &-right {
+			padding: 2rem;
+
+			@extend %kv-col-12, %kv-col-md-6;
+		}
+
+		&-left {
+			line-height: 1.3;
+
+			&-title {
+				margin-bottom: 2rem;
+				font-size: larger;
+				font-weight: bold;
+			}
+
+			&-list-item {
+				@extend .kv-row;
+
+				margin-bottom: 2rem;
+
+				&-left {
+					@extend %kv-col-2;
+
+					&-number {
+						width: 30px;
+						height: 30px;
+						text-align: center;
+						line-height: 30px;
+						background-color: #424242;
+						border-radius: 50%;
+						font-family: monospace;
+						font-size: 18px;
+						color: white;
+					}
+				}
+
+				&-right {
+					@extend %kv-col-10;
+
+					font-weight: 600;
+				}
+			}
+
+			&-button {
+				text-align: center;
+				margin-top: 1rem;
+				border-radius: 0;
+				background-color: #424242;
+				border-color: #424242;
+				text-transform: none;
+
+				&:hover {
+					background-color: #88c541;
+					border-color: #88c541;
+				}
+			}
+		}
+
+		&-right {
+			padding-left: 0;
+
+			img {
+				padding: 0.5rem;
+				border: 1px solid $color-light;
+			}
+		}
+	}
+}

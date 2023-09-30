@@ -1,0 +1,156 @@
+<div class="kv-row-container kv-bg-white">
+    <div class="kv-my-5">
+            <div class="kv-container kv-mb-4">
+                <h2>Mortgage Calculator</h2>
+            </div>
+            <div class="kv-container">
+                <div class="kv-mortgage-calculator">
+                    <div class="kv-mortgage-calculator-sidebar">
+                        <div class="kv-mortgage-calculator-sidebar-image">
+                            <img src="{{ kvcoreidx.publicUrl ~ 'images/mortgage-calculator-image.png' }}">
+                        </div>
+                        <div class="kv-mortgage-calculator-sidebar-form">
+                            <span>Home Price</span>
+                            <form id="kv-mortgage-calculator-form" class="kv-mortgage-calculator-form">
+                                <label>
+                                    <input type="text" name="list-price" value="{{ price }}" />
+                                </label>
+                                <label>
+                                    Down Payment<br>
+                                    <input type="text" name="down-payment-amount" value="{{ down_payment }}" /><input type="text" name="down-payment-percent" value="{{ down_payment_percent }}" />
+                                </label>
+                                <label>
+                                    Length of Loan<br>
+                                    <select name="payment-term">
+                                        <option value="10">10 Years</option>
+                                        <option value="15">15 Years</option>
+                                        <option value="20">20 Years</option>
+                                        <option value="25">25 Years</option>
+                                        <option value="30" selected="selected">30 Years</option>
+                                        <option value="35">35 Years</option>
+                                        <option value="40">40 Years</option>
+                                    </select>
+                                </label>
+                                <label>
+                                    Interest Rate<br>
+                                    <input type="text" name="interest-rate" value="{{ interest_rate }}" />
+                                </label>
+
+                                <a href="#" class="kv-d-block kv-mb-3 kv-mortgage-calculator-form-show-advanced-options">Show advanced options</a>
+
+                                <div class="kv-mortgage-calculator-form-advanced-options kv-hidden">
+                                    <label>
+                                        Property Taxes (Yearly)<br>
+                                        <input type="text" name="property-taxes" value="{{ property_taxes }}" />
+                                    </label>
+                                    <label>
+                                        Insurance (Yearly)<br>
+                                        <input type="text" name="insurance" value="{{ insurance }}" />
+                                    </label>
+                                    <label>
+                                        PMI (Monthly)<br>
+                                        <input type="text" name="pmi" value="{{ pmi }}" />
+                                    </label>
+                                    <label>
+                                        Extra Payment (Monthly)<br>
+                                        <input type="text" name="extra-payment" value="{{ extra_payment }}" />
+                                    </label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="kv-mortgage-calculator-report" class="kv-mortgage-calculator-report">
+                        <h3>Payment Breakdown</h3>
+                        <div class="kv-mortgage-calculator-report-breakdown">
+                            <div id="{{ chart_id }}" class="kv-mortgage-calculator-report-breakdown-chart">
+                            </div>
+                            <div class="kv-mortgage-calculator-report-breakdown-calculated">
+                                <table>
+                                    <tr>
+                                        <th>
+                                            <span class="kv-mortgage-calculator-report-breakdown-chart-principal"></span>
+                                            Principal
+                                        </th>
+                                        <td>+<span data-value="monthly-principal"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <span class="kv-mortgage-calculator-report-breakdown-chart-taxes"></span>
+                                            Taxes
+                                        </th>
+                                        <td>+<span data-value="monthly-taxes"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <span class="kv-mortgage-calculator-report-breakdown-chart-pmi"></span>
+                                            INS/PMI*
+                                        </th>
+                                        <td>+<span data-value="monthly-ins-pmi"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            <span class="kv-mortgage-calculator-report-breakdown-chart-other"></span>
+                                            Other
+                                        </th>
+                                        <td>+<span data-value="monthly-other"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            <h4 class="kv-py-3">
+                                                Total monthly payment = <span  data-value="monthly-total">XXXXXXXX</span>
+                                            </h4>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <table id="kv-mortgage-calculator-output" style="width: 100%;">
+                            <tr id="kv-mortgage-calculator-output-header">
+                                <th>&nbsp;</th>
+                                <th>Principal</th>
+                                <th>Taxes</th>
+                                <th>INS/PMI*</th>
+                                <th>Other</th>
+                                <th>Total</th>
+                            </tr>
+
+                            <tr>
+                                <th>Monthly</th>
+                                <td><span data-value="monthly-principal"></span></td>
+                                <td><span data-value="monthly-taxes"></span></td>
+                                <td><span data-value="monthly-ins-pmi"></span></td>
+                                <td><span data-value="monthly-other"></span></td>
+                                <td><b><span data-value="monthly-total"></span></b></td>
+                            </tr>
+
+                            <tr>
+                                <th>Yearly</th>
+                                <td><span data-value="yearly-principal"></span></td>
+                                <td><span data-value="yearly-taxes"></span></td>
+                                <td><span data-value="yearly-ins-pmi"></span></td>
+                                <td><span data-value="yearly-other"></span></td>
+                                <td><b><span data-value="yearly-total"></span></b></td>
+                            </tr>
+
+                            <tr>
+                                <th>Total</th>
+                                <td><span data-value="total-principal"></span></td>
+                                <td><span data-value="total-taxes"></span></td>
+                                <td><span data-value="total-ins-pmi"></span></td>
+                                <td><span data-value="total-other"></span></td>
+                                <td><b><span data-value="total-total"></span></b></td>
+                            </tr>
+                        </table>
+
+                        <p>*Private mortgage insurance is an insurance policy that a residential mortgage lender requires of the borrower if the loan-to-value (LTV) ratio of the home is greater than 80%. Mortgage insurance protects the lender from the risk that the borrower may default on the loan. Federal law requires lenders to notify borrowers when the loan-to-value ratio drops below 80%. Mortgage insurance premiums vary, but generally range from $1,000 to $5,000 a year for an average priced home.</p>
+
+                        <p>Results received from this calculator are designed for comparative purposes only, and accuracy is not guaranteed.</p>
+
+                        {% if kvcoreidx.options.listing_detail.show_prequalify_button == "2" and kvcoreidx.options.listing_detail.prequalify_link is not empty %}
+                            <a href="{{kvcoreidx.options.listing_detail.prequalify_link}}" target="_blank" class="kv-button kv-button-inverted-v2">Get pre-approved</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>

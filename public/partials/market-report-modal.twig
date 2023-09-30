@@ -1,0 +1,55 @@
+<div id="modal--market-report" class="modal kv-modal fade in">
+    <div class="modal-dialog kv-modal-dialog">
+        <div class="kv-modal-content kv-container">
+            <div class="kv-modal-header">
+                <h4 class="kv-modal-title">Market Reports</h4>
+                <button type="button" class="kv-modal-close" data-dismiss="kv-modal">&times;</button>
+            </div>
+            <div class="kv-modal-body kv-modal-mr">
+                <div class="kv-modal-mr-left">
+                    <div class="kv-modal-mr-left-title">
+                        {% if kvcoreidx.options.optimize_for_canada == "1" %}
+                            See current market statistics for a given area in three simple steps. Stats include valuable information like average listing price, new listings, etc. To view your market report:
+                        {% else %}
+                            See current market statistics for a given area in three simple steps. Stats include valuable information like average listing price, new listings, price reductions, etc. To view your market report:
+                        {% endif %}
+                    </div>
+                    <div class="kv-modal-mr-left-list-item">
+                        <div class="kv-modal-mr-left-list-item-left">
+                            <div class="kv-modal-mr-left-list-item-left-number">1</div>
+                        </div>
+                        <div class="kv-modal-mr-left-list-item-right">
+                            {% if kvcoreidx.options.optimize_for_canada == "1" %}
+                                Search for listings in a specific neighbourhood, area, city, county, or postal code.
+                            {% else %}
+                                Search for listings in a specific neighborhood, area, city, county, or zip code.
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="kv-modal-mr-left-list-item">
+                        <div class="kv-modal-mr-left-list-item-left">
+                            <div class="kv-modal-mr-left-list-item-left-number">2</div>
+                        </div>
+                        <div class="kv-modal-mr-left-list-item-right">
+                            In the right sidebar of the search results page, click the Market Report link.
+                        </div>
+                    </div>
+                    <div class="kv-modal-mr-left-list-item">
+                        <div class="kv-modal-mr-left-list-item-left">
+                            <div class="kv-modal-mr-left-list-item-left-number">3</div>
+                        </div>
+                        <div class="kv-modal-mr-left-list-item-right">
+                            Instantly view the current report and subscribe to receive monthly updates to stay current on changes to the area.
+                        </div>
+                    </div>
+                    <div class="kv-modal-mr-left-button kv-button" data-dismiss="modal">
+                        <i class="fa fa-bar-chart"></i>&nbsp;Get your Market Report now
+                    </div>
+                </div>
+                <div class="kv-modal-mr-right">
+                    <img src="{{ kvcoreidx.publicUrl ~ 'images/market-report.jpg' }}">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

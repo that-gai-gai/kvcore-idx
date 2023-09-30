@@ -1,0 +1,148 @@
+@media screen and (max-width: 520px) {
+    .kv-slider {
+        .kv-box {
+            max-width: 65vw;
+        }
+        .kv-similar-properties,
+        .add-favorite {
+            font-size: 12px;
+            .fa {
+                display: none;
+            }
+        }
+    }
+}
+
+.kv-slider {
+    .slick-slide,
+    .kv-slide {
+        $image-height: 45vmin;
+        $fallback-height: 480px;
+        $min-height: 400px;
+        $max-height: 720px;
+        $min-height-container: 280px;
+        $max-height-container: 480px;
+        position: relative;
+        @supports (height: $image-height) {
+            min-height: $min-height;
+            max-height: $max-height;
+        }
+        .kv-container-box & {
+            min-height: $min-height-container;
+            max-height: $max-height-container;
+        }
+        .kv-property {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+    .slick-arrow+.slick-list {
+        margin-left: 60px;
+        margin-right: 50px;
+    }
+    .slick-arrow {
+        @extend .kv-m-0;
+        background: none;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        width: 50px;
+        border: 0;
+        opacity: 0.75;
+        font-size: 0;
+        outline: none;
+        transition: opacity 0.33s ease;
+        &:hover {
+            background: none;
+            opacity: 1;
+        }
+        &::before {
+            font-family: 'FontAwesome', Helvetica, Arial, serif;
+            font-size: 40px;
+            font-weight: 700;
+            line-height: 1;
+            color: $color-primary;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+            cursor: pointer;
+        }
+        &.slick-prev {
+            left: 0;
+            &::before {
+                content: "\f104";
+            }
+        }
+        &.slick-next {
+            right: 0;
+            &::before {
+                content: "\f105";
+            }
+        }
+    }
+    &-nav {
+        $nav-width: 60px;
+        height: 90px;
+        background: #333;
+        .slick-list {
+            margin-left: $nav-width;
+            margin-right: $nav-width;
+        }
+        .slick-arrow {
+            @extend .kv-m-0;
+            background: none;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            width: 50px;
+            border: 0;
+            opacity: 0.75;
+            font-size: 0;
+            outline: none;
+            transition: opacity 0.33s ease;
+            &:hover {
+                background: none;
+                opacity: 1;
+            }
+            &::before {
+                font-family: 'FontAwesome', Helvetica, Arial, serif;
+                font-size: 40px;
+                font-weight: 700;
+                line-height: 1;
+                color: #fff;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-shadow: 1px 1px 0 rgba(255, 255, 255, .3);
+                cursor: pointer;
+            }
+            &.slick-prev {
+                left: 0;
+                &::before {
+                    content: "\f104";
+                }
+            }
+            &.slick-next {
+                right: 0;
+                &::before {
+                    content: "\f105";
+                }
+            }
+        }
+        .slick-slide {
+            @extend .kv-px-1,
+            .kv-py-2;
+            opacity: 0.25;
+            transition: opacity 0.33s ease;
+            &:hover {
+                opacity: 0.75;
+            }
+            &.slick-current {
+                opacity: 1;
+            }
+            img {
+                width: 75px;
+                height: 75px;
+            }
+        }
+    }
+}

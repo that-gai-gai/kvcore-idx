@@ -1,0 +1,325 @@
+<div class="kv-detail-v2">
+	<div class="kv-row-container" style="display: none;"></div>
+	<div class="kv-row-container">
+		<button class="kv-detail-v2-back-to-search-button kv-mt-4 kv-button">BACK TO SEARCH</button>
+		<div class="kv-detail-v2-main kv-mt-4 kv-mb-5">
+			<div class="kv-container-space-between">
+				<h4 class="kv-detail-v2-main-city">
+					<i class="fa fa-map-marker"></i>{{ ' ' ~ data.city ~ ', ' ~ data.state ~ ' ' ~ data.zip }}
+				</h4>
+				<h2 class="kv-detail-v2-main-price">{{ '$' ~ data.price|number_format(0) }}</h2>
+			</div>
+			<div class="kv-container-space-between kv-mb-0">
+				<h1 class="kv-detail-v2-main-address">{{ data.address }}</h1>
+				<ul class="kv-detail-v2-main-actions kv-list-bar">
+					{% if not data.manualType %}
+					<li>
+						{% if not data.saved %}
+							<a id="kv-detail-save" href="">
+								<i class="fa fa-heart-o"></i><span>Save</span>
+							</a>
+						{% else %}
+							<a id="kv-detail-save" class="saved-listing" href="">
+								<i class="fa fa-heart"></i><span>Remove</span>
+							</a>
+						{% endif %}
+					</li>
+					{% endif %}
+					<li><a id="kv-detail-share" href=""><i class="fa fa-share-alt"></i>Share</a></li>
+					<li><a id="kv-detail-print-flyer" href=""><i class="fa fa-file-text-o"></i>Print</a></li>
+					<li>
+						<a href="{{ kvcoreidx.pages.user_profile ~ '#tab-saved-searches' }}">
+							<i class="fa fa-envelope-o"></i>Saved Searches
+						</a>
+					</li>
+					{% if data.virtualtour %}
+					<li>
+						<a href="{{ data.virtualtour }}" class="kv-detail-v2-details-virtualtour" target="_blank">
+							<i class="fa fa-video-camera"></i>Virtual Tour
+						</a>
+					</li>
+					{% endif %}
+					{% if data.video %}
+					<li>
+						<a href="{{ data.video }}" target="_blank">
+							<i class="fa fa-play"></i>Video
+						</a>
+					</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="kv-row-container kv-detail-v2-photos-container">
+		{% if not kv_empty(data.photos) and not kv_empty(data.photos.data) and data.photos.data.length != 0 %}
+			<nav class="kv-detail-v2-photos-controls kv-hidden-md-up">
+				<i class="fa fa-chevron-left"></i>
+				<i class="fa fa-chevron-right"></i>
+			</nav>
+			<div class="kv-detail-v2-photos kv-full-width-child">
+			{% if data.openHouses is defined and data.openHouses.data is iterable and data.openHouses.data is not empty %}
+				<div class="kv-detail-v2-openhouse">
+				{% for openhouse in data.openHouses.data %}
+					<div>OPEN HOUSE {{ openhouse.fulldate | date('D, M jS') }} {{ openhouse.time }} - VIEWS</div>
+				{% endfor %}
+				</div>
+			{% endif %}
+				{% for photo in data.photos.data %}
+					{% if loop.index == 1 %}
+						<aside class="kv-detail-v2-photos-main">
+							<img class="kv-image kv-image-object-fit kv-image-object-fit-cover"
+							     src="{{ photo.url }}"
+							     data-order="0"
+							>
+						</aside>
+					{% else %}
+						<img class="kv-image kv-image-object-fit kv-image-object-fit-cover"
+						     src="{{ photo.url }}"
+						     data-order="{{ loop.index0 }}"
+						     style="order: {{ loop.index0 }}"
+						>
+					{% endif %}
+				{% endfor %}
+			</div>
+		{% endif %}
+	</div>
+	<div id="kv-detail-v2-cta" class="kv-row-container">
+		<div class="kv-detail-v2-cta kv-my-4">
+			<div class="kv-container-space-between kv-mb-0">
+				<ul class="kv-list-bar kv-list-bar-no-border">
+					{% if kvcoreidx.showMLSLogoInHeader %}
+						<li>
+							<img src="https://d9la9jrhv6fdd.cloudfront.net/mlslogos/{{ data.mls }}.png"
+							     alt="{{ data.mlsName.data.name }}"
+							>
+						</li>
+					{% endif %}
+					{% if data.mlsid %}
+					<li>{{ 'MLS #' ~ data.mlsid }}</li>
+					{% endif %}
+					<li>{{ 'List Date: ' ~ data.listingdate|date('m/d/Y') }}</li>
+				</ul>
+				<ul class="kv-list-bar kv-list-bar-no-border">
+					{% if kvcoreidx.showPrequalifyButton %}
+						<li>
+							<div class="kv-detail-prequalify kv-button kv-button-inverted">Pre-Qualify</div>
+						</li>
+					{% endif %}
+{#					<li>#}
+{#						<div class="kv-detail-schedule kv-button kv-button-inverted">Schedule A Showing</div>#}
+{#					</li>#}
+					<li>
+						<div class="kv-detail-requesttour kv-button kv-button-inverted">Request Tour</div>
+					</li>
+					<li>
+						<div class="kv-detail-request kv-button kv-button-inverted">Request Info</div>
+					</li>
+				</ul>
+			</div>
+			{% if kvcoreidx.showListingAgentAndMLSInHeader %}
+				{% if data.agentname is defined and data.brokername is defined %}
+					{% if data.isAgencyListing %}
+						<div class="kv-container kv-detail-v2-compliance">Presented By: {{ data.agentname }} of {{ data.brokername }}{% if not kv_empty(data.mlsName.data.name) %} and {{ data.mlsName.data.name }}{% endif %}.</div>
+					{% else %}
+						<div class="kv-container kv-detail-v2-compliance">Presented By: {{ data.brokername }}{% if not kv_empty(data.mlsName.data.name) %} and {{ data.mlsName.data.name }}{% endif %}.</div>
+					{% endif %}
+				{% endif %}
+			{% endif %}
+			{% if kvcoreidx.showMLSDisclaimerInHeader %}
+				<div class="kv-container kv-detail-v2-compliance">Disclaimer: The information contained in this listing has not been verified by {{ kvcoreidx.siteName }} and should be verified by the buyer.</div>
+			{% endif %}
+		</div>
+	</div>
+	<div class="kv-row-container">
+		<div class="kv-detail-v2-info kv-my-5">
+			<div class="kv-container-space-between kv-mb-0">
+				<ul class="kv-list-bar kv-list-bar-no-border">
+					{% if not kv_empty(data.beds) %}
+						<li>
+							<img src="{{ kvcoreidx.publicUrl ~ 'images/detail/bed.svg' }}">
+							{{ 'Beds &bull; ' ~ data.beds }}
+						</li>
+					{% endif %}
+					{% if not kv_empty(data.bathsCalculated) %}
+						<li>
+							<img src="{{ kvcoreidx.publicUrl ~ 'images/detail/bath.svg' }}">
+							{{ 'Baths &bull; ' ~ data.bathsCalculated }}
+						</li>
+					{% endif %}
+					{% if not kv_empty(data[data.footageType]) %}
+						<li>
+							<img src="{{ kvcoreidx.publicUrl ~ 'images/detail/footage.png' }}">
+							{% set footageName = data.footageType == 'footage' ? 'SQFT' : 'ACRES' %}
+							{{ footageName ~ ' &bull; ' ~ data[data.footageType]|number_format(0) }}
+						</li>
+					{% endif %}
+					{% if not kv_empty(data.garage) %}
+						<li>
+							<img src="{{ kvcoreidx.publicUrl ~ 'images/detail/garage.svg' }}">
+							{{ 'Garage &bull; ' ~ data.garage }}
+						</li>
+					{% endif %}
+					{% if not kv_empty(data.yearbuilt) %}
+						<li>
+							<img src="{{ kvcoreidx.publicUrl ~ 'images/detail/year.svg' }}">
+							{{ 'Year Built &bull; ' ~ data.yearbuilt }}
+						</li>
+					{% endif %}
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="kv-row-container">
+		<div class="kv-detail-v2-details kv-my-5">
+			<div class="kv-container kv-mb-4">
+				<h2>Home Details</h2>
+			</div>
+			<div class="kv-container kv-detail-v2-details-description">
+			{% if not kv_empty(data.remarks) %}
+				<div class="kv-container kv-detail-v2-details-description">{{ data.remarks }}</div>
+			{% endif %}
+			{% if data.agentname and data.brokername %}
+			<div class="kv-container kv-mt-2">
+				{% if data.isAgencyListing %}
+					<b>Presented By: </b>{{ {0: data.agentname, 1: data.brokername}|kv_join(', ') }}
+				{% else %}
+					<b>Presented By: </b>{{ data.brokername }}
+				{% endif %}
+			</div>
+			{% endif %}
+		</div>
+	</div>
+
+	{% macro featureLists(data, featureName) %}
+		{% if not kv_empty(data[featureName]) %}
+			<div class="kv-row-container">
+				<div class="kv-detail-v2-features kv-detail-v2-{{ featureName }} kv-my-5">
+					<div class="kv-container kv-mb-4">
+						<h2>{{ featureName|capitalize }}</h2>
+					</div>
+					<div class="kv-row kv-no-gutters">
+						{% for featureList in data[featureName] %}
+							<div class="kv-list-v2">
+								{% for feature in featureList %}
+									<div class="kv-list-v2-item">
+										<span class="kv-list-v2-item-name">{{ feature.realname }}</span>
+										{% if feature.realname == "Virtual Tour URL" %}
+											<span class="kv-list-v2-item-value"><a href="{{ feature.value }}" target="_blank">{{ feature.value }}</a></span>
+										{% else %}
+											<span class="kv-list-v2-item-value">{{ feature.value }}</span>
+										{% endif %}
+									</div>
+								{% endfor %}
+							</div>
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		{% endif %}
+	{% endmacro %}
+
+	{% import _self as macro %}
+
+	{% for featureName in ['general', 'interior', 'exterior'] %}
+		{{ macro.featureLists(data, featureName) }}
+	{% endfor %}
+
+	{% if not kv_empty(data.history.data) or not kv_empty(data.schools.data) or not kv_empty(agent) %}
+	<div class="kv-row-container">
+		<div class="kv-detail-v2-additional-agent kv-my-5">
+			{% if not kv_empty(data.history.data) or not kv_empty(data.schools.data) %}
+				<div class="kv-container kv-mb-4">
+					<h2>Additional Details</h2>
+				</div>
+				<div class="kv-row kv-no-gutters kv-detail-v2-features">
+					{% if not kv_empty(data.history.data) and kvcoreidx.options.optimize_for_canada != "1" %}
+						<div class="kv-list-v2">
+							<h3 class="kv-list-v2-title">Price History</h3>
+							<div class="kv-detail-v2-additional-agent-price-history"></div>
+						</div>
+					{% endif %}
+					{% if not kv_empty(data.schools.data) %}
+						{% set schoolTypeNames = {
+							middleschool: 'Middle School',
+							elementaryschool: 'Elementary School',
+							highschool: 'High School'
+						} %}
+						<div class="kv-list-v2">
+							<h3 class="kv-list-v2-title">Schools</h3>
+							{% for school in data.schools.data %}
+								<div class="kv-list-v2-item">
+									<span class="kv-list-v2-item-name">{{ schoolTypeNames[school.type] }}</span>
+									<span class="kv-list-v2-item-value">
+										{% if not ('Unknown' in school.name) %}
+											{{ school.name }}
+										{% endif %}
+									</span>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			{% endif %}
+			{% set agent = data.listingAgent.data %}
+			{% if not kv_empty(agent) %}
+				<div class="kv-detail-v2-agent kv-mt-5">
+					<div class="kv-detail-v2-agent-photo">
+						<img src="{{ agent.photo }}">
+					</div>
+					<div class="kv-detail-v2-agent-details">
+						<h2>{{ agent.full_name }}</h2>
+						<div>{{ agent.title }}</div>
+						<div class="kv-list-v2">
+							<div class="kv-list-v2-item">
+								<span class="kv-list-v2-item-name">Price</span>
+								<span class="kv-list-v2-item-value">{{ '$' ~ data.price|number_format(0) }}</span>
+							</div>
+							<div class="kv-list-v2-item">
+								<span class="kv-list-v2-item-name">MLS#</span>
+									<span class="kv-list-v2-item-value">{{ data.mlsid }}</span>
+							</div>
+							<div class="kv-list-v2-item">
+								<span class="kv-list-v2-item-name">List Date</span>
+								<span class="kv-list-v2-item-value">{{ data.listingdate|date('m/d/Y') }}</span>
+							</div>
+							<div class="kv-list-v2-item">
+								<span class="kv-list-v2-item-name">Property Type</span>
+								<span class="kv-list-v2-item-value">{{ data.type }}</span>
+							</div>
+							{% set phone = kv_first_non_empty({
+								0: agent.cell_phone, 1: agent.direct_phone, 2: agent.work_phone
+							}) %}
+							<div class="kv-list-v2-item">
+								<span class="kv-list-v2-item-name">Phone</span>
+								<a href="{{ 'tel:' ~ phone }}" class="kv-list-v2-item-value">
+									{{ phone|kv_phone_format }}
+								</a>
+							</div>
+						</div>
+					</div>
+					<div class="kv-detail-v2-agent-cta">
+						{% if kvcoreidx.showPrequalifyButton %}
+							<div class="kv-detail-prequalify kv-button kv-button-inverted-v2">Pre-Qualify</div>
+						{% endif %}
+{#						<div class="kv-detail-schedule kv-button kv-button-inverted-v2">Schedule A Showing</div>#}
+						<div class="kv-detail-requesttour kv-button kv-button-inverted-v2">Request Tour</div>
+						<div class="kv-detail-request kv-button kv-button-inverted-v2">Request Info</div>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</div>
+	{% endif %}
+	<section id="kv-detail-v2-map" class="kv-detail-v2-map"></section>
+	<section id="kv-detail-mortgage-calculator" class="kv-mortgage-calculator-container"></section>
+	<div class="kv-row-container">
+		<div class="kv-detail-v2-compliance-similar kv-my-5">
+			<div class="kv-detail-v2-similar kv-hidden">
+				<div class="kv-container kv-mb-4">
+					<h2>Similar Properties</h2>
+				</div>
+				<div id="kv-detail-v2-similar" class="kv-container kv-px-0"></div>
+			</div>
+		</div>
+	</div>
+</div>

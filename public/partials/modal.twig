@@ -1,0 +1,24 @@
+<div class="modal kv-modal {{ class_name }} fadein" id="{{ id }}" tabindex="-1" role="dialog" aria-labelledby="{{ id }}-title" aria-hidden="true">
+    <div class="modal-dialog-centered kv-modal-dialog kv-modal-dialog-wide" role="document">
+        <div class="kv-modal-content">
+            <div class="kv-modal-header">
+                {% if title %}
+                    {% if heading_tag is not defined %}
+                        {% set heading_tag = 'h2' %}
+                    {% endif %}
+                    <{{ heading_tag }} class="modal-title" id="{{ id }}-title">{{ title }}</{{ heading_tag }}>
+                {% endif %}
+                <button type="button" class="close kv-modal-close" data-dismiss="kv-modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                {{ content | raw }}
+            </div>
+            {#<div class="modal-footer">#}
+                {#<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>#}
+                {#<button type="button" class="btn btn-primary">Save changes</button>#}
+            {#</div>#}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="kv-detail-content">
+    <div class="kv-box-v1 kv-box-v1-horizontal-short kv-box-v1-no-border">
+	    {% set agent = data.listingAgent.data is defined ? data.listingAgent.data : false %}
+
+	    {% set photo = agent ? agent.photo : data.agentphoto %}
+	    {% if photo is empty %}
+		    {% set photo = kvcoreidx.publicUrl ~ 'images/user-icon.png' %}
+	    {% endif %}
+
+	    {% if agent %}
+		    {% set phone = agent.cell_phone is not empty ? agent.cell_phone : agent.direct_phone %}
+		    {% if phone is empty %}
+			    {% set phone = agent.work_phone %}
+		    {% endif %}
+	    {% else %}
+		    {% set phone = data.agentphone %}
+	    {% endif %}
+
+	    {% set email = agent ? agent.email : data.agentemail %}
+
+        <div class="kv-box-v1-image"><img src="{{ photo }}"></div>
+
+        <div class="kv-box-v1-main">
+            <div class="kv-box-v1-title">
+                {% if agent %}
+                    <span class="kv-box-v1-title-main">{{ agent.full_name }}</span>
+	                {% if agent.credentials is not empty %}
+                        <span class="kv-box-v1-title-sub kv-mt-2">{{ agent.credentials }}</span>
+                    {% endif %}
+                {% else %}
+                    <span class="kv-box-v1-title-main">{{ data.agentname }}</span>
+                {% endif %}
+            </div>
+
+            <a href="tel:{{ phone }}" class="kv-list-item-value">{{ phone|kv_phone_format }}</a>
+        </div>
+    </div>
+</div>

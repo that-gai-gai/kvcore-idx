@@ -1,0 +1,13 @@
+<div class="kv-area-we-cover-areas">
+   <div class="kv-area-section-heading">AREAS WE COVER</div>
+   <div class="kv-area-section-line"></div>
+   <div class="kv-area-row">
+      <div class="kv-col-12">
+         <div class="kv-nearby-areas-block">       
+            {% for area in areas %}
+            <a href="{{ area.url }}" class="kv-nearby-area-we-cover-link">{{ area.name }}</a>
+            {% endfor %}
+         </div>
+      </div>
+    </div>
+</div>

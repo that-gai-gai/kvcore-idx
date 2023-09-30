@@ -1,0 +1,85 @@
+<div class="{{ kvcoreidx.wrapper_class }}">
+    <div id="user-logged-in" class="widget user-logged-in">
+        {% if user.display_name %}
+            <h3 class="widgettitle">Logged in as:</h3>
+        {% else %}
+            <h3 class="widgettitle">Logged in</h3>
+        {% endif %}
+
+        <div class="widget-input login-tabs-wrapper tab-login">
+            <div class="login-content-wrapper">
+                {% if user.display_name %}
+                    <label>
+                        {{ user.display_name }}
+                    </label>
+                {% endif %}
+                <button type="button" class="kv-button"
+                        onclick="kvCORE.User.logout()"
+                >
+                    LOGOUT
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {# show if cookie lead id is not set #}
+    <div id="login_tabs" class="widget user-guest">
+        <h3 class="widgettitle">Login/Register</h3>
+        <div class="login-tabs-wrapper">
+        <div class="widget-title">
+            <div id="tab-login" class="tab-name tab-login-title tab-active">Login</div>
+            <div id="tab-register" class="tab-name tab-register-title tab-inactive">Register</div>
+        </div>
+        <div class="login-content-wrapper">
+            <div class="tab-content widget-input tab-login-content">
+                <form name="loginform" class="login-form kv-form" id="public-login-tab-content--loginform"
+                    action="public/leads" method="get">
+                    <input name="email" id="public-login--email" class="kv-form-control"
+                           placeholder="Email" type="text"
+                    >
+                    <input required="required" name="phone" class="kv-form-control"
+                           id="public-login--phone" placeholder="Phone" type="text"
+                    >
+                    <input type="hidden" name="action" value="login">
+                    <input type="hidden" name="testcookie" value="1">
+                    <button type="submit" class="kv-button">Login</button>
+                </form>
+            </div>
+
+            {% if kvcoreidx.options['google_client_id'] or kvcoreidx.options['facebook_client_id'] or kvcoreidx.options['twitter_client_id'] %}
+                <div class="kv-login-social">
+                    {% if kvcoreidx.options['google_client_id'] %}
+                        <form name="socialform" class="kv-login-social-form" method="post">
+                            <input type="hidden" name="action" value="login">
+                            <input type="hidden" name="provider" value="google">
+                            <a href="#" class="kv-login-social-button">
+                                <img src="{{ kvcoreidx.publicUrl }}images/google-login.svg">
+                            </a>
+                        </form>
+                    {% endif %}
+
+                    {% if kvcoreidx.options['facebook_client_id'] %}
+                        <form name="socialform" class="kv-login-social-form" method="post">
+                            <input type="hidden" name="action" value="login">
+                            <input type="hidden" name="provider" value="facebook">
+                            <a href="#" class="kv-login-social-button">
+                                <img src="{{ kvcoreidx.publicUrl }}images/facebook-login.svg">
+                            </a>
+                        </form>
+                    {% endif %}
+
+                    {% if kvcoreidx.options['twitter_client_id'] %}
+                        <form name="socialform" class="kv-login-social-form" method="post">
+                            <input type="hidden" name="action" value="login">
+                            <input type="hidden" name="provider" value="twitter">
+                            <a href="#" class="kv-login-social-button">
+                                <img src="{{ kvcoreidx.publicUrl }}images/twitter-login.svg">
+                            </a>
+                        </form>
+                    {% endif %}
+                </div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</div>

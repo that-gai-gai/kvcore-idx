@@ -1,0 +1,219 @@
+.kv-box {
+    $box: &;
+    $footer-height: 50px;
+    $shadow-opacity: .175;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    -webkit-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.1);
+    @for $footer-count from 1 through 3 {
+        &-footer-count-#{$footer-count} {
+            &:hover {
+                #{$box}-image {
+                    height: calc(225px - #{$footer-count * $footer-height});
+                    &-portrait {
+                        height: calc(275px - #{$footer-count * $footer-height});
+                    }
+                }
+                #{$box}-footer {
+                    height: $footer-height;
+                }
+            }
+            @media (max-width: map_get($grid-breakpoints, 'lg') - 1) {
+                #{$box}-image {
+                    height: 300px;
+                }
+                #{$box}-footer {
+                    height: $footer-height;
+                }
+            }
+        }
+    }
+    &-highlight-dark {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, ($shadow-opacity * 4));
+    }
+    &-highlight-medium {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, ($shadow-opacity * 2));
+    }
+    &-highlight-light {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, ($shadow-opacity / 2));
+    }
+    &-image {
+        @extend .kv-d-block;
+        height: 225px;
+        transition: kv-transition(min-height), kv-transition(height), kv-transition(max-height) !important;
+        background: no-repeat center center;
+        background-size: cover;
+        &-portrait {
+            height: 275px;
+            background: no-repeat center 15%;
+            background-size: cover;
+        }
+        a {
+            display: flex;
+            flex: 1;
+            width: 100%;
+        }
+    }
+    &-brokername {
+        font-size: .80em;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    h4.kv-box-content-title-sub {
+        margin-top: 0;
+    }
+    .kv-card-title {
+		display: flex;
+		justify-content: flex-start;
+		.kv-card-city {
+			font-size: 1rem;
+			font-weight: 600;
+			overflow-x: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			margin-right: 8px;
+		}
+		.kv-card-price {
+			padding: 1px 6px;
+			text-decoration:underline;
+			cursor:pointer;
+		}
+	}
+    &-label {
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        font-size: .80em;
+        font-weight: 700;
+        padding: 4px 12px;
+        position: absolute;
+        left: 20px;
+        top: 20px;
+        text-transform: uppercase;
+        z-index:1;
+    }
+    &-content {
+        @extend .kv-p-3,
+        .kv-bg-white;
+        position: relative;
+        flex: 1;
+        cursor: pointer;
+        &-keyword {
+            @extend .kv-text-right,
+            .kv-text-ellip,
+            .kv-color-gray;
+            position: absolute;
+            height: 10px;
+            line-height: 10px;
+            left: 25%;
+            right: 7px;
+            bottom: 7px;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+        .kv-box-mls-logo {
+            height: 50px;
+            max-width: 110px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: left center;
+        }
+        &-title {
+            @extend .kv-mb-3;
+            &-main {
+                color: black;
+                &-bold {
+                    font-weight: 600;
+                }
+            }
+            &-sub {
+                @extend .kv-color-gray;
+                .kv-small {
+                    font-size: 0.85em;
+                }
+            }
+        }
+        &-info {
+            &-line {
+                @extend .kv-d-block;
+                @at-root {
+                    a#{&} {
+                        transition: kv-transition(color, $transition-delay * 0.5) !important;
+                    }
+                }
+            }
+        }
+    }
+    &-footer {
+        $f: &;
+        @extend .kv-row,
+        .kv-no-gutters,
+        .kv-bg-white;
+        justify-content: center;
+        text-align: center;
+        height: 0;
+        transition: kv-transition(height) !important;
+        &-show {
+            height: $footer-height;
+        }
+        &-item {
+            @extend %kv-col-12,
+            %kv-col-sm-6;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            min-height: 0;
+            line-height: 1.2;
+            border-top: 1px solid;
+            border-right: 1px solid;
+            text-transform: uppercase !important;
+            letter-spacing: 1px;
+            transition: kv-transition(background-color, $transition-duration * 0.5) !important;
+            overflow: hidden;
+            &:last-of-type {
+                border-right: none;
+            }
+            &.kv-social-icon {
+                padding-left: 5px;
+                padding-right: 5px;
+                font-size: 26px;
+                transition: kv-transition(flex) !important;
+                &:hover {
+                    flex: 2;
+                }
+            }
+        }
+        a#{$f}-item {
+            flex-direction: row;
+            border: none;
+            color: white !important;
+        }
+    }
+    .fa:before {
+        margin-right: 5px;
+    }
+}
+
+.kv-sold-gate {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    color: #999999;
+    background: #444444;
+    padding: 3.5rem 1.5rem 1.5rem 1.5rem;
+    text-align: center;
+    top: 0;
+    right: 0;
+    z-index: 0;
+    
+    p {
+        margin-bottom: 0 !important;
+        .fa-lock {
+            font-size: 2rem;
+        }
+    }
+}

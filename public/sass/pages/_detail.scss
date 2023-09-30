@@ -1,0 +1,148 @@
+.kv-detail {
+  &-header {
+    &-container {
+      @extend .kv-row;
+    }
+
+    &-go-back {
+      @extend %kv-col-12, .kv-my-4;
+    }
+
+    &-slider {
+      @extend %kv-col-12, .kv-px-0;
+
+      &-container {
+        @extend %kv-col-12, %kv-col-md-6, %kv-col-lg-8, %kv-col-xl-8;
+
+        @media (max-width: map_get($grid-breakpoints, 'md') - 1) {
+          margin-bottom: $spacer;
+        }
+      }
+    }
+
+    &-detail {
+      @extend %kv-col-12, .kv-px-0;
+
+      &-container {
+        @extend %kv-col-12, %kv-col-md-6, %kv-col-lg-4, %kv-col-xl-3;
+      }
+
+      .kv-detail {
+        &-heading, &-text, .kv-list {
+          @extend .kv-mb-3;
+        }
+
+        &-mlsid {
+          @extend .kv-mb-4;
+        }
+
+        &-tour {
+          @extend .kv-mb-4;
+          display:inline-block;
+        }
+
+        &-heading {
+          font-weight: bold;
+          display: block;
+
+          font-size: 2.25em;
+          line-height: 1.2;
+        }
+
+        &-text, &-mlsid {
+          display: block;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+
+  &-list-container {
+    @extend .kv-row;
+
+    .kv-detail-list {
+      @extend %kv-col-12, %kv-col-md-6, .kv-mb-4;
+
+      &:last-child,&:nth-last-child(2){
+        @extend .kv-mb-0;
+      }
+
+      .kv-list {
+        @extend .kv-mb-0;
+      }
+    }
+  }
+
+  &-property-location-container.kv-content-box-content {
+    @extend .kv-p-0;
+  }
+
+  &-home-details-container {
+    .kv-list-item-heading {
+      min-width: 200px;
+      width: auto;
+      margin-right: 0.5rem;
+    }
+  }
+
+  &-similar-properties-container {
+    @extend .kv-p-4;
+
+    background-color: $color-bg-light;
+
+    .slick-track {
+      @extend .kv-row;
+
+      .slick-slide {
+        @extend %kv-col, .kv-p-0;
+
+        max-width: 350px;
+        height: auto !important;
+
+        & > div {
+          height: auto;
+
+          .kv-box {
+            @extend .kv-d-flex, .kv-pb-0;
+          }
+        }
+
+        .kv-property {
+          margin-bottom: 15px !important;
+        }
+      }
+    }
+  }
+  &-openhouse-wrapper { 
+		position:absolute;
+		top:15px;
+		left:25px;
+		font-size: 0.75em;
+		text-transform: uppercase;
+    padding:0 10px;
+    z-index:9;
+	}
+
+	&-openhouse {
+    margin-bottom:10px;
+    background-color:#000;
+		color:#fff;
+  }
+  
+  &-listingstatus-wrapper { 
+		position:absolute;
+		top:15px;
+		left:25px;
+		font-size: 0.75em;
+		text-transform: uppercase;
+		padding:0 10px;
+	}
+}
+
+#kvcoreidx-shortcode--listing-detail--details {
+  @extend .kv-pt-0;
+
+  .kv-content-box {
+    @extend .kv-bg-white;
+  }
+}
